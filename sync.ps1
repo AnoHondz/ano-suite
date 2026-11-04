@@ -45,10 +45,16 @@ foreach ($word in $words) {
     if ($left) { $left | ForEach-Object { Write-Warning "$($_.Path) still contains a private word" }; throw 'A private word is still present; nothing was pushed.' }
 }
 
-git -C $root add -A
+# git writes progress and notices to stderr, which Windows PowerShell 5.1 would treat as errors under 'Stop':
+# from here on, success is judged by git's exit codes instead.
+$ErrorActionPreference = 'Continue'
+git -C $root add -A 2>$null
+if ($LASTEXITCODE) { throw "git add failed ($LASTEXITCODE)" }
 if (git -C $root status --porcelain) {
-    git -C $root commit -m $Message | Out-Null
-    git -C $root push
+    git -C $root commit -q -m $Message 2>$null
+    if ($LASTEXITCODE) { throw "git commit failed ($LASTEXITCODE)" }
+    git -C $root push -q 2>$null
+    if ($LASTEXITCODE) { throw "git push failed ($LASTEXITCODE); the commit is saved locally, run sync again to retry" }
     Write-Host "Saved and pushed: $Message"
 } else {
     Write-Host 'Nothing changed since the last save.'
