@@ -1,0 +1,217 @@
+{
+  "verified_at": "2026-10-20T16:48:13.825262+00:00",
+  "study_id": "nfl-phase2-3-elo-logistic-v1",
+  "registered_at": "2026-10-20T12:38:20.079135+00:00",
+  "frozen_models": [
+    {
+      "model_id": "nfl-frozen-elo-v1",
+      "model_version": "nfl-frozen-elo-v1",
+      "feature_names": [
+        "home_field",
+        "home_rating",
+        "away_rating"
+      ],
+      "training_cutoff": "2026-02-16T11:30:00+00:00",
+      "evidence_cutoff": "2026-10-19T14:07:10.715523+00:00",
+      "training_evidence_class": "B",
+      "prospective_input_evidence_class": "A",
+      "training_data_fingerprint": "b3364bd10e49cff21883477c9185f51980a5c9c57867670e09c9058e4bfc0ceb",
+      "feature_mapping_fingerprint": "9aa5d080d5887f9ff0ebcb3e9d3227ec07eaad24a77b0d175d846e58922d2aa2",
+      "feature_code_sha256": "785fd83db69be4b7ad978d74797b9b5ac481b0d648831720504bc87dae5ea72b",
+      "artifact_sha256": "1d3498489943452fa1000850e8bdbbb326220070e54e7d4e86a55b6145a22e8b",
+      "training_games": 1139
+    },
+    {
+      "model_id": "nfl-frozen-logistic-v1",
+      "model_version": "nfl-frozen-logistic-v1",
+      "feature_names": [
+        "home_field",
+        "diff_win_rate",
+        "diff_rest_days"
+      ],
+      "training_cutoff": "2024-12-25T16:59:59.999999+00:00",
+      "evidence_cutoff": "2025-12-23T13:15:00+00:00",
+      "training_evidence_class": "B",
+      "prospective_input_evidence_class": "A",
+      "training_data_fingerprint": "d78a40b7d265ae7b715c3953c9ed7a1271df778b463549b64fb546687b3fcb5f",
+      "feature_mapping_fingerprint": "9aa5d080d5887f9ff0ebcb3e9d3227ec07eaad24a77b0d175d846e58922d2aa2",
+      "feature_code_sha256": "785fd83db69be4b7ad978d74797b9b5ac481b0d648831720504bc87dae5ea72b",
+      "artifact_sha256": "98b751981b21e6862f6880304b5e0747a38b5cf8c337d8d4088b99e93783524c",
+      "training_games": 604
+    }
+  ],
+  "eligible_upcoming_games": 1,
+  "upcoming_schedule_games": 179,
+  "archived_forecasts": 2,
+  "archived_games": 1,
+  "forecasts": [
+    {
+      "archived_at": "2026-10-20T16:47:51.909603+00:00",
+      "artifact_sha256": "1d3498489943452fa1000850e8bdbbb326220070e54e7d4e86a55b6145a22e8b",
+      "away_team": "NE",
+      "away_win_probability": 0.47910813009659403,
+      "data_freshness": {
+        "pbp": {
+          "age_seconds": 18748.990957,
+          "collected_at": "2026-10-20T11:35:08.848004+00:00",
+          "content_sha256": "08bc3a89fd5eba28f5e9ca62f78879f615c1decad503eb22a2793c13f1d4aac3",
+          "maximum_age_seconds": 21600,
+          "receipt_id": 42,
+          "status": "fresh"
+        },
+        "schedules": {
+          "age_seconds": 0.744678,
+          "collected_at": "2026-10-20T16:47:37.094283+00:00",
+          "content_sha256": "31a7ba675c44726de6aac0f99ea5483e63b0d97789941b44e094470329e70bfc",
+          "maximum_age_seconds": 300,
+          "receipt_id": 69,
+          "status": "fresh"
+        }
+      },
+      "deadline": "2026-10-22T23:15:00+00:00",
+      "enabled": false,
+      "evidence_class": "A",
+      "evidence_cutoff": "2026-10-20T16:47:37.838961+00:00",
+      "feature_code_sha256": "785fd83db69be4b7ad978d74797b9b5ac481b0d648831720504bc87dae5ea72b",
+      "feature_fingerprint": "8b43e93f9d06c2bfdf2c99d8f3c944f949c3d5785c8dd0e8c43277aabb4a017f",
+      "feature_mapping_fingerprint": "9aa5d080d5887f9ff0ebcb3e9d3227ec07eaad24a77b0d175d846e58922d2aa2",
+      "forecast_created_at": "2026-10-20T16:47:46.334593+00:00",
+      "forecast_status": "archived",
+      "game_id": "2026_07_NE_CHI",
+      "home_team": "CHI",
+      "home_win_probability": 0.520891869903406,
+      "missing_features": [],
+      "model_id": "nfl-frozen-elo-v1",
+      "model_version": "nfl-frozen-elo-v1",
+      "production_active": false,
+      "research_only": true,
+      "scheduled_kickoff": "2026-10-23T00:15:00+00:00",
+      "study_id": "nfl-phase2-3-elo-logistic-v1",
+      "tie_policy": "conditional_on_no_tie",
+      "training_evidence_class": "B"
+    },
+    {
+      "archived_at": "2026-10-20T16:47:51.909603+00:00",
+      "artifact_sha256": "98b751981b21e6862f6880304b5e0747a38b5cf8c337d8d4088b99e93783524c",
+      "away_team": "NE",
+      "away_win_probability": 0.49173507265151095,
+      "data_freshness": {
+        "pbp": {
+          "age_seconds": 18748.990957,
+          "collected_at": "2026-10-20T11:35:08.848004+00:00",
+          "content_sha256": "08bc3a89fd5eba28f5e9ca62f78879f615c1decad503eb22a2793c13f1d4aac3",
+          "maximum_age_seconds": 21600,
+          "receipt_id": 42,
+          "status": "fresh"
+        },
+        "schedules": {
+          "age_seconds": 0.744678,
+          "collected_at": "2026-10-20T16:47:37.094283+00:00",
+          "content_sha256": "31a7ba675c44726de6aac0f99ea5483e63b0d97789941b44e094470329e70bfc",
+          "maximum_age_seconds": 300,
+          "receipt_id": 69,
+          "status": "fresh"
+        }
+      },
+      "deadline": "2026-10-22T23:15:00+00:00",
+      "enabled": false,
+      "evidence_class": "A",
+      "evidence_cutoff": "2026-10-20T16:47:37.838961+00:00",
+      "feature_code_sha256": "785fd83db69be4b7ad978d74797b9b5ac481b0d648831720504bc87dae5ea72b",
+      "feature_fingerprint": "8b43e93f9d06c2bfdf2c99d8f3c944f949c3d5785c8dd0e8c43277aabb4a017f",
+      "feature_mapping_fingerprint": "9aa5d080d5887f9ff0ebcb3e9d3227ec07eaad24a77b0d175d846e58922d2aa2",
+      "forecast_created_at": "2026-10-20T16:47:46.334593+00:00",
+      "forecast_status": "archived",
+      "game_id": "2026_07_NE_CHI",
+      "home_team": "CHI",
+      "home_win_probability": 0.508264927348489,
+      "missing_features": [
+        "diff_rest_days"
+      ],
+      "model_id": "nfl-frozen-logistic-v1",
+      "model_version": "nfl-frozen-logistic-v1",
+      "production_active": false,
+      "research_only": true,
+      "scheduled_kickoff": "2026-10-23T00:15:00+00:00",
+      "study_id": "nfl-phase2-3-elo-logistic-v1",
+      "tie_policy": "conditional_on_no_tie",
+      "training_evidence_class": "B"
+    }
+  ],
+  "inputs": [
+    "8b43e93f9d06c2bfdf2c99d8f3c944f949c3d5785c8dd0e8c43277aabb4a017f"
+  ],
+  "replay": {
+    "verified_forecasts": 2,
+    "maximum_absolute_probability_error": 0.0,
+    "holdout_outcomes_read": 0
+  },
+  "independent_probability_maximum_error": 0.0,
+  "historical_files_preserved": 83,
+  "existing_observations_preserved": 1530347,
+  "preserved_history_sha256": "a83d4d8dd0b5310dc88548c31c96e06393adc8f01b8fd9bcf4c353a675cdc94f",
+  "preservation_proof": "preservation.json",
+  "current_source_records": 1516580,
+  "migrations": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "holdout_games": 109,
+  "evaluation_locked": true,
+  "holdout_protocol_sha256": "a4b906096d31dccbeceabdf4ffa1a275dccdd6a08206b2b636bac8026f202281",
+  "holdout_outcomes_evaluated": 0,
+  "collector": {
+    "version": "nfl-prospective-collector-v2",
+    "pid": 7812,
+    "database": "C:\\Users\\User\\Documents\\scorpred\\cache\\nflverse\\nflverse.sqlite3",
+    "started_at": "2026-10-20T16:37:40.602130+00:00",
+    "code_sha256": "73b6a17218275bee71f2148c6385a00ba8e00a60b493ee5f846eba6053e770d9",
+    "interval_seconds": 240,
+    "pbp_interval_seconds": 21600,
+    "research_only": true,
+    "enabled": false,
+    "production_active": false,
+    "last_cycle": {
+      "started_at": "2026-10-20T16:47:31.687974+00:00",
+      "collector_version": "nfl-prospective-collector-v2",
+      "collector_pid": 7812,
+      "writer_code_sha256": "73b6a17218275bee71f2148c6385a00ba8e00a60b493ee5f846eba6053e770d9",
+      "schedule_received_at": "2026-10-20T16:47:37.094283+00:00",
+      "forecasts": {
+        "status": "success",
+        "dry_run": false,
+        "started_at": "2026-10-20T16:47:37.462127+00:00",
+        "completed_at": "2026-10-20T16:47:52.074956+00:00",
+        "eligible_upcoming": 179,
+        "due_games": 1,
+        "archived": 1,
+        "missed": 0,
+        "results": [
+          {
+            "game_id": "2026_07_NE_CHI",
+            "status": "archived",
+            "forecast_count": 2,
+            "feature_fingerprint": "8b43e93f9d06c2bfdf2c99d8f3c944f949c3d5785c8dd0e8c43277aabb4a017f"
+          }
+        ]
+      },
+      "completed_at": "2026-10-20T16:47:52.098644+00:00",
+      "errors": [],
+      "status": "success"
+    },
+    "state": "waiting",
+    "heartbeat_at": "2026-10-20T16:48:12.185658+00:00",
+    "cycles": 2
+  },
+  "missed_games": 0,
+  "rejected_attempts": 1,
+  "feature_mapping_fingerprint": "9aa5d080d5887f9ff0ebcb3e9d3227ec07eaad24a77b0d175d846e58922d2aa2",
+  "feature_code_sha256": "785fd83db69be4b7ad978d74797b9b5ac481b0d648831720504bc87dae5ea72b",
+  "source_bundle_files": 19,
+  "research_only": true,
+  "enabled": false,
+  "production_active": false
+}

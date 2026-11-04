@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}NBA Standings{% endblock %}
+{% block content %}
+<section class="sp-hero sp-nba">
+  <span class="sp-kicker">NBA</span>
+  <h1 style="font-size:1.4rem; font-weight:800; margin:.2rem 0 .3rem">Standings</h1>
+</section>
+
+{% if error %}
+<div class="sp-notice sp-notice--error"><strong>{{ error }}</strong></div>
+{% endif %}
+
+<div class="sp-split">
+  {% for conf, rows in [('Eastern Conference', standings.east), ('Western Conference', standings.west)] %}
+  <div class="sp-panel">
+    <h2 class="sp-section-title">{{ conf }}</h2>
+    {% if rows %}
+    <div class="sp-table-wrap">
+      <table class="sp-table">
+        <thead><tr><th>#</th><th>Team</th><th>W</th><th>L</th><th>PCT</th><th>Last 10</th></tr></thead>
+        <tbody>
+          {% for r in rows %}
+          <tr>
+            <td style="color:var(--text-3)">{{ r.seed }}</td>
+            <td>
+              {% if r.team.logo %}<img src="{{ r.team.logo }}" style="width:16px;height:16px;object-fit:contain;vertical-align:middle;margin-right:.3rem" alt=""/>{% endif %}
+              {{ r.team.nickname or r.team.name }}
+            </td>
+            <td style="font-weight:600; color:var(--c-strong)">{{ r.wins }}</td>
+            <td style="color:var(--text-3)">{{ r.losses }}</td>
+            <td>{{ '%.3f'|format(r.win_pct) }}</td>
+            <td style="font-size:.82rem; color:var(--text-3)">{{ r.last10 }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p style="color:var(--text-3)">No standings data available.</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{
+  "generated_at": "2026-10-22T02:29:50.104949+00:00",
+  "files": {
+    "data/providers/nba_registry.json": "de404b53a13a9db64e94fd2ae89ed7c747012b526a73b47c6c29106c03edc673",
+    "docs/assets/nba_registry/backend_tests.txt": "4bb2bfd9afc15b2a3859c128db9256fdc86e136fe10290f27e093e3fc64ac8f2",
+    "docs/assets/nba_registry/bundle.json": "ba132e29a330147f31c3a0f02870e99361483dfe59b12e4ff12964b46bd684ab",
+    "docs/assets/nba_registry/candidate_manifests.json": "f1a2bbde3651cb0bfd247a09c4cc12fe9f0055028dc245849d6f8ac1973c3aba",
+    "docs/assets/nba_registry/frontend_build.txt": "109ac58adfdb7f4a749b0c31cf434fc38f547589bfe9393654472d37128b2b47",
+    "docs/assets/nba_registry/input_manifest.json": "5dc9c414873beab669d98ed0c85dc2d0c3050d052f1853505007f6dedc2fe4cf",
+    "docs/assets/nba_registry/local_game_index.json": "31b414d9d1e97402f88bb7331565c19ac7d235eba437c1164df0afbdc57ea9f9",
+    "docs/assets/nba_registry/permission_matrix.json": "b9547c91f223a588093e10fd3c2065b5dbe559ac2bc4d34fb7c4a2545d195302",
+    "docs/assets/nba_registry/preservation.json": "36f3b9b32c550c9837e16b8be4437683dee327f4f783c9359432e840adaf94c4",
+    "docs/assets/nba_registry/provider_registry.json": "e1433caafd9e13675f8014a76150ec927519fddeb30f7a97889fa87dd21d800e",
+    "docs/assets/nba_registry/reconciliation.json": "eccd16ba38bb733d70e7a1ea0fb7134e0b63ab869b9411b32690582fe0b1b2ec",
+    "docs/assets/nba_registry/season_coverage.csv": "ef4ff299d4b95914be4c33788063b363659b38d3d2184beefd8c227b1c2841c7",
+    "docs/assets/nba_registry/verification.json": "e2d0bd634c4eafebcbc9b981e2af52a8a83cbeeb69a0133110c265c83da942b5",
+    "docs/NBA_HISTORICAL_RECONCILIATION.md": "e24443e90a8ed1758cb4aab20eec2b73dc6879803f87ef7a26af2ff873ce68cd",
+    "docs/NBA_PROVIDER_REGISTRY.md": "8d2190a53ad0207449388ab62b1f91ca93251b26e48b0dc176d46d3f8db48104",
+    "docs/NBA_SOURCE_PERMISSION_MATRIX.md": "486f4a83d36355c409837d6987cb6107f74115b034f0e31db4ba7ffa1b297ded",
+    "scripts/reconcile_nba_history.py": "04dee95289dff2d48a2ba2d24a4d61b4d6fc02d0ac95369b78c614eb22df39ff",
+    "services/nba_historical_reconciliation.py": "470a3a35016f89788a0187f8ca2dd5b0844807e6926cd5ca02ff3e05c46d7994",
+    "services/nba_provider_registry.py": "17a7202f9394e42150e3a0c11efedf779d139065b0322746774f014707acd292",
+    "tests/test_nba_provider_registry.py": "45f4c56002dbfc343f6f00f318de189f1f75afe4ec7543ae2ecdeacb59c60e80"
+  }
+}

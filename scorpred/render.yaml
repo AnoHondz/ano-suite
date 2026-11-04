@@ -1,0 +1,85 @@
+services:
+  - type: web
+    name: scorpred
+    runtime: python
+    # Persistent disk requires a paid service; this file does not deploy changes.
+    plan: starter
+    buildCommand: pip install -r requirements.txt && python scripts/model_artifacts.py && npm --prefix frontend ci && npm --prefix frontend run build
+    startCommand: gunicorn app:app --config gunicorn.conf.py
+    healthCheckPath: /health
+    disk:
+      name: scorpred-data
+      mountPath: /var/data
+      sizeGB: 1
+
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.3"
+
+      # ── Flask ──────────────────────────────────────────────────────────────
+      - key: SECRET_KEY
+        sync: false                    # set in Render dashboard
+      - key: SCORPRED_DATA_ROOT
+        value: /var/data/scorpred
+      - key: SCORPRED_PERSISTENT_ROOT
+        value: /var/data/scorpred/persistent
+      - key: SCORPRED_SCHEDULER_ENABLED
+        value: "1"
+      - key: NODE_VERSION
+        value: "22.23.3"
+
+      # ── Football API (api-sports.io) ───────────────────────────────────────
+      - key: APISPORTS_KEY
+        sync: false
+      - key: APISPORTS_KEY_BACKUP
+        sync: false
+      - key: API_FOOTBALL_KEY
+        sync: false
+      - key: API_FOOTBALL_KEY_BACKUP
+        sync: false
+      - key: RAPIDAPI_KEY
+        sync: false
+      - key: API_FOOTBALL_BASE_URL
+        value: https://v3.football.api-sports.io
+      - key: API_FOOTBALL_HOST
+        value: v3.football.api-sports.io
+      - key: API_FOOTBALL_FREE_MAX_SEASON
+        value: "2024"
+
+      # ── football-data.org (preferred free provider) ────────────────────────
+      - key: FOOTBALL_DATA_KEY
+        sync: false
+
+      # ── NBA API (RapidAPI) ─────────────────────────────────────────────────
+      - key: NBA_API_KEY
+        sync: false
+      - key: NBA_API_HOST
+        value: nba-api-free-data.p.rapidapi.com
+      - key: NBA_API_BASE_URL
+        value: https://nba-api-free-data.p.rapidapi.com
+
+      # ── Optional integrations ──────────────────────────────────────────────
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: ODDS_API_KEY
+        sync: false
+
+      # ── Email alerts ───────────────────────────────────────────────────────
+      - key: DAILY_DIGEST_ENABLED
+        value: "true"
+      - key: DAILY_DIGEST_RECIPIENT
+        sync: false
+      - key: DAILY_DIGEST_TIME
+        value: "06:00"
+      - key: ALERT_EMAIL
+        sync: false
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_USE_TLS
+        value: "true"

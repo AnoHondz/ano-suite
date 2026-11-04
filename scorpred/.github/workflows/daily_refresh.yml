@@ -1,0 +1,71 @@
+name: Daily Refresh
+
+# Runs every day at 02:00 UTC.
+# Refreshes learning artifacts and the ML report from whatever model and
+# processed data are currently committed to the repo.
+# Steps that require live prediction-tracking data (learn_from_mistakes,
+# optimize_policy) are skipped automatically in this environment.
+
+on:
+  schedule:
+    - cron: "0 2 * * *"   # 02:00 UTC daily
+  workflow_dispatch:       # manual trigger from Actions tab
+
+concurrency:
+  group: artifact-publishing
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write      # needed to commit refreshed artifacts back
+
+    env:
+      SECRET_KEY: ci-placeholder-not-used
+      API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+      NBA_API_KEY: ${{ secrets.NBA_API_KEY }}
+      ANTHROPIC_API_KEY: ""
+      FLASK_DEBUG: "0"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history so we can push back
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run daily refresh pipeline
+        run: python daily_refresh.py
+        # Exits 0 even when steps are skipped (no tracking data in CI).
+        # Exits 1 only if a step that *could* run fails hard.
+
+      - name: Commit refreshed artifacts
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "ScorPred Pipeline"
+
+          # Stage all pipeline-generated JSON artifacts (skip binary models).
+          git add --force \
+            cache/prediction_tracking.json \
+            data/analysis/ \
+            cache/ml/ \
+            data/logs/ \
+            || true
+
+          # Only commit when something actually changed.
+          git diff --staged --quiet && echo "Nothing to commit." && exit 0
+
+          git commit -m "chore(pipeline): daily refresh $(date -u '+%Y-%m-%d') [skip ci]"
+          git push

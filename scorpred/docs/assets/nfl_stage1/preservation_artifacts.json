@@ -1,0 +1,14 @@
+{
+  "captured_at": "2026-10-21T13:05:16.823009+00:00",
+  "files": {
+    "docs\\assets\\nfl_phase2_3\\forecasts.json": "60b5dd8969efb41ac7c5eb3af15c35a03fbe62994fdc2d4d50d39fdc3b8d2f76",
+    "docs\\assets\\nfl_phase2_3\\independent_replay.json": "a853c30535de302295d9ef583957a6deff12688ebf6a975d8c2c6231960e1325",
+    "docs\\assets\\nfl_phase2_3\\inputs_2026_07_NE_CHI.json": "8b43e93f9d06c2bfdf2c99d8f3c944f949c3d5785c8dd0e8c43277aabb4a017f",
+    "docs\\assets\\nfl_phase2_3\\nfl-frozen-elo-v1.json": "1d3498489943452fa1000850e8bdbbb326220070e54e7d4e86a55b6145a22e8b",
+    "docs\\assets\\nfl_phase2_3\\nfl-frozen-logistic-v1.json": "98b751981b21e6862f6880304b5e0747a38b5cf8c337d8d4088b99e93783524c",
+    "docs\\assets\\nfl_phase2_3\\preservation.json": "73e62ca7d1299ed9b2f2a37c3eec8e26515de5d9c16f39d4ce9f75967f4f833c",
+    "docs\\assets\\nfl_phase2_3\\retry_verification.json": "0c19a770e864c105dc13254a4d81dfe35b83afe91cc0cc6ea3bab3a9717f9ed2",
+    "docs\\assets\\nfl_phase2_3\\study.json": "fd4526c5da021c30c28538dcdb67faadc18f581d7ac451a2d56f1f6589534cb7",
+    "docs\\assets\\nfl_phase2_3\\verification.json": "9ce030cb3856f74c2765aed9eef97d95ef8f96bd2cadd3b81e2fd542f88df9af"
+  }
+}

@@ -1,0 +1,2666 @@
+{
+  "observed_at": "2026-10-22T19:09:18.308514+00:00",
+  "mocked": false,
+  "requests": [
+    {
+      "path": "/api/dashboard/nba",
+      "status": 200,
+      "ms": 1610.8,
+      "payload": {
+        "availableDates": [
+          "2026-10-22",
+          "2026-10-23",
+          "2026-10-24",
+          "2026-10-25",
+          "2026-10-26"
+        ],
+        "calendarTimezone": "America/New_York",
+        "error": null,
+        "last_updated": "2026-10-22T19:09:16.002694+00:00",
+        "plan": {
+          "bet": 0,
+          "consider": 0,
+          "skip": 2
+        },
+        "refresh_status": "success",
+        "selectedDate": "2026-10-22",
+        "slate": [
+          {
+            "action": "SKIP",
+            "awayId": "5",
+            "confidence": 0,
+            "confidenceMeasure": "rule_confidence",
+            "data": "Limited Data",
+            "dataFreshness": {
+              "expires_at": "2026-10-22T19:10:16.025723+00:00",
+              "max_stale_at": "2026-10-22T19:14:16.025723+00:00",
+              "observed_at": "2026-10-22T19:09:16.025723+00:00",
+              "source": "ESPN",
+              "state": "fresh"
+            },
+            "drawProbability": null,
+            "eventStatus": {
+              "completed": false,
+              "detail": "Thu, October 22nd at 7:00 PM EDT",
+              "long": "Scheduled",
+              "short": "STATUS_SCHEDULED",
+              "short_detail": "10/22 - 7:00 PM EDT",
+              "state": "pre"
+            },
+            "homeId": "20",
+            "leagueId": null,
+            "leagueLogo": "",
+            "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/cle.png",
+            "market": null,
+            "matchDate": "2026-10-22T23:00Z",
+            "matchId": "401909093",
+            "matchup": "Philadelphia 76ers vs Cleveland Cavaliers",
+            "modelSource": "unavailable",
+            "opponent": "Philadelphia 76ers",
+            "pregameAvailable": true,
+            "reason": "At least two completed current-season games per team are needed for a pregame estimate.",
+            "scenarioShare": null,
+            "side": "Unavailable",
+            "slateDate": "",
+            "sport": "nba",
+            "support": "NBA",
+            "teamA": "Philadelphia 76ers",
+            "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/phi.png",
+            "teamB": "Cleveland Cavaliers",
+            "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/cle.png",
+            "tiedScenarioShare": null,
+            "winProbability": null
+          },
+          {
+            "action": "SKIP",
+            "awayId": "7",
+            "confidence": 0,
+            "confidenceMeasure": "rule_confidence",
+            "data": "Limited Data",
+            "dataFreshness": {
+              "expires_at": "2026-10-22T19:10:16.025723+00:00",
+              "max_stale_at": "2026-10-22T19:14:16.025723+00:00",
+              "observed_at": "2026-10-22T19:09:16.025723+00:00",
+              "source": "ESPN",
+              "state": "fresh"
+            },
+            "drawProbability": null,
+            "eventStatus": {
+              "completed": false,
+              "detail": "Thu, October 22nd at 9:30 PM EDT",
+              "long": "Scheduled",
+              "short": "STATUS_SCHEDULED",
+              "short_detail": "10/22 - 9:30 PM EDT",
+              "state": "pre"
+            },
+            "homeId": "25",
+            "leagueId": null,
+            "leagueLogo": "",
+            "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/den.png",
+            "market": null,
+            "matchDate": "2026-10-23T01:30Z",
+            "matchId": "401909094",
+            "matchup": "Oklahoma City Thunder vs Denver Nuggets",
+            "modelSource": "unavailable",
+            "opponent": "Oklahoma City Thunder",
+            "pregameAvailable": true,
+            "reason": "At least two completed current-season games per team are needed for a pregame estimate.",
+            "scenarioShare": null,
+            "side": "Unavailable",
+            "slateDate": "",
+            "sport": "nba",
+            "support": "NBA",
+            "teamA": "Oklahoma City Thunder",
+            "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/okc.png",
+            "teamB": "Denver Nuggets",
+            "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/den.png",
+            "tiedScenarioShare": null,
+            "winProbability": null
+          }
+        ],
+        "topOpportunities": [
+          {
+            "action": "SKIP",
+            "awayId": "5",
+            "confidence": 0,
+            "confidenceMeasure": "rule_confidence",
+            "data": "Limited Data",
+            "dataFreshness": {
+              "expires_at": "2026-10-22T19:10:16.025723+00:00",
+              "max_stale_at": "2026-10-22T19:14:16.025723+00:00",
+              "observed_at": "2026-10-22T19:09:16.025723+00:00",
+              "source": "ESPN",
+              "state": "fresh"
+            },
+            "drawProbability": null,
+            "eventStatus": {
+              "completed": false,
+              "detail": "Thu, October 22nd at 7:00 PM EDT",
+              "long": "Scheduled",
+              "short": "STATUS_SCHEDULED",
+              "short_detail": "10/22 - 7:00 PM EDT",
+              "state": "pre"
+            },
+            "homeId": "20",
+            "leagueId": null,
+            "leagueLogo": "",
+            "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/cle.png",
+            "market": null,
+            "matchDate": "2026-10-22T23:00Z",
+            "matchId": "401909093",
+            "matchup": "Philadelphia 76ers vs Cleveland Cavaliers",
+            "modelSource": "unavailable",
+            "opponent": "Philadelphia 76ers",
+            "pregameAvailable": true,
+            "reason": "At least two completed current-season games per team are needed for a pregame estimate.",
+            "scenarioShare": null,
+            "side": "Unavailable",
+            "slateDate": "",
+            "sport": "nba",
+            "support": "NBA",
+            "teamA": "Philadelphia 76ers",
+            "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/phi.png",
+            "teamB": "Cleveland Cavaliers",
+            "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/cle.png",
+            "tiedScenarioShare": null,
+            "winProbability": null
+          },
+          {
+            "action": "SKIP",
+            "awayId": "7",
+            "confidence": 0,
+            "confidenceMeasure": "rule_confidence",
+            "data": "Limited Data",
+            "dataFreshness": {
+              "expires_at": "2026-10-22T19:10:16.025723+00:00",
+              "max_stale_at": "2026-10-22T19:14:16.025723+00:00",
+              "observed_at": "2026-10-22T19:09:16.025723+00:00",
+              "source": "ESPN",
+              "state": "fresh"
+            },
+            "drawProbability": null,
+            "eventStatus": {
+              "completed": false,
+              "detail": "Thu, October 22nd at 9:30 PM EDT",
+              "long": "Scheduled",
+              "short": "STATUS_SCHEDULED",
+              "short_detail": "10/22 - 9:30 PM EDT",
+              "state": "pre"
+            },
+            "homeId": "25",
+            "leagueId": null,
+            "leagueLogo": "",
+            "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/den.png",
+            "market": null,
+            "matchDate": "2026-10-23T01:30Z",
+            "matchId": "401909094",
+            "matchup": "Oklahoma City Thunder vs Denver Nuggets",
+            "modelSource": "unavailable",
+            "opponent": "Oklahoma City Thunder",
+            "pregameAvailable": true,
+            "reason": "At least two completed current-season games per team are needed for a pregame estimate.",
+            "scenarioShare": null,
+            "side": "Unavailable",
+            "slateDate": "",
+            "sport": "nba",
+            "support": "NBA",
+            "teamA": "Oklahoma City Thunder",
+            "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/okc.png",
+            "teamB": "Denver Nuggets",
+            "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/den.png",
+            "tiedScenarioShare": null,
+            "winProbability": null
+          }
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "path": "/api/nba/matches/401909093/context?date=2026-10-22",
+      "status": 200,
+      "ms": 194.3,
+      "payload": {
+        "result": {
+          "availability_lag_hours": 24,
+          "game": {
+            "id": "401909093",
+            "kickoff": "2026-10-22T23:00Z",
+            "result": null,
+            "status": {
+              "completed": false,
+              "detail": "Thu, October 22nd at 7:00 PM EDT",
+              "long": "Scheduled",
+              "short": "STATUS_SCHEDULED",
+              "short_detail": "10/22 - 7:00 PM EDT",
+              "state": "pre"
+            },
+            "venue": {
+              "name": "Xfinity Mobile Arena"
+            }
+          },
+          "notice": "Historical team comparisons are descriptive, not win probabilities or betting recommendations. Archive records are retrospective; historical pregame availability is unverified. All comparison games precede the selected tipoff by at least 24 hours.",
+          "prediction": {
+            "minimum_current_games_rules": 2,
+            "minimum_current_games_scoring": 3,
+            "prior_season_probability_fallback": "unsupported",
+            "winner_model": "No validated NBA winner classifier is installed; existing weighted rules are separate."
+          },
+          "prediction_fallback": false,
+          "refresh_pending": false,
+          "role": "descriptive_only",
+          "statistics_cutoff": "2026-10-21T19:09:16.874959+00:00",
+          "teams": {
+            "away": {
+              "current": {
+                "games": 0,
+                "losses": 0,
+                "points_against": null,
+                "points_for": null,
+                "recent_results": [],
+                "scope": "Observed regular-season games (provider type 2); not official standings",
+                "wins": 0
+              },
+              "current_season": 2027,
+              "current_source": {
+                "expires_at": "2026-10-22T20:05:43.332834+00:00",
+                "max_stale_at": "2026-10-23T01:05:43.332834+00:00",
+                "observed_at": "2026-10-22T19:05:43.332834+00:00",
+                "source": "ESPN",
+                "state": "fresh"
+              },
+              "current_status": "available",
+              "historical_source": {
+                "files": [
+                  "202510.json",
+                  "202511.json",
+                  "202512.json",
+                  "202601.json",
+                  "202602.json",
+                  "202603.json",
+                  "202604.json"
+                ],
+                "historical_pregame_availability": "unverified",
+                "kind": "existing_local_archive",
+                "received_at": null
+              },
+              "previous": {
+                "games": 82,
+                "losses": 30,
+                "points_against": 115.4,
+                "points_for": 119.5,
+                "recent_results": [
+                  {
+                    "date": "2026-04-12T22:00Z",
+                    "game_id": "401811042",
+                    "home": true,
+                    "opponent": "Washington Wizards",
+                    "points_against": 117,
+                    "points_for": 130,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-10T23:00Z",
+                    "game_id": "401811028",
+                    "home": false,
+                    "opponent": "Atlanta Hawks",
+                    "points_against": 124,
+                    "points_for": 102,
+                    "result": "L",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-08T23:00Z",
+                    "game_id": "401811013",
+                    "home": true,
+                    "opponent": "Atlanta Hawks",
+                    "points_against": 116,
+                    "points_for": 122,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-07T00:00Z",
+                    "game_id": "401811000",
+                    "home": false,
+                    "opponent": "Memphis Grizzlies",
+                    "points_against": 126,
+                    "points_for": 142,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-05T22:00Z",
+                    "game_id": "401810991",
+                    "home": true,
+                    "opponent": "Indiana Pacers",
+                    "points_against": 108,
+                    "points_for": 117,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-03T02:00Z",
+                    "game_id": "401810972",
+                    "home": false,
+                    "opponent": "Golden State Warriors",
+                    "points_against": 111,
+                    "points_for": 118,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  }
+                ],
+                "scope": "Observed regular-season games (provider type 2); not official standings",
+                "wins": 52
+              },
+              "previous_season": 2026,
+              "team": {
+                "abbrev": "CLE",
+                "city": "Cleveland",
+                "id": "5",
+                "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/cle.png",
+                "name": "Cleveland Cavaliers",
+                "nickname": "Cavaliers"
+              }
+            },
+            "home": {
+              "current": {
+                "games": 1,
+                "losses": 0,
+                "points_against": 100.0,
+                "points_for": 106.0,
+                "recent_results": [
+                  {
+                    "date": "2026-10-20T23:00Z",
+                    "game_id": "401909089",
+                    "home": false,
+                    "opponent": "New York Knicks",
+                    "points_against": 100,
+                    "points_for": 106,
+                    "result": "W",
+                    "season": 2027,
+                    "season_type": 2
+                  }
+                ],
+                "scope": "Observed regular-season games (provider type 2); not official standings",
+                "wins": 1
+              },
+              "current_season": 2027,
+              "current_source": {
+                "expires_at": "2026-10-22T20:05:43.409125+00:00",
+                "max_stale_at": "2026-10-23T01:05:43.409125+00:00",
+                "observed_at": "2026-10-22T19:05:43.409125+00:00",
+                "source": "ESPN",
+                "state": "fresh"
+              },
+              "current_status": "available",
+              "historical_source": {
+                "files": [
+                  "202510.json",
+                  "202511.json",
+                  "202512.json",
+                  "202601.json",
+                  "202602.json",
+                  "202603.json",
+                  "202604.json"
+                ],
+                "historical_pregame_availability": "unverified",
+                "kind": "existing_local_archive",
+                "received_at": null
+              },
+              "previous": {
+                "games": 82,
+                "losses": 37,
+                "points_against": 116.1,
+                "points_for": 115.9,
+                "recent_results": [
+                  {
+                    "date": "2026-04-12T22:00Z",
+                    "game_id": "401811046",
+                    "home": true,
+                    "opponent": "Milwaukee Bucks",
+                    "points_against": 106,
+                    "points_for": 126,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-10T23:30Z",
+                    "game_id": "401811030",
+                    "home": false,
+                    "opponent": "Indiana Pacers",
+                    "points_against": 94,
+                    "points_for": 105,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-10T00:00Z",
+                    "game_id": "401811024",
+                    "home": false,
+                    "opponent": "Houston Rockets",
+                    "points_against": 113,
+                    "points_for": 102,
+                    "result": "L",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-07T00:00Z",
+                    "game_id": "401811001",
+                    "home": false,
+                    "opponent": "San Antonio Spurs",
+                    "points_against": 115,
+                    "points_for": 102,
+                    "result": "L",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-04T23:00Z",
+                    "game_id": "401810986",
+                    "home": true,
+                    "opponent": "Detroit Pistons",
+                    "points_against": 116,
+                    "points_for": 93,
+                    "result": "L",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-03T23:00Z",
+                    "game_id": "401810976",
+                    "home": true,
+                    "opponent": "Minnesota Timberwolves",
+                    "points_against": 103,
+                    "points_for": 115,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  }
+                ],
+                "scope": "Observed regular-season games (provider type 2); not official standings",
+                "wins": 45
+              },
+              "previous_season": 2026,
+              "team": {
+                "abbrev": "PHI",
+                "city": "Philadelphia",
+                "id": "20",
+                "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/phi.png",
+                "name": "Philadelphia 76ers",
+                "nickname": "76ers"
+              }
+            }
+          },
+          "version": "nba-descriptive-context-v1"
+        }
+      }
+    },
+    {
+      "path": "/api/nba/matches/401909094/context?date=2026-10-22",
+      "status": 200,
+      "ms": 160.5,
+      "payload": {
+        "result": {
+          "availability_lag_hours": 24,
+          "game": {
+            "id": "401909094",
+            "kickoff": "2026-10-23T01:30Z",
+            "result": null,
+            "status": {
+              "completed": false,
+              "detail": "Thu, October 22nd at 9:30 PM EDT",
+              "long": "Scheduled",
+              "short": "STATUS_SCHEDULED",
+              "short_detail": "10/22 - 9:30 PM EDT",
+              "state": "pre"
+            },
+            "venue": {
+              "name": "Paycom Center"
+            }
+          },
+          "notice": "Historical team comparisons are descriptive, not win probabilities or betting recommendations. Archive records are retrospective; historical pregame availability is unverified. All comparison games precede the selected tipoff by at least 24 hours.",
+          "prediction": {
+            "minimum_current_games_rules": 2,
+            "minimum_current_games_scoring": 3,
+            "prior_season_probability_fallback": "unsupported",
+            "winner_model": "No validated NBA winner classifier is installed; existing weighted rules are separate."
+          },
+          "prediction_fallback": false,
+          "refresh_pending": false,
+          "role": "descriptive_only",
+          "statistics_cutoff": "2026-10-21T19:09:17.044195+00:00",
+          "teams": {
+            "away": {
+              "current": {
+                "games": 0,
+                "losses": 0,
+                "points_against": null,
+                "points_for": null,
+                "recent_results": [],
+                "scope": "Observed regular-season games (provider type 2); not official standings",
+                "wins": 0
+              },
+              "current_season": 2027,
+              "current_source": {
+                "expires_at": "2026-10-22T20:05:43.650951+00:00",
+                "max_stale_at": "2026-10-23T01:05:43.650951+00:00",
+                "observed_at": "2026-10-22T19:05:43.650951+00:00",
+                "source": "ESPN",
+                "state": "fresh"
+              },
+              "current_status": "available",
+              "historical_source": {
+                "files": [
+                  "202510.json",
+                  "202511.json",
+                  "202512.json",
+                  "202601.json",
+                  "202602.json",
+                  "202603.json",
+                  "202604.json"
+                ],
+                "historical_pregame_availability": "unverified",
+                "kind": "existing_local_archive",
+                "received_at": null
+              },
+              "previous": {
+                "games": 82,
+                "losses": 28,
+                "points_against": 116.9,
+                "points_for": 122.1,
+                "recent_results": [
+                  {
+                    "date": "2026-04-13T00:30Z",
+                    "game_id": "401811052",
+                    "home": false,
+                    "opponent": "San Antonio Spurs",
+                    "points_against": 118,
+                    "points_for": 128,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-11T01:00Z",
+                    "game_id": "401811037",
+                    "home": true,
+                    "opponent": "Oklahoma City Thunder",
+                    "points_against": 107,
+                    "points_for": 127,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-09T01:00Z",
+                    "game_id": "401811017",
+                    "home": true,
+                    "opponent": "Memphis Grizzlies",
+                    "points_against": 119,
+                    "points_for": 136,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-07T01:00Z",
+                    "game_id": "401811002",
+                    "home": true,
+                    "opponent": "Portland Trail Blazers",
+                    "points_against": 132,
+                    "points_for": 137,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-04T19:00Z",
+                    "game_id": "401810985",
+                    "home": true,
+                    "opponent": "San Antonio Spurs",
+                    "points_against": 134,
+                    "points_for": 136,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-02T01:00Z",
+                    "game_id": "401810967",
+                    "home": false,
+                    "opponent": "Utah Jazz",
+                    "points_against": 117,
+                    "points_for": 130,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  }
+                ],
+                "scope": "Observed regular-season games (provider type 2); not official standings",
+                "wins": 54
+              },
+              "previous_season": 2026,
+              "team": {
+                "abbrev": "DEN",
+                "city": "Denver",
+                "id": "7",
+                "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/den.png",
+                "name": "Denver Nuggets",
+                "nickname": "Nuggets"
+              }
+            },
+            "home": {
+              "current": {
+                "games": 1,
+                "losses": 0,
+                "points_against": 104.0,
+                "points_for": 116.0,
+                "recent_results": [
+                  {
+                    "date": "2026-10-21T01:50Z",
+                    "game_id": "401909090",
+                    "home": false,
+                    "opponent": "San Antonio Spurs",
+                    "points_against": 104,
+                    "points_for": 116,
+                    "result": "W",
+                    "season": 2027,
+                    "season_type": 2
+                  }
+                ],
+                "scope": "Observed regular-season games (provider type 2); not official standings",
+                "wins": 1
+              },
+              "current_season": 2027,
+              "current_source": {
+                "expires_at": "2026-10-22T20:05:43.707670+00:00",
+                "max_stale_at": "2026-10-23T01:05:43.707670+00:00",
+                "observed_at": "2026-10-22T19:05:43.707670+00:00",
+                "source": "ESPN",
+                "state": "fresh"
+              },
+              "current_status": "available",
+              "historical_source": {
+                "files": [
+                  "202510.json",
+                  "202511.json",
+                  "202512.json",
+                  "202601.json",
+                  "202602.json",
+                  "202603.json",
+                  "202604.json"
+                ],
+                "historical_pregame_availability": "unverified",
+                "kind": "existing_local_archive",
+                "received_at": null
+              },
+              "previous": {
+                "games": 82,
+                "losses": 18,
+                "points_against": 107.9,
+                "points_for": 119.0,
+                "recent_results": [
+                  {
+                    "date": "2026-04-13T00:30Z",
+                    "game_id": "401811051",
+                    "home": true,
+                    "opponent": "Phoenix Suns",
+                    "points_against": 135,
+                    "points_for": 103,
+                    "result": "L",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-11T01:00Z",
+                    "game_id": "401811037",
+                    "home": false,
+                    "opponent": "Denver Nuggets",
+                    "points_against": 127,
+                    "points_for": 107,
+                    "result": "L",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-09T02:00Z",
+                    "game_id": "401811018",
+                    "home": false,
+                    "opponent": "LA Clippers",
+                    "points_against": 110,
+                    "points_for": 128,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-08T02:30Z",
+                    "game_id": "401811010",
+                    "home": false,
+                    "opponent": "Los Angeles Lakers",
+                    "points_against": 87,
+                    "points_for": 123,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-05T23:00Z",
+                    "game_id": "401810994",
+                    "home": true,
+                    "opponent": "Utah Jazz",
+                    "points_against": 111,
+                    "points_for": 146,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-03T01:30Z",
+                    "game_id": "401810971",
+                    "home": true,
+                    "opponent": "Los Angeles Lakers",
+                    "points_against": 96,
+                    "points_for": 139,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  }
+                ],
+                "scope": "Observed regular-season games (provider type 2); not official standings",
+                "wins": 64
+              },
+              "previous_season": 2026,
+              "team": {
+                "abbrev": "OKC",
+                "city": "Oklahoma City",
+                "id": "25",
+                "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/okc.png",
+                "name": "Oklahoma City Thunder",
+                "nickname": "Thunder"
+              }
+            }
+          },
+          "version": "nba-descriptive-context-v1"
+        }
+      }
+    },
+    {
+      "path": "/api/nba/games?view=results&date=2026-10-21",
+      "status": 200,
+      "ms": 454.5,
+      "payload": {
+        "availableDates": [
+          "2026-10-21"
+        ],
+        "history_role": "descriptive_only",
+        "last_updated": null,
+        "notice": "Completed observations only. Archived statistics are descriptive and are never reconstructed pregame predictions.",
+        "plan": {
+          "bet": 0,
+          "consider": 0,
+          "skip": 11
+        },
+        "selectedDate": "2026-10-21",
+        "slate": [
+          {
+            "action": "SKIP",
+            "awayId": "1",
+            "confidence": 0,
+            "confidenceMeasure": "rule_confidence",
+            "data": "Limited Data",
+            "dataFreshness": {
+              "expires_at": "2026-10-22T19:10:17.624686+00:00",
+              "max_stale_at": "2026-10-22T19:14:17.624686+00:00",
+              "observed_at": "2026-10-22T19:09:17.624686+00:00",
+              "source": "ESPN",
+              "state": "fresh"
+            },
+            "drawProbability": null,
+            "eventStatus": {
+              "completed": true,
+              "detail": "Final",
+              "long": "Final",
+              "short": "STATUS_FINAL",
+              "short_detail": "Final",
+              "state": "post"
+            },
+            "homeId": "19",
+            "leagueId": null,
+            "leagueLogo": "",
+            "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/atl.png",
+            "market": null,
+            "matchDate": "2026-10-21T23:00Z",
+            "matchId": "401909834",
+            "matchup": "Orlando Magic vs Atlanta Hawks",
+            "modelSource": "unavailable",
+            "opponent": "Orlando Magic",
+            "pregameAvailable": false,
+            "reason": "Pregame recommendations are unavailable after kickoff or when the game is not scheduled.",
+            "scenarioShare": null,
+            "side": "Unavailable",
+            "slateDate": "2026-10-21",
+            "sport": "nba",
+            "support": "NBA | Kia Center",
+            "teamA": "Orlando Magic",
+            "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/orl.png",
+            "teamB": "Atlanta Hawks",
+            "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/atl.png",
+            "tiedScenarioShare": null,
+            "winProbability": null
+          },
+          {
+            "action": "SKIP",
+            "awayId": "15",
+            "confidence": 0,
+            "confidenceMeasure": "rule_confidence",
+            "data": "Limited Data",
+            "dataFreshness": {
+              "expires_at": "2026-10-22T19:10:17.624686+00:00",
+              "max_stale_at": "2026-10-22T19:14:17.624686+00:00",
+              "observed_at": "2026-10-22T19:09:17.624686+00:00",
+              "source": "ESPN",
+              "state": "fresh"
+            },
+            "drawProbability": null,
+            "eventStatus": {
+              "completed": true,
+              "detail": "Final",
+              "long": "Final",
+              "short": "STATUS_FINAL",
+              "short_detail": "Final",
+              "state": "post"
+            },
+            "homeId": "27",
+            "leagueId": null,
+            "leagueLogo": "",
+            "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/mil.png",
+            "market": null,
+            "matchDate": "2026-10-21T23:00Z",
+            "matchId": "401909835",
+            "matchup": "Washington Wizards vs Milwaukee Bucks",
+            "modelSource": "unavailable",
+            "opponent": "Washington Wizards",
+            "pregameAvailable": false,
+            "reason": "Pregame recommendations are unavailable after kickoff or when the game is not scheduled.",
+            "scenarioShare": null,
+            "side": "Unavailable",
+            "slateDate": "2026-10-21",
+            "sport": "nba",
+            "support": "NBA | Capital One Arena",
+            "teamA": "Washington Wizards",
+            "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/wsh.png",
+            "teamB": "Milwaukee Bucks",
+            "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/mil.png",
+            "tiedScenarioShare": null,
+            "winProbability": null
+          },
+          {
+            "action": "SKIP",
+            "awayId": "16",
+            "confidence": 0,
+            "confidenceMeasure": "rule_confidence",
+            "data": "Limited Data",
+            "dataFreshness": {
+              "expires_at": "2026-10-22T19:10:17.624686+00:00",
+              "max_stale_at": "2026-10-22T19:14:17.624686+00:00",
+              "observed_at": "2026-10-22T19:09:17.624686+00:00",
+              "source": "ESPN",
+              "state": "fresh"
+            },
+            "drawProbability": null,
+            "eventStatus": {
+              "completed": true,
+              "detail": "Final",
+              "long": "Final",
+              "short": "STATUS_FINAL",
+              "short_detail": "Final",
+              "state": "post"
+            },
+            "homeId": "14",
+            "leagueId": null,
+            "leagueLogo": "",
+            "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/min.png",
+            "market": null,
+            "matchDate": "2026-10-21T23:30Z",
+            "matchId": "401909091",
+            "matchup": "Miami Heat vs Minnesota Timberwolves",
+            "modelSource": "unavailable",
+            "opponent": "Miami Heat",
+            "pregameAvailable": false,
+            "reason": "Pregame recommendations are unavailable after kickoff or when the game is not scheduled.",
+            "scenarioShare": null,
+            "side": "Unavailable",
+            "slateDate": "2026-10-21",
+            "sport": "nba",
+            "support": "NBA | Kaseya Center",
+            "teamA": "Miami Heat",
+            "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/mia.png",
+            "teamB": "Minnesota Timberwolves",
+            "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/min.png",
+            "tiedScenarioShare": null,
+            "winProbability": null
+          },
+          {
+            "action": "SKIP",
+            "awayId": "30",
+            "confidence": 0,
+            "confidenceMeasure": "rule_confidence",
+            "data": "Limited Data",
+            "dataFreshness": {
+              "expires_at": "2026-10-22T19:10:17.624686+00:00",
+              "max_stale_at": "2026-10-22T19:14:17.624686+00:00",
+              "observed_at": "2026-10-22T19:09:17.624686+00:00",
+              "source": "ESPN",
+              "state": "fresh"
+            },
+            "drawProbability": null,
+            "eventStatus": {
+              "completed": true,
+              "detail": "Final",
+              "long": "Final",
+              "short": "STATUS_FINAL",
+              "short_detail": "Final",
+              "state": "post"
+            },
+            "homeId": "17",
+            "leagueId": null,
+            "leagueLogo": "",
+            "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/cha.png",
+            "market": null,
+            "matchDate": "2026-10-21T23:30Z",
+            "matchId": "401909836",
+            "matchup": "Brooklyn Nets vs Charlotte Hornets",
+            "modelSource": "unavailable",
+            "opponent": "Brooklyn Nets",
+            "pregameAvailable": false,
+            "reason": "Pregame recommendations are unavailable after kickoff or when the game is not scheduled.",
+            "scenarioShare": null,
+            "side": "Unavailable",
+            "slateDate": "2026-10-21",
+            "sport": "nba",
+            "support": "NBA | Barclays Center",
+            "teamA": "Brooklyn Nets",
+            "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/bkn.png",
+            "teamB": "Charlotte Hornets",
+            "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/cha.png",
+            "tiedScenarioShare": null,
+            "winProbability": null
+          },
+          {
+            "action": "SKIP",
+            "awayId": "4",
+            "confidence": 0,
+            "confidenceMeasure": "rule_confidence",
+            "data": "Limited Data",
+            "dataFreshness": {
+              "expires_at": "2026-10-22T19:10:17.624686+00:00",
+              "max_stale_at": "2026-10-22T19:14:17.624686+00:00",
+              "observed_at": "2026-10-22T19:09:17.624686+00:00",
+              "source": "ESPN",
+              "state": "fresh"
+            },
+            "drawProbability": null,
+            "eventStatus": {
+              "completed": true,
+              "detail": "Final",
+              "long": "Final",
+              "short": "STATUS_FINAL",
+              "short_detail": "Final",
+              "state": "post"
+            },
+            "homeId": "28",
+            "leagueId": null,
+            "leagueLogo": "",
+            "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/chi.png",
+            "market": null,
+            "matchDate": "2026-10-21T23:30Z",
+            "matchId": "401909837",
+            "matchup": "Toronto Raptors vs Chicago Bulls",
+            "modelSource": "unavailable",
+            "opponent": "Toronto Raptors",
+            "pregameAvailable": false,
+            "reason": "Pregame recommendations are unavailable after kickoff or when the game is not scheduled.",
+            "scenarioShare": null,
+            "side": "Unavailable",
+            "slateDate": "2026-10-21",
+            "sport": "nba",
+            "support": "NBA | Scotiabank Arena",
+            "teamA": "Toronto Raptors",
+            "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/tor.png",
+            "teamB": "Chicago Bulls",
+            "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/chi.png",
+            "tiedScenarioShare": null,
+            "winProbability": null
+          },
+          {
+            "action": "SKIP",
+            "awayId": "26",
+            "confidence": 0,
+            "confidenceMeasure": "rule_confidence",
+            "data": "Limited Data",
+            "dataFreshness": {
+              "expires_at": "2026-10-22T19:10:17.624686+00:00",
+              "max_stale_at": "2026-10-22T19:14:17.624686+00:00",
+              "observed_at": "2026-10-22T19:09:17.624686+00:00",
+              "source": "ESPN",
+              "state": "fresh"
+            },
+            "drawProbability": null,
+            "eventStatus": {
+              "completed": true,
+              "detail": "Final",
+              "long": "Final",
+              "short": "STATUS_FINAL",
+              "short_detail": "Final",
+              "state": "post"
+            },
+            "homeId": "29",
+            "leagueId": null,
+            "leagueLogo": "",
+            "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/utah.png",
+            "market": null,
+            "matchDate": "2026-10-22T00:00Z",
+            "matchId": "401909838",
+            "matchup": "Memphis Grizzlies vs Utah Jazz",
+            "modelSource": "unavailable",
+            "opponent": "Memphis Grizzlies",
+            "pregameAvailable": false,
+            "reason": "Pregame recommendations are unavailable after kickoff or when the game is not scheduled.",
+            "scenarioShare": null,
+            "side": "Unavailable",
+            "slateDate": "2026-10-21",
+            "sport": "nba",
+            "support": "NBA | FedExForum",
+            "teamA": "Memphis Grizzlies",
+            "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/mem.png",
+            "teamB": "Utah Jazz",
+            "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/utah.png",
+            "tiedScenarioShare": null,
+            "winProbability": null
+          },
+          {
+            "action": "SKIP",
+            "awayId": "11",
+            "confidence": 0,
+            "confidenceMeasure": "rule_confidence",
+            "data": "Limited Data",
+            "dataFreshness": {
+              "expires_at": "2026-10-22T19:10:17.624686+00:00",
+              "max_stale_at": "2026-10-22T19:14:17.624686+00:00",
+              "observed_at": "2026-10-22T19:09:17.624686+00:00",
+              "source": "ESPN",
+              "state": "fresh"
+            },
+            "drawProbability": null,
+            "eventStatus": {
+              "completed": true,
+              "detail": "Final",
+              "long": "Final",
+              "short": "STATUS_FINAL",
+              "short_detail": "Final",
+              "state": "post"
+            },
+            "homeId": "3",
+            "leagueId": null,
+            "leagueLogo": "",
+            "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/ind.png",
+            "market": null,
+            "matchDate": "2026-10-22T00:00Z",
+            "matchId": "401909839",
+            "matchup": "New Orleans Pelicans vs Indiana Pacers",
+            "modelSource": "unavailable",
+            "opponent": "New Orleans Pelicans",
+            "pregameAvailable": false,
+            "reason": "Pregame recommendations are unavailable after kickoff or when the game is not scheduled.",
+            "scenarioShare": null,
+            "side": "Unavailable",
+            "slateDate": "2026-10-21",
+            "sport": "nba",
+            "support": "NBA | Smoothie King Center",
+            "teamA": "New Orleans Pelicans",
+            "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/no.png",
+            "teamB": "Indiana Pacers",
+            "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/ind.png",
+            "tiedScenarioShare": null,
+            "winProbability": null
+          },
+          {
+            "action": "SKIP",
+            "awayId": "6",
+            "confidence": 0,
+            "confidenceMeasure": "rule_confidence",
+            "data": "Limited Data",
+            "dataFreshness": {
+              "expires_at": "2026-10-22T19:10:17.624686+00:00",
+              "max_stale_at": "2026-10-22T19:14:17.624686+00:00",
+              "observed_at": "2026-10-22T19:09:17.624686+00:00",
+              "source": "ESPN",
+              "state": "fresh"
+            },
+            "drawProbability": null,
+            "eventStatus": {
+              "completed": true,
+              "detail": "Final",
+              "long": "Final",
+              "short": "STATUS_FINAL",
+              "short_detail": "Final",
+              "state": "post"
+            },
+            "homeId": "10",
+            "leagueId": null,
+            "leagueLogo": "",
+            "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/dal.png",
+            "market": null,
+            "matchDate": "2026-10-22T00:30Z",
+            "matchId": "401909840",
+            "matchup": "Houston Rockets vs Dallas Mavericks",
+            "modelSource": "unavailable",
+            "opponent": "Houston Rockets",
+            "pregameAvailable": false,
+            "reason": "Pregame recommendations are unavailable after kickoff or when the game is not scheduled.",
+            "scenarioShare": null,
+            "side": "Unavailable",
+            "slateDate": "2026-10-21",
+            "sport": "nba",
+            "support": "NBA | Toyota Center (Houston)",
+            "teamA": "Houston Rockets",
+            "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/hou.png",
+            "teamB": "Dallas Mavericks",
+            "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/dal.png",
+            "tiedScenarioShare": null,
+            "winProbability": null
+          },
+          {
+            "action": "SKIP",
+            "awayId": "9",
+            "confidence": 0,
+            "confidenceMeasure": "rule_confidence",
+            "data": "Limited Data",
+            "dataFreshness": {
+              "expires_at": "2026-10-22T19:10:17.624686+00:00",
+              "max_stale_at": "2026-10-22T19:14:17.624686+00:00",
+              "observed_at": "2026-10-22T19:09:17.624686+00:00",
+              "source": "ESPN",
+              "state": "fresh"
+            },
+            "drawProbability": null,
+            "eventStatus": {
+              "completed": true,
+              "detail": "Final",
+              "long": "Final",
+              "short": "STATUS_FINAL",
+              "short_detail": "Final",
+              "state": "post"
+            },
+            "homeId": "13",
+            "leagueId": null,
+            "leagueLogo": "",
+            "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/gs.png",
+            "market": null,
+            "matchDate": "2026-10-22T02:00Z",
+            "matchId": "401909092",
+            "matchup": "Los Angeles Lakers vs Golden State Warriors",
+            "modelSource": "unavailable",
+            "opponent": "Los Angeles Lakers",
+            "pregameAvailable": false,
+            "reason": "Pregame recommendations are unavailable after kickoff or when the game is not scheduled.",
+            "scenarioShare": null,
+            "side": "Unavailable",
+            "slateDate": "2026-10-21",
+            "sport": "nba",
+            "support": "NBA | crypto.com Arena",
+            "teamA": "Los Angeles Lakers",
+            "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/lal.png",
+            "teamB": "Golden State Warriors",
+            "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/gs.png",
+            "tiedScenarioShare": null,
+            "winProbability": null
+          },
+          {
+            "action": "SKIP",
+            "awayId": "21",
+            "confidence": 0,
+            "confidenceMeasure": "rule_confidence",
+            "data": "Limited Data",
+            "dataFreshness": {
+              "expires_at": "2026-10-22T19:10:17.624686+00:00",
+              "max_stale_at": "2026-10-22T19:14:17.624686+00:00",
+              "observed_at": "2026-10-22T19:09:17.624686+00:00",
+              "source": "ESPN",
+              "state": "fresh"
+            },
+            "drawProbability": null,
+            "eventStatus": {
+              "completed": true,
+              "detail": "Final",
+              "long": "Final",
+              "short": "STATUS_FINAL",
+              "short_detail": "Final",
+              "state": "post"
+            },
+            "homeId": "22",
+            "leagueId": null,
+            "leagueLogo": "",
+            "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/phx.png",
+            "market": null,
+            "matchDate": "2026-10-22T02:00Z",
+            "matchId": "401909841",
+            "matchup": "Portland Trail Blazers vs Phoenix Suns",
+            "modelSource": "unavailable",
+            "opponent": "Portland Trail Blazers",
+            "pregameAvailable": false,
+            "reason": "Pregame recommendations are unavailable after kickoff or when the game is not scheduled.",
+            "scenarioShare": null,
+            "side": "Unavailable",
+            "slateDate": "2026-10-21",
+            "sport": "nba",
+            "support": "NBA | Moda Center",
+            "teamA": "Portland Trail Blazers",
+            "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/por.png",
+            "teamB": "Phoenix Suns",
+            "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/phx.png",
+            "tiedScenarioShare": null,
+            "winProbability": null
+          },
+          {
+            "action": "SKIP",
+            "awayId": "23",
+            "confidence": 0,
+            "confidenceMeasure": "rule_confidence",
+            "data": "Limited Data",
+            "dataFreshness": {
+              "expires_at": "2026-10-22T19:10:17.624686+00:00",
+              "max_stale_at": "2026-10-22T19:14:17.624686+00:00",
+              "observed_at": "2026-10-22T19:09:17.624686+00:00",
+              "source": "ESPN",
+              "state": "fresh"
+            },
+            "drawProbability": null,
+            "eventStatus": {
+              "completed": true,
+              "detail": "Final",
+              "long": "Final",
+              "short": "STATUS_FINAL",
+              "short_detail": "Final",
+              "state": "post"
+            },
+            "homeId": "12",
+            "leagueId": null,
+            "leagueLogo": "",
+            "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/sac.png",
+            "market": null,
+            "matchDate": "2026-10-22T02:30Z",
+            "matchId": "401909842",
+            "matchup": "LA Clippers vs Sacramento Kings",
+            "modelSource": "unavailable",
+            "opponent": "LA Clippers",
+            "pregameAvailable": false,
+            "reason": "Pregame recommendations are unavailable after kickoff or when the game is not scheduled.",
+            "scenarioShare": null,
+            "side": "Unavailable",
+            "slateDate": "2026-10-21",
+            "sport": "nba",
+            "support": "NBA | Intuit Dome",
+            "teamA": "LA Clippers",
+            "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/lac.png",
+            "teamB": "Sacramento Kings",
+            "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/sac.png",
+            "tiedScenarioShare": null,
+            "winProbability": null
+          }
+        ],
+        "topOpportunities": []
+      }
+    },
+    {
+      "path": "/api/nba/matches/401909834/context?date=2026-10-21",
+      "status": 200,
+      "ms": 98.5,
+      "payload": {
+        "result": {
+          "availability_lag_hours": 24,
+          "game": {
+            "id": "401909834",
+            "kickoff": "2026-10-21T23:00Z",
+            "result": {
+              "home": {
+                "linescore": [
+                  "33",
+                  "29",
+                  "38",
+                  "25"
+                ],
+                "points": 125
+              },
+              "visitors": {
+                "linescore": [
+                  "28",
+                  "44",
+                  "27",
+                  "33"
+                ],
+                "points": 132
+              }
+            },
+            "status": {
+              "completed": true,
+              "detail": "Final",
+              "long": "Final",
+              "short": "STATUS_FINAL",
+              "short_detail": "Final",
+              "state": "post"
+            },
+            "venue": {
+              "name": "Kia Center"
+            }
+          },
+          "notice": "Historical team comparisons are descriptive, not win probabilities or betting recommendations. Archive records are retrospective; historical pregame availability is unverified. All comparison games precede the selected tipoff by at least 24 hours.",
+          "prediction": {
+            "minimum_current_games_rules": 2,
+            "minimum_current_games_scoring": 3,
+            "prior_season_probability_fallback": "unsupported",
+            "winner_model": "No validated NBA winner classifier is installed; existing weighted rules are separate."
+          },
+          "prediction_fallback": false,
+          "refresh_pending": false,
+          "role": "descriptive_only",
+          "statistics_cutoff": "2026-10-20T23:00:00+00:00",
+          "teams": {
+            "away": {
+              "current": {
+                "games": 0,
+                "losses": 0,
+                "points_against": null,
+                "points_for": null,
+                "recent_results": [],
+                "scope": "Observed regular-season games (provider type 2); not official standings",
+                "wins": 0
+              },
+              "current_season": 2027,
+              "current_source": {},
+              "current_status": "archive",
+              "historical_source": {
+                "files": [
+                  "202510.json",
+                  "202511.json",
+                  "202512.json",
+                  "202601.json",
+                  "202602.json",
+                  "202603.json",
+                  "202604.json"
+                ],
+                "historical_pregame_availability": "unverified",
+                "kind": "existing_local_archive",
+                "received_at": null
+              },
+              "previous": {
+                "games": 82,
+                "losses": 36,
+                "points_against": 116.0,
+                "points_for": 118.5,
+                "recent_results": [
+                  {
+                    "date": "2026-04-12T22:00Z",
+                    "game_id": "401811044",
+                    "home": false,
+                    "opponent": "Miami Heat",
+                    "points_against": 143,
+                    "points_for": 117,
+                    "result": "L",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-10T23:00Z",
+                    "game_id": "401811028",
+                    "home": true,
+                    "opponent": "Cleveland Cavaliers",
+                    "points_against": 102,
+                    "points_for": 124,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-08T23:00Z",
+                    "game_id": "401811013",
+                    "home": false,
+                    "opponent": "Cleveland Cavaliers",
+                    "points_against": 122,
+                    "points_for": 116,
+                    "result": "L",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-06T23:00Z",
+                    "game_id": "401810998",
+                    "home": true,
+                    "opponent": "New York Knicks",
+                    "points_against": 108,
+                    "points_for": 105,
+                    "result": "L",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-03T23:30Z",
+                    "game_id": "401810977",
+                    "home": false,
+                    "opponent": "Brooklyn Nets",
+                    "points_against": 107,
+                    "points_for": 141,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-01T23:00Z",
+                    "game_id": "401810962",
+                    "home": false,
+                    "opponent": "Orlando Magic",
+                    "points_against": 101,
+                    "points_for": 130,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  }
+                ],
+                "scope": "Observed regular-season games (provider type 2); not official standings",
+                "wins": 46
+              },
+              "previous_season": 2026,
+              "team": {
+                "abbrev": "ATL",
+                "city": "Atlanta",
+                "id": "1",
+                "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/atl.png",
+                "name": "Atlanta Hawks",
+                "nickname": "Hawks"
+              }
+            },
+            "home": {
+              "current": {
+                "games": 0,
+                "losses": 0,
+                "points_against": null,
+                "points_for": null,
+                "recent_results": [],
+                "scope": "Observed regular-season games (provider type 2); not official standings",
+                "wins": 0
+              },
+              "current_season": 2027,
+              "current_source": {},
+              "current_status": "archive",
+              "historical_source": {
+                "files": [
+                  "202510.json",
+                  "202511.json",
+                  "202512.json",
+                  "202601.json",
+                  "202602.json",
+                  "202603.json",
+                  "202604.json"
+                ],
+                "historical_pregame_availability": "unverified",
+                "kind": "existing_local_archive",
+                "received_at": null
+              },
+              "previous": {
+                "games": 82,
+                "losses": 37,
+                "points_against": 115.1,
+                "points_for": 115.7,
+                "recent_results": [
+                  {
+                    "date": "2026-04-12T22:00Z",
+                    "game_id": "401811041",
+                    "home": false,
+                    "opponent": "Boston Celtics",
+                    "points_against": 113,
+                    "points_for": 108,
+                    "result": "L",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-11T00:00Z",
+                    "game_id": "401811032",
+                    "home": false,
+                    "opponent": "Chicago Bulls",
+                    "points_against": 103,
+                    "points_for": 127,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-08T23:00Z",
+                    "game_id": "401811014",
+                    "home": true,
+                    "opponent": "Minnesota Timberwolves",
+                    "points_against": 120,
+                    "points_for": 132,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-06T23:00Z",
+                    "game_id": "401810999",
+                    "home": true,
+                    "opponent": "Detroit Pistons",
+                    "points_against": 107,
+                    "points_for": 123,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-05T23:00Z",
+                    "game_id": "401810993",
+                    "home": false,
+                    "opponent": "New Orleans Pelicans",
+                    "points_against": 108,
+                    "points_for": 112,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-04T00:30Z",
+                    "game_id": "401810982",
+                    "home": false,
+                    "opponent": "Dallas Mavericks",
+                    "points_against": 127,
+                    "points_for": 138,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  }
+                ],
+                "scope": "Observed regular-season games (provider type 2); not official standings",
+                "wins": 45
+              },
+              "previous_season": 2026,
+              "team": {
+                "abbrev": "ORL",
+                "city": "Orlando",
+                "id": "19",
+                "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/orl.png",
+                "name": "Orlando Magic",
+                "nickname": "Magic"
+              }
+            }
+          },
+          "version": "nba-descriptive-context-v1"
+        }
+      }
+    },
+    {
+      "path": "/api/nba/games?view=archive",
+      "status": 200,
+      "ms": 35.3,
+      "payload": {
+        "availableDates": [
+          "2026-06-13"
+        ],
+        "history_role": "descriptive_only",
+        "last_updated": null,
+        "notice": "Completed observations only. Archived statistics are descriptive and are never reconstructed pregame predictions.",
+        "plan": {
+          "bet": 0,
+          "consider": 0,
+          "skip": 1
+        },
+        "selectedDate": "2026-06-13",
+        "slate": [
+          {
+            "action": "SKIP",
+            "awayId": "18",
+            "confidence": 0,
+            "confidenceMeasure": "rule_confidence",
+            "data": "Limited Data",
+            "dataFreshness": {},
+            "drawProbability": null,
+            "eventStatus": {
+              "completed": true,
+              "detail": "Final",
+              "long": "Final",
+              "short": "STATUS_FINAL",
+              "short_detail": "Final",
+              "state": "post"
+            },
+            "homeId": "24",
+            "leagueId": null,
+            "leagueLogo": "",
+            "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/ny.png",
+            "market": null,
+            "matchDate": "2026-06-14T00:30Z",
+            "matchId": "401859967",
+            "matchup": "San Antonio Spurs vs New York Knicks",
+            "modelSource": "unavailable",
+            "opponent": "San Antonio Spurs",
+            "pregameAvailable": false,
+            "reason": "Pregame recommendations are unavailable after kickoff or when the game is not scheduled.",
+            "scenarioShare": null,
+            "side": "Unavailable",
+            "slateDate": "2026-06-13",
+            "sport": "nba",
+            "support": "NBA | Frost Bank Center",
+            "teamA": "San Antonio Spurs",
+            "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/sa.png",
+            "teamB": "New York Knicks",
+            "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/ny.png",
+            "tiedScenarioShare": null,
+            "winProbability": null
+          }
+        ],
+        "topOpportunities": []
+      }
+    },
+    {
+      "path": "/api/nba/matches/401859967/context?date=2026-06-14",
+      "status": 200,
+      "ms": 91.5,
+      "payload": {
+        "result": {
+          "availability_lag_hours": 24,
+          "game": {
+            "id": "401859967",
+            "kickoff": "2026-06-14T00:30Z",
+            "result": {
+              "home": {
+                "linescore": [
+                  "23",
+                  "19",
+                  "30",
+                  "18"
+                ],
+                "points": 90
+              },
+              "visitors": {
+                "linescore": [
+                  "13",
+                  "24",
+                  "28",
+                  "29"
+                ],
+                "points": 94
+              }
+            },
+            "status": {
+              "completed": true,
+              "detail": "Final",
+              "long": "Final",
+              "short": "STATUS_FINAL",
+              "short_detail": "Final",
+              "state": "post"
+            },
+            "venue": {
+              "name": "Frost Bank Center"
+            }
+          },
+          "notice": "Historical team comparisons are descriptive, not win probabilities or betting recommendations. Archive records are retrospective; historical pregame availability is unverified. All comparison games precede the selected tipoff by at least 24 hours.",
+          "prediction": {
+            "minimum_current_games_rules": 2,
+            "minimum_current_games_scoring": 3,
+            "prior_season_probability_fallback": "unsupported",
+            "winner_model": "No validated NBA winner classifier is installed; existing weighted rules are separate."
+          },
+          "prediction_fallback": false,
+          "refresh_pending": false,
+          "role": "descriptive_only",
+          "statistics_cutoff": "2026-06-13T00:30:00+00:00",
+          "teams": {
+            "away": {
+              "current": {
+                "games": 83,
+                "losses": 29,
+                "points_against": 110.2,
+                "points_for": 116.5,
+                "recent_results": [
+                  {
+                    "date": "2026-04-12T22:00Z",
+                    "game_id": "401811045",
+                    "home": true,
+                    "opponent": "Charlotte Hornets",
+                    "points_against": 110,
+                    "points_for": 96,
+                    "result": "L",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-10T23:30Z",
+                    "game_id": "401811031",
+                    "home": true,
+                    "opponent": "Toronto Raptors",
+                    "points_against": 95,
+                    "points_for": 112,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-09T23:30Z",
+                    "game_id": "401811023",
+                    "home": true,
+                    "opponent": "Boston Celtics",
+                    "points_against": 106,
+                    "points_for": 112,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-06T23:00Z",
+                    "game_id": "401810998",
+                    "home": false,
+                    "opponent": "Atlanta Hawks",
+                    "points_against": 105,
+                    "points_for": 108,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-03T23:30Z",
+                    "game_id": "401810978",
+                    "home": true,
+                    "opponent": "Chicago Bulls",
+                    "points_against": 96,
+                    "points_for": 136,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-02T00:00Z",
+                    "game_id": "401810858",
+                    "home": false,
+                    "opponent": "Memphis Grizzlies",
+                    "points_against": 119,
+                    "points_for": 130,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  }
+                ],
+                "scope": "Observed regular-season games (provider type 2); not official standings",
+                "wins": 54
+              },
+              "current_season": 2026,
+              "current_source": {},
+              "current_status": "archive",
+              "historical_source": {
+                "files": [
+                  "202410.json",
+                  "202411.json",
+                  "202412.json",
+                  "202501.json",
+                  "202502.json",
+                  "202503.json",
+                  "202504.json"
+                ],
+                "historical_pregame_availability": "unverified",
+                "kind": "existing_local_archive",
+                "received_at": null
+              },
+              "previous": {
+                "games": 82,
+                "losses": 31,
+                "points_against": 111.7,
+                "points_for": 115.8,
+                "recent_results": [
+                  {
+                    "date": "2025-04-13T17:00Z",
+                    "game_id": "401705754",
+                    "home": false,
+                    "opponent": "Brooklyn Nets",
+                    "points_against": 105,
+                    "points_for": 113,
+                    "result": "W",
+                    "season": 2025,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2025-04-11T23:30Z",
+                    "game_id": "401705741",
+                    "home": true,
+                    "opponent": "Cleveland Cavaliers",
+                    "points_against": 108,
+                    "points_for": 102,
+                    "result": "L",
+                    "season": 2025,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2025-04-10T23:00Z",
+                    "game_id": "401705733",
+                    "home": false,
+                    "opponent": "Detroit Pistons",
+                    "points_against": 115,
+                    "points_for": 106,
+                    "result": "L",
+                    "season": 2025,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2025-04-08T23:30Z",
+                    "game_id": "401705717",
+                    "home": true,
+                    "opponent": "Boston Celtics",
+                    "points_against": 119,
+                    "points_for": 117,
+                    "result": "L",
+                    "season": 2025,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2025-04-06T23:00Z",
+                    "game_id": "401705706",
+                    "home": true,
+                    "opponent": "Phoenix Suns",
+                    "points_against": 98,
+                    "points_for": 112,
+                    "result": "W",
+                    "season": 2025,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2025-04-05T19:00Z",
+                    "game_id": "401705694",
+                    "home": false,
+                    "opponent": "Atlanta Hawks",
+                    "points_against": 105,
+                    "points_for": 121,
+                    "result": "W",
+                    "season": 2025,
+                    "season_type": 2
+                  }
+                ],
+                "scope": "Observed regular-season games (provider type 2); not official standings",
+                "wins": 51
+              },
+              "previous_season": 2025,
+              "team": {
+                "abbrev": "NY",
+                "city": "New York",
+                "id": "18",
+                "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/ny.png",
+                "name": "New York Knicks",
+                "nickname": "Knicks"
+              }
+            },
+            "home": {
+              "current": {
+                "games": 83,
+                "losses": 21,
+                "points_against": 111.7,
+                "points_for": 119.7,
+                "recent_results": [
+                  {
+                    "date": "2026-04-13T00:30Z",
+                    "game_id": "401811052",
+                    "home": true,
+                    "opponent": "Denver Nuggets",
+                    "points_against": 128,
+                    "points_for": 118,
+                    "result": "L",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-11T00:00Z",
+                    "game_id": "401811035",
+                    "home": true,
+                    "opponent": "Dallas Mavericks",
+                    "points_against": 120,
+                    "points_for": 139,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-09T01:30Z",
+                    "game_id": "401811016",
+                    "home": true,
+                    "opponent": "Portland Trail Blazers",
+                    "points_against": 101,
+                    "points_for": 112,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-07T00:00Z",
+                    "game_id": "401811001",
+                    "home": true,
+                    "opponent": "Philadelphia 76ers",
+                    "points_against": 102,
+                    "points_for": 115,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-04T19:00Z",
+                    "game_id": "401810985",
+                    "home": false,
+                    "opponent": "Denver Nuggets",
+                    "points_against": 136,
+                    "points_for": 134,
+                    "result": "L",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-03T02:30Z",
+                    "game_id": "401810974",
+                    "home": false,
+                    "opponent": "LA Clippers",
+                    "points_against": 99,
+                    "points_for": 118,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  }
+                ],
+                "scope": "Observed regular-season games (provider type 2); not official standings",
+                "wins": 62
+              },
+              "current_season": 2026,
+              "current_source": {},
+              "current_status": "archive",
+              "historical_source": {
+                "files": [
+                  "202410.json",
+                  "202411.json",
+                  "202412.json",
+                  "202501.json",
+                  "202502.json",
+                  "202503.json",
+                  "202504.json"
+                ],
+                "historical_pregame_availability": "unverified",
+                "kind": "existing_local_archive",
+                "received_at": null
+              },
+              "previous": {
+                "games": 82,
+                "losses": 48,
+                "points_against": 116.7,
+                "points_for": 113.9,
+                "recent_results": [
+                  {
+                    "date": "2025-04-13T19:30Z",
+                    "game_id": "401705763",
+                    "home": true,
+                    "opponent": "Toronto Raptors",
+                    "points_against": 118,
+                    "points_for": 125,
+                    "result": "W",
+                    "season": 2025,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2025-04-12T02:00Z",
+                    "game_id": "401705748",
+                    "home": false,
+                    "opponent": "Phoenix Suns",
+                    "points_against": 117,
+                    "points_for": 98,
+                    "result": "L",
+                    "season": 2025,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2025-04-10T02:00Z",
+                    "game_id": "401705729",
+                    "home": false,
+                    "opponent": "Golden State Warriors",
+                    "points_against": 111,
+                    "points_for": 114,
+                    "result": "W",
+                    "season": 2025,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2025-04-09T02:30Z",
+                    "game_id": "401705721",
+                    "home": false,
+                    "opponent": "LA Clippers",
+                    "points_against": 122,
+                    "points_for": 117,
+                    "result": "L",
+                    "season": 2025,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2025-04-06T22:00Z",
+                    "game_id": "401705705",
+                    "home": false,
+                    "opponent": "Portland Trail Blazers",
+                    "points_against": 120,
+                    "points_for": 109,
+                    "result": "L",
+                    "season": 2025,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2025-04-05T00:00Z",
+                    "game_id": "401705690",
+                    "home": true,
+                    "opponent": "Cleveland Cavaliers",
+                    "points_against": 114,
+                    "points_for": 113,
+                    "result": "L",
+                    "season": 2025,
+                    "season_type": 2
+                  }
+                ],
+                "scope": "Observed regular-season games (provider type 2); not official standings",
+                "wins": 34
+              },
+              "previous_season": 2025,
+              "team": {
+                "abbrev": "SA",
+                "city": "San Antonio",
+                "id": "24",
+                "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/sa.png",
+                "name": "San Antonio Spurs",
+                "nickname": "Spurs"
+              }
+            }
+          },
+          "version": "nba-descriptive-context-v1"
+        }
+      }
+    },
+    {
+      "path": "/api/nba/matches/999999999999/context?date=2020-01-01",
+      "status": 404,
+      "ms": 18.5,
+      "payload": {
+        "error": "NBA game not found in the available schedule or local archive."
+      }
+    },
+    {
+      "path": "/api/matches/401909093?sport=nba&date=2026-10-22",
+      "status": 200,
+      "ms": 14.4,
+      "payload": {
+        "decision": {
+          "action": "SKIP",
+          "awayId": "5",
+          "confidence": 0,
+          "confidenceMeasure": "rule_confidence",
+          "data": "Limited Data",
+          "dataFreshness": {
+            "expires_at": "2026-10-22T19:10:16.025723+00:00",
+            "max_stale_at": "2026-10-22T19:14:16.025723+00:00",
+            "observed_at": "2026-10-22T19:09:16.025723+00:00",
+            "source": "ESPN",
+            "state": "fresh"
+          },
+          "drawProbability": null,
+          "eventStatus": {
+            "completed": false,
+            "detail": "Thu, October 22nd at 7:00 PM EDT",
+            "long": "Scheduled",
+            "short": "STATUS_SCHEDULED",
+            "short_detail": "10/22 - 7:00 PM EDT",
+            "state": "pre"
+          },
+          "homeId": "20",
+          "leagueId": null,
+          "leagueLogo": "",
+          "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/cle.png",
+          "market": null,
+          "matchDate": "2026-10-22T23:00Z",
+          "matchId": "401909093",
+          "matchup": "Philadelphia 76ers vs Cleveland Cavaliers",
+          "modelSource": "unavailable",
+          "opponent": "Philadelphia 76ers",
+          "pregameAvailable": true,
+          "reason": "At least two completed current-season games per team are needed for a pregame estimate.",
+          "scenarioShare": null,
+          "side": "Unavailable",
+          "slateDate": "",
+          "sport": "nba",
+          "support": "NBA",
+          "teamA": "Philadelphia 76ers",
+          "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/phi.png",
+          "teamB": "Cleveland Cavaliers",
+          "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/cle.png",
+          "tiedScenarioShare": null,
+          "winProbability": null
+        }
+      }
+    },
+    {
+      "path": "/api/scoreline/nba?team_a_id=20&team_b_id=5&team_a_name=Philadelphia%2076ers&team_b_name=Cleveland%20Cavaliers&event_id=401909093&before=2026-10-22T23%3A00Z",
+      "status": 422,
+      "ms": 98.6,
+      "payload": {
+        "message": "NBA scoring needs scoring averages or at least three completed games with scores per team.",
+        "status": "error"
+      }
+    },
+    {
+      "path": "/api/dashboard/nba",
+      "status": 200,
+      "ms": 237.6,
+      "payload": {
+        "availableDates": [
+          "2026-10-22",
+          "2026-10-23",
+          "2026-10-24",
+          "2026-10-25",
+          "2026-10-26"
+        ],
+        "calendarTimezone": "America/New_York",
+        "error": null,
+        "last_updated": "2026-10-22T19:09:16.002694+00:00",
+        "plan": {
+          "bet": 0,
+          "consider": 0,
+          "skip": 2
+        },
+        "refresh_status": "success",
+        "selectedDate": "2026-10-22",
+        "slate": [
+          {
+            "action": "SKIP",
+            "awayId": "5",
+            "confidence": 0,
+            "confidenceMeasure": "rule_confidence",
+            "data": "Limited Data",
+            "dataFreshness": {
+              "expires_at": "2026-10-22T19:10:16.025723+00:00",
+              "max_stale_at": "2026-10-22T19:14:16.025723+00:00",
+              "observed_at": "2026-10-22T19:09:16.025723+00:00",
+              "source": "ESPN",
+              "state": "fresh"
+            },
+            "drawProbability": null,
+            "eventStatus": {
+              "completed": false,
+              "detail": "Thu, October 22nd at 7:00 PM EDT",
+              "long": "Scheduled",
+              "short": "STATUS_SCHEDULED",
+              "short_detail": "10/22 - 7:00 PM EDT",
+              "state": "pre"
+            },
+            "homeId": "20",
+            "leagueId": null,
+            "leagueLogo": "",
+            "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/cle.png",
+            "market": null,
+            "matchDate": "2026-10-22T23:00Z",
+            "matchId": "401909093",
+            "matchup": "Philadelphia 76ers vs Cleveland Cavaliers",
+            "modelSource": "unavailable",
+            "opponent": "Philadelphia 76ers",
+            "pregameAvailable": true,
+            "reason": "At least two completed current-season games per team are needed for a pregame estimate.",
+            "scenarioShare": null,
+            "side": "Unavailable",
+            "slateDate": "",
+            "sport": "nba",
+            "support": "NBA",
+            "teamA": "Philadelphia 76ers",
+            "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/phi.png",
+            "teamB": "Cleveland Cavaliers",
+            "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/cle.png",
+            "tiedScenarioShare": null,
+            "winProbability": null
+          },
+          {
+            "action": "SKIP",
+            "awayId": "7",
+            "confidence": 0,
+            "confidenceMeasure": "rule_confidence",
+            "data": "Limited Data",
+            "dataFreshness": {
+              "expires_at": "2026-10-22T19:10:16.025723+00:00",
+              "max_stale_at": "2026-10-22T19:14:16.025723+00:00",
+              "observed_at": "2026-10-22T19:09:16.025723+00:00",
+              "source": "ESPN",
+              "state": "fresh"
+            },
+            "drawProbability": null,
+            "eventStatus": {
+              "completed": false,
+              "detail": "Thu, October 22nd at 9:30 PM EDT",
+              "long": "Scheduled",
+              "short": "STATUS_SCHEDULED",
+              "short_detail": "10/22 - 9:30 PM EDT",
+              "state": "pre"
+            },
+            "homeId": "25",
+            "leagueId": null,
+            "leagueLogo": "",
+            "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/den.png",
+            "market": null,
+            "matchDate": "2026-10-23T01:30Z",
+            "matchId": "401909094",
+            "matchup": "Oklahoma City Thunder vs Denver Nuggets",
+            "modelSource": "unavailable",
+            "opponent": "Oklahoma City Thunder",
+            "pregameAvailable": true,
+            "reason": "At least two completed current-season games per team are needed for a pregame estimate.",
+            "scenarioShare": null,
+            "side": "Unavailable",
+            "slateDate": "",
+            "sport": "nba",
+            "support": "NBA",
+            "teamA": "Oklahoma City Thunder",
+            "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/okc.png",
+            "teamB": "Denver Nuggets",
+            "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/den.png",
+            "tiedScenarioShare": null,
+            "winProbability": null
+          }
+        ],
+        "topOpportunities": [
+          {
+            "action": "SKIP",
+            "awayId": "5",
+            "confidence": 0,
+            "confidenceMeasure": "rule_confidence",
+            "data": "Limited Data",
+            "dataFreshness": {
+              "expires_at": "2026-10-22T19:10:16.025723+00:00",
+              "max_stale_at": "2026-10-22T19:14:16.025723+00:00",
+              "observed_at": "2026-10-22T19:09:16.025723+00:00",
+              "source": "ESPN",
+              "state": "fresh"
+            },
+            "drawProbability": null,
+            "eventStatus": {
+              "completed": false,
+              "detail": "Thu, October 22nd at 7:00 PM EDT",
+              "long": "Scheduled",
+              "short": "STATUS_SCHEDULED",
+              "short_detail": "10/22 - 7:00 PM EDT",
+              "state": "pre"
+            },
+            "homeId": "20",
+            "leagueId": null,
+            "leagueLogo": "",
+            "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/cle.png",
+            "market": null,
+            "matchDate": "2026-10-22T23:00Z",
+            "matchId": "401909093",
+            "matchup": "Philadelphia 76ers vs Cleveland Cavaliers",
+            "modelSource": "unavailable",
+            "opponent": "Philadelphia 76ers",
+            "pregameAvailable": true,
+            "reason": "At least two completed current-season games per team are needed for a pregame estimate.",
+            "scenarioShare": null,
+            "side": "Unavailable",
+            "slateDate": "",
+            "sport": "nba",
+            "support": "NBA",
+            "teamA": "Philadelphia 76ers",
+            "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/phi.png",
+            "teamB": "Cleveland Cavaliers",
+            "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/cle.png",
+            "tiedScenarioShare": null,
+            "winProbability": null
+          },
+          {
+            "action": "SKIP",
+            "awayId": "7",
+            "confidence": 0,
+            "confidenceMeasure": "rule_confidence",
+            "data": "Limited Data",
+            "dataFreshness": {
+              "expires_at": "2026-10-22T19:10:16.025723+00:00",
+              "max_stale_at": "2026-10-22T19:14:16.025723+00:00",
+              "observed_at": "2026-10-22T19:09:16.025723+00:00",
+              "source": "ESPN",
+              "state": "fresh"
+            },
+            "drawProbability": null,
+            "eventStatus": {
+              "completed": false,
+              "detail": "Thu, October 22nd at 9:30 PM EDT",
+              "long": "Scheduled",
+              "short": "STATUS_SCHEDULED",
+              "short_detail": "10/22 - 9:30 PM EDT",
+              "state": "pre"
+            },
+            "homeId": "25",
+            "leagueId": null,
+            "leagueLogo": "",
+            "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/den.png",
+            "market": null,
+            "matchDate": "2026-10-23T01:30Z",
+            "matchId": "401909094",
+            "matchup": "Oklahoma City Thunder vs Denver Nuggets",
+            "modelSource": "unavailable",
+            "opponent": "Oklahoma City Thunder",
+            "pregameAvailable": true,
+            "reason": "At least two completed current-season games per team are needed for a pregame estimate.",
+            "scenarioShare": null,
+            "side": "Unavailable",
+            "slateDate": "",
+            "sport": "nba",
+            "support": "NBA",
+            "teamA": "Oklahoma City Thunder",
+            "teamALogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/okc.png",
+            "teamB": "Denver Nuggets",
+            "teamBLogo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/den.png",
+            "tiedScenarioShare": null,
+            "winProbability": null
+          }
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "path": "/api/nba/matches/401909093/context?date=2026-10-22",
+      "status": 200,
+      "ms": 78.1,
+      "payload": {
+        "result": {
+          "availability_lag_hours": 24,
+          "game": {
+            "id": "401909093",
+            "kickoff": "2026-10-22T23:00Z",
+            "result": null,
+            "status": {
+              "completed": false,
+              "detail": "Thu, October 22nd at 7:00 PM EDT",
+              "long": "Scheduled",
+              "short": "STATUS_SCHEDULED",
+              "short_detail": "10/22 - 7:00 PM EDT",
+              "state": "pre"
+            },
+            "venue": {
+              "name": "Xfinity Mobile Arena"
+            }
+          },
+          "notice": "Historical team comparisons are descriptive, not win probabilities or betting recommendations. Archive records are retrospective; historical pregame availability is unverified. All comparison games precede the selected tipoff by at least 24 hours.",
+          "prediction": {
+            "minimum_current_games_rules": 2,
+            "minimum_current_games_scoring": 3,
+            "prior_season_probability_fallback": "unsupported",
+            "winner_model": "No validated NBA winner classifier is installed; existing weighted rules are separate."
+          },
+          "prediction_fallback": false,
+          "refresh_pending": false,
+          "role": "descriptive_only",
+          "statistics_cutoff": "2026-10-21T19:09:18.242156+00:00",
+          "teams": {
+            "away": {
+              "current": {
+                "games": 0,
+                "losses": 0,
+                "points_against": null,
+                "points_for": null,
+                "recent_results": [],
+                "scope": "Observed regular-season games (provider type 2); not official standings",
+                "wins": 0
+              },
+              "current_season": 2027,
+              "current_source": {
+                "expires_at": "2026-10-22T20:05:43.332834+00:00",
+                "max_stale_at": "2026-10-23T01:05:43.332834+00:00",
+                "observed_at": "2026-10-22T19:05:43.332834+00:00",
+                "source": "ESPN",
+                "state": "fresh"
+              },
+              "current_status": "available",
+              "historical_source": {
+                "files": [
+                  "202510.json",
+                  "202511.json",
+                  "202512.json",
+                  "202601.json",
+                  "202602.json",
+                  "202603.json",
+                  "202604.json"
+                ],
+                "historical_pregame_availability": "unverified",
+                "kind": "existing_local_archive",
+                "received_at": null
+              },
+              "previous": {
+                "games": 82,
+                "losses": 30,
+                "points_against": 115.4,
+                "points_for": 119.5,
+                "recent_results": [
+                  {
+                    "date": "2026-04-12T22:00Z",
+                    "game_id": "401811042",
+                    "home": true,
+                    "opponent": "Washington Wizards",
+                    "points_against": 117,
+                    "points_for": 130,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-10T23:00Z",
+                    "game_id": "401811028",
+                    "home": false,
+                    "opponent": "Atlanta Hawks",
+                    "points_against": 124,
+                    "points_for": 102,
+                    "result": "L",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-08T23:00Z",
+                    "game_id": "401811013",
+                    "home": true,
+                    "opponent": "Atlanta Hawks",
+                    "points_against": 116,
+                    "points_for": 122,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-07T00:00Z",
+                    "game_id": "401811000",
+                    "home": false,
+                    "opponent": "Memphis Grizzlies",
+                    "points_against": 126,
+                    "points_for": 142,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-05T22:00Z",
+                    "game_id": "401810991",
+                    "home": true,
+                    "opponent": "Indiana Pacers",
+                    "points_against": 108,
+                    "points_for": 117,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-03T02:00Z",
+                    "game_id": "401810972",
+                    "home": false,
+                    "opponent": "Golden State Warriors",
+                    "points_against": 111,
+                    "points_for": 118,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  }
+                ],
+                "scope": "Observed regular-season games (provider type 2); not official standings",
+                "wins": 52
+              },
+              "previous_season": 2026,
+              "team": {
+                "abbrev": "CLE",
+                "city": "Cleveland",
+                "id": "5",
+                "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/cle.png",
+                "name": "Cleveland Cavaliers",
+                "nickname": "Cavaliers"
+              }
+            },
+            "home": {
+              "current": {
+                "games": 1,
+                "losses": 0,
+                "points_against": 100.0,
+                "points_for": 106.0,
+                "recent_results": [
+                  {
+                    "date": "2026-10-20T23:00Z",
+                    "game_id": "401909089",
+                    "home": false,
+                    "opponent": "New York Knicks",
+                    "points_against": 100,
+                    "points_for": 106,
+                    "result": "W",
+                    "season": 2027,
+                    "season_type": 2
+                  }
+                ],
+                "scope": "Observed regular-season games (provider type 2); not official standings",
+                "wins": 1
+              },
+              "current_season": 2027,
+              "current_source": {
+                "expires_at": "2026-10-22T20:05:43.409125+00:00",
+                "max_stale_at": "2026-10-23T01:05:43.409125+00:00",
+                "observed_at": "2026-10-22T19:05:43.409125+00:00",
+                "source": "ESPN",
+                "state": "fresh"
+              },
+              "current_status": "available",
+              "historical_source": {
+                "files": [
+                  "202510.json",
+                  "202511.json",
+                  "202512.json",
+                  "202601.json",
+                  "202602.json",
+                  "202603.json",
+                  "202604.json"
+                ],
+                "historical_pregame_availability": "unverified",
+                "kind": "existing_local_archive",
+                "received_at": null
+              },
+              "previous": {
+                "games": 82,
+                "losses": 37,
+                "points_against": 116.1,
+                "points_for": 115.9,
+                "recent_results": [
+                  {
+                    "date": "2026-04-12T22:00Z",
+                    "game_id": "401811046",
+                    "home": true,
+                    "opponent": "Milwaukee Bucks",
+                    "points_against": 106,
+                    "points_for": 126,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-10T23:30Z",
+                    "game_id": "401811030",
+                    "home": false,
+                    "opponent": "Indiana Pacers",
+                    "points_against": 94,
+                    "points_for": 105,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-10T00:00Z",
+                    "game_id": "401811024",
+                    "home": false,
+                    "opponent": "Houston Rockets",
+                    "points_against": 113,
+                    "points_for": 102,
+                    "result": "L",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-07T00:00Z",
+                    "game_id": "401811001",
+                    "home": false,
+                    "opponent": "San Antonio Spurs",
+                    "points_against": 115,
+                    "points_for": 102,
+                    "result": "L",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-04T23:00Z",
+                    "game_id": "401810986",
+                    "home": true,
+                    "opponent": "Detroit Pistons",
+                    "points_against": 116,
+                    "points_for": 93,
+                    "result": "L",
+                    "season": 2026,
+                    "season_type": 2
+                  },
+                  {
+                    "date": "2026-04-03T23:00Z",
+                    "game_id": "401810976",
+                    "home": true,
+                    "opponent": "Minnesota Timberwolves",
+                    "points_against": 103,
+                    "points_for": 115,
+                    "result": "W",
+                    "season": 2026,
+                    "season_type": 2
+                  }
+                ],
+                "scope": "Observed regular-season games (provider type 2); not official standings",
+                "wins": 45
+              },
+              "previous_season": 2026,
+              "team": {
+                "abbrev": "PHI",
+                "city": "Philadelphia",
+                "id": "20",
+                "logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/phi.png",
+                "name": "Philadelphia 76ers",
+                "nickname": "76ers"
+              }
+            }
+          },
+          "version": "nba-descriptive-context-v1"
+        }
+      }
+    }
+  ]
+}

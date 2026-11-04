@@ -1,0 +1,17 @@
+{
+  "verified_at_eastern": "2026-10-22T20:05:01.426718-04:00",
+  "protected_files": 160,
+  "changed": [],
+  "prediction_modules_unchanged": {
+    "services/nba_pregame_model.py": true,
+    "services/nba_game_projection.py": true
+  },
+  "runtime": {
+    "app": "ScorPred",
+    "pid": 14940,
+    "research_enabled": false,
+    "root": "C:\\Users\\User\\Documents\\scorpred",
+    "source_fingerprint": "b60091326a9135f7b44b5ba2392701b1d076877e03be7dee79962e5b7f016f25"
+  },
+  "loaded_source_matches": true
+}

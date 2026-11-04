@@ -1,0 +1,118 @@
+{
+  "contract_version": "soccer-stats-v1",
+  "source_code_sha256": "7ff7469341907d4da2a775b870fb0d0942efc1122d6ff1c28f16cd4bde90174e",
+  "count_source_paths": {
+    "goals": [
+      "goals",
+      "goals.total"
+    ],
+    "assists": [
+      "assists",
+      "goals.assists"
+    ],
+    "shots": [
+      "shots",
+      "shots.total"
+    ],
+    "shots_on_target": [
+      "shots_on_target",
+      "shots.on"
+    ],
+    "corners": [
+      "corners"
+    ],
+    "fouls_committed": [
+      "fouls_committed",
+      "committed"
+    ],
+    "fouls_drawn": [
+      "fouls_drawn",
+      "drawn"
+    ],
+    "yellow_cards": [
+      "yellow_cards",
+      "cards.yellow",
+      "yellow"
+    ],
+    "red_cards": [
+      "red_cards",
+      "cards.red"
+    ],
+    "second_yellow_red": [
+      "second_yellow_red"
+    ],
+    "direct_red": [
+      "direct_red"
+    ],
+    "minutes": [
+      "minutes",
+      "games.minutes"
+    ],
+    "clearances": [
+      "clearances"
+    ],
+    "aerial_duels_won": [
+      "aerial_duels_won"
+    ],
+    "passes_completed": [
+      "passes_completed"
+    ],
+    "chances_created": [
+      "chances_created"
+    ]
+  },
+  "xg_source_paths": {
+    "xg": [
+      "expected_goals",
+      "expected.goals",
+      "Expected Goals",
+      "xG"
+    ],
+    "home_xg": [
+      "home_xg"
+    ],
+    "away_xg": [
+      "away_xg"
+    ]
+  },
+  "dedicated_definition_required": [
+    "clearances",
+    "aerial_duels_won",
+    "passes_completed",
+    "chances_created"
+  ],
+  "null_policy": "missing stays null; actual supplied observed zero retained",
+  "prediction_scope": "research-only by default; prior-game receipt/cutoff validation separate",
+  "acceptance_case_names": [
+    "missing_goals",
+    "real_zero_goals",
+    "missing_shots_and_cards",
+    "shots_on_target_exceeds_total",
+    "corners_independent_of_goals",
+    "corners_real_zero",
+    "fouls_committed_vs_drawn",
+    "second_yellow_direct_red",
+    "score_float_is_not_xg",
+    "explicit_zero_xg",
+    "unknown_xg_definition",
+    "negative_nonfinite_or_fractional_counts",
+    "count_percent_unit_mismatch",
+    "shootout_result",
+    "legacy_aliases",
+    "pregame_cutoff"
+  ],
+  "issues_addressed": {
+    "SOC-STAT-001": "corrected/unavailable in disabled v1; production path unchanged",
+    "SOC-STAT-002": "corrected/unavailable in disabled v1; production path unchanged",
+    "SOC-STAT-003": "corrected/unavailable in disabled v1; production path unchanged",
+    "SOC-STAT-004": "corrected/unavailable in disabled v1; production path unchanged",
+    "SOC-STAT-005": "corrected/unavailable in disabled v1; production path unchanged",
+    "SOC-STAT-006": "corrected/unavailable in disabled v1; production path unchanged",
+    "SOC-STAT-007": "corrected/unavailable in disabled v1; production path unchanged",
+    "SOC-STAT-008": "corrected/unavailable in disabled v1; production path unchanged",
+    "SOC-STAT-009": "corrected/unavailable in disabled v1; production path unchanged",
+    "SOC-STAT-010": "corrected/unavailable in disabled v1; production path unchanged",
+    "SOC-STAT-011": "corrected/unavailable in disabled v1; production path unchanged",
+    "SOC-STAT-012": "corrected/unavailable in disabled v1; production path unchanged"
+  }
+}

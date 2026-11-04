@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}ScorPred | Parlay Mode{% endblock %}
+{% block topbar_title %}Parlay Mode{% endblock %}
+
+{% block head %}
+<style>
+  .pm-tabs { display:flex; gap:.5rem; flex-wrap:wrap; margin: 0 0 1.25rem; }
+  .pm-tab { padding:.55rem 1rem; min-height:44px; display:inline-flex; align-items:center; gap:.5rem;
+            border:1px solid var(--border-light); border-radius: var(--radius); color: var(--text-2);
+            text-decoration:none; font-weight:600; background: var(--bg-surface); }
+  .pm-tab:hover { color: var(--text); border-color: var(--text-3); }
+  .pm-tab.active { color: var(--bg); background: var(--c-strong); border-color: var(--c-strong); }
+  .pm-tab small { font-weight:500; opacity:.8; }
+
+  .pm-meta { display:flex; flex-wrap:wrap; gap:.5rem 1.25rem; color: var(--text-2); font-size:.875rem; margin-bottom:1rem; }
+  .pm-meta strong { color: var(--text); }
+
+  .pm-picks { display:grid; gap:.75rem; }
+  .pm-pick { display:grid; grid-template-columns: 2.25rem minmax(0,1fr) auto; gap: .9rem; align-items:center;
+             background: var(--card-bg, var(--bg-raised)); border:1px solid var(--border); border-radius: var(--radius-lg);
+             padding: .9rem 1rem; }
+  .pm-pick.in-parlay { border-color: rgba(var(--c-strong-rgb), .55); }
+  .pm-rank { width:2.25rem; height:2.25rem; border-radius:50%; display:grid; place-items:center;
+             background: var(--bg-elevated); color: var(--text); font-family: var(--font-display); font-size:1.1rem; }
+  .pm-pick.in-parlay .pm-rank { background: rgba(var(--c-strong-rgb), .15); color: var(--c-strong); }
+  .pm-sel { font-weight:700; color: var(--text); font-size:1.02rem; overflow-wrap:anywhere; }
+  .pm-sub { color: var(--text-2); font-size:.84rem; margin-top:.15rem; overflow-wrap:anywhere; }
+  .pm-tags { display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.45rem; }
+  .pm-tag { font-size:.72rem; font-weight:600; padding:.15rem .5rem; border-radius:999px; border:1px solid var(--border-light); color: var(--text-2); }
+  .pm-tag--value { color: var(--c-strong); border-color: rgba(var(--c-strong-rgb), .45); }
+  .pm-tag--model { color: var(--c-active); border-color: rgba(var(--c-active-rgb), .45); }
+  .pm-tag--parlay { color: var(--bg); background: var(--c-strong); border-color: var(--c-strong); }
+  .pm-price { text-align:right; }
+  .pm-odds { font-family: var(--font-mono); font-size:1.15rem; font-weight:700; color: var(--text); }
+  .pm-book { color: var(--text-3); font-size:.75rem; }
+  .pm-prob { color: var(--text-2); font-size:.8rem; margin-top:.2rem; }
+
+  .pm-parlay { margin-top: 1.5rem; border:1px solid rgba(var(--c-strong-rgb), .5); border-radius: var(--radius-xl);
+               padding: 1.25rem; background: linear-gradient(0deg, rgba(var(--c-strong-rgb), .05), rgba(var(--c-strong-rgb), .05)), var(--bg-surface); }
+  .pm-parlay h2 { margin:0 0 .25rem; font-family: var(--font-display); letter-spacing:.02em; }
+  .pm-parlay__legs { list-style:none; margin: .9rem 0; padding:0; display:grid; gap:.4rem; }
+  .pm-parlay__legs li { color: var(--text); }
+  .pm-parlay__stats { display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:.75rem; }
+  .pm-stat { background: var(--bg-raised); border:1px solid var(--border); border-radius: var(--radius); padding:.7rem .85rem; }
+  .pm-stat__label { color: var(--text-3); font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; }
+  .pm-stat__value { font-family: var(--font-mono); font-size:1.2rem; font-weight:700; color: var(--text); margin-top:.15rem; }
+  .pm-stat__value--strong { color: var(--c-strong); }
+
+  .pm-fine { color: var(--text-3); font-size:.8rem; margin-top:1.5rem; line-height:1.55; }
+  @media (max-width: 560px) {
+    .pm-pick { grid-template-columns: 2rem minmax(0,1fr); }
+    .pm-price { grid-column: 2; text-align:left; display:flex; gap:.75rem; align-items:baseline; flex-wrap:wrap; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="sp-page-hero">
+  <span class="sp-page-hero__eyebrow">Parlay Mode</span>
+  <h1>5 picks and one parlay, priced off real sportsbooks.</h1>
+  <p>NBA every day · NFL every Sunday · Soccer on Fridays for the weekend, plus Champions League and Europa League nights.</p>
+</section>
+
+<nav class="pm-tabs" aria-label="Sport">
+  {% for s in sports %}
+    <a class="pm-tab{% if s.key == sport %} active{% endif %}" href="/parlays?sport={{ s.key }}"
+       {% if s.key == sport %}aria-current="page"{% endif %}>
+      {{ s.label }} <small>{{ s.schedule }}</small>
+    </a>
+  {% endfor %}
+</nav>
+
+{% if not has_key %}
+  <div class="sp-alert sp-alert--warn">Set <code>ODDS_API_KEY</code> (free at the-odds-api.com) to turn on Parlay Mode.</div>
+{% endif %}
+
+{% if slate and slate.picks %}
+  {% set parlay_ranks = slate.parlay.legs if slate.parlay else [] %}
+  <div class="pm-meta">
+    <span><strong>{{ slate.title }}</strong></span>
+    {% if slate.competitions %}<span>{{ slate.competitions|join(' · ') }}</span>{% endif %}
+    <span>{{ slate.games }} games scanned</span>
+    {% if slate.model_games %}<span>{{ slate.model_games }} with ScorPred model</span>{% endif %}
+    <span>Updated {{ slate.generated_at[:16].replace('T', ' ') }} UTC</span>
+  </div>
+
+  {% if slate.is_previous %}
+    <div class="sp-alert sp-alert--info">
+      {% if slate.today_status == 'off_day' %}No {{ slate.label }} slate today — showing the most recent one.
+      {% else %}Today's slate isn't ready yet — showing the most recent one.{% endif %}
+    </div>
+  {% endif %}
+
+  <section class="sp-section" aria-labelledby="pm-picks-h">
+    <div class="sp-section__header"><div><h2 id="pm-picks-h">Top {{ slate.picks|length }} picks</h2>
+      <p>Best available price across books. Probability blends ScorPred's model with the vig-free market where the model covers the game.</p></div></div>
+    <ol class="pm-picks" style="list-style:none;margin:0;padding:0">
+      {% for p in slate.picks %}
+      <li class="pm-pick{% if p.rank in parlay_ranks %} in-parlay{% endif %}">
+        <span class="pm-rank" aria-label="Pick {{ p.rank }}">{{ p.rank }}</span>
+        <div>
+          <div class="pm-sel">{{ p.selection }}</div>
+          <div class="pm-sub">{{ p.matchup }} · {{ p.competition }}{% if p.kickoff_et %} · {{ p.kickoff_et }}{% endif %}</div>
+          <div class="pm-tags">
+            <span class="pm-tag">{{ p.bet_type }}</span>
+            {% if p.tier == 'value' %}<span class="pm-tag pm-tag--value">+{{ '%.1f'|format(p.ev * 100) }}% EV</span>
+            {% else %}<span class="pm-tag">Lean</span>{% endif %}
+            {% if p.source == 'model+market' %}<span class="pm-tag pm-tag--model">ScorPred model</span>{% endif %}
+            {% if p.rank in parlay_ranks %}<span class="pm-tag pm-tag--parlay">In parlay</span>{% endif %}
+          </div>
+        </div>
+        <div class="pm-price">
+          <div class="pm-odds">{{ p.american }}</div>
+          <div class="pm-book">{{ p.book }}</div>
+          <div class="pm-prob">{{ '%.0f'|format(p.prob * 100) }}% to hit</div>
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  {% if slate.parlay %}
+  <section class="pm-parlay" aria-labelledby="pm-parlay-h">
+    <h2 id="pm-parlay-h">Parlay of the day · {{ slate.parlay.legs|length }} legs</h2>
+    <p class="pm-sub">The most likely combination of today's picks that pays at least {{ '%g'|format(min_odds) }}× your stake.</p>
+    <ul class="pm-parlay__legs">
+      {% for s in slate.parlay.selections %}<li>✓ {{ s }}</li>{% endfor %}
+    </ul>
+    <div class="pm-parlay__stats">
+      <div class="pm-stat"><div class="pm-stat__label">Odds</div><div class="pm-stat__value pm-stat__value--strong">{{ slate.parlay.american }}</div></div>
+      <div class="pm-stat"><div class="pm-stat__label">Payout</div><div class="pm-stat__value">{{ '%.2f'|format(slate.parlay.decimal_odds) }}×</div></div>
+      <div class="pm-stat"><div class="pm-stat__label">$10 returns</div><div class="pm-stat__value">${{ '%.2f'|format(slate.parlay.payout_per_10) }}</div></div>
+      <div class="pm-stat"><div class="pm-stat__label">Chance to hit</div><div class="pm-stat__value">{{ '%.0f'|format(slate.parlay.hit_prob * 100) }}%</div></div>
+    </div>
+  </section>
+  {% endif %}
+
+  {% for note in slate.notes %}<p class="pm-fine">{{ note }}</p>{% endfor %}
+
+{% elif slate and slate.status == 'off_day' %}
+  <div class="sp-alert sp-alert--info">{{ slate.notes[0] if slate.notes else 'No slate today.' }}</div>
+{% else %}
+  <div class="sp-alert sp-alert--info">
+    {% if sport == 'soccer' %}No soccer slate yet. Weekend picks post on Friday mornings; Champions League and Europa League picks post on match days.
+    {% elif sport == 'nfl' %}NFL picks post on Sunday mornings.
+    {% else %}Today's NBA picks post late morning (Eastern).{% endif %}
+  </div>
+{% endif %}
+
+<p class="pm-fine">Odds can move after picks are posted — check the price at your book before betting.
+Probabilities are estimates, not guarantees. Bet only what you can afford to lose; if gambling stops being fun,
+call 1-800-GAMBLER.</p>
+{% endblock %}

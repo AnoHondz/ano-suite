@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block title %}NBA Key Threats — {{ team_a.nickname or team_a.name }} vs {{ team_b.nickname or team_b.name }}{% endblock %}
+
+{% block head %}
+<style>
+  .sp-threats{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+  .sp-threat-col{display:flex;flex-direction:column;gap:.6rem}
+  .sp-threat-hdr{display:flex;align-items:center;gap:.6rem;padding:.6rem .8rem;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.18);border-radius:var(--radius)}
+  .sp-threat-hdr img{width:28px;height:28px;object-fit:contain}
+  .sp-threat-hdr h2{margin:0;font-size:.95rem;font-weight:600}
+  .sp-threat{display:flex;gap:.75rem;align-items:flex-start;padding:.75rem;border:1px solid var(--border);border-radius:var(--radius);transition:border-color .2s}
+  .sp-threat:hover{border-color:var(--c-caution)}
+  .sp-threat--top{border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.04)}
+  .sp-threat--feat{border-color:rgba(60,242,164,.25);background:rgba(60,242,164,.03)}
+  .sp-threat__rank{font-size:1.15rem;font-weight:700;color:var(--text-3);min-width:1.3rem}
+  .sp-threat--top .sp-threat__rank{color:var(--c-caution)}
+  .sp-threat--feat .sp-threat__rank{color:var(--c-strong)}
+  .sp-threat__photo{width:44px;height:44px;border-radius:50%;object-fit:cover;background:rgba(148,163,184,.08);flex-shrink:0}
+  .sp-threat__info{flex:1;min-width:0}
+  .sp-threat__name{font-weight:600;font-size:.92rem;margin-bottom:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sp-threat__contrib{font-size:.78rem;color:var(--text-3)}
+  .sp-threat__contrib strong{color:var(--text-2)}
+  .sp-threat__live{font-size:.76rem;color:var(--c-strong);margin-top:.15rem;font-weight:600}
+  .sp-rosters{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+  .sp-roster-player{display:flex;align-items:center;gap:.5rem;padding:.35rem .6rem;border:1px solid var(--border);border-radius:var(--radius);font-size:.82rem;margin-bottom:.25rem}
+  .sp-roster-player img{width:24px;height:24px;border-radius:50%;object-fit:cover}
+  .sp-pos-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);margin:.5rem 0 .25rem;padding-left:.15rem}
+  @media(max-width:640px){.sp-threats,.sp-rosters{grid-template-columns:1fr}}
+</style>
+{% endblock %}
+
+{% block content %}
+{# ── Header ── #}
+<section class="sp-hero sp-nba" style="text-align:center">
+  <div style="display:flex; align-items:center; justify-content:center; gap:1rem; flex-wrap:wrap">
+    <div style="display:flex; align-items:center; gap:.4rem">
+      {% if team_a.logo %}<img src="{{ team_a.logo }}" style="width:32px;height:32px;object-fit:contain" alt="{{ team_a.name }}" />{% endif %}
+      <strong>{{ team_a.nickname or team_a.name }}</strong>
+    </div>
+    <span style="color:var(--text-3)">vs</span>
+    <div style="display:flex; align-items:center; gap:.4rem">
+      {% if team_b.logo %}<img src="{{ team_b.logo }}" style="width:32px;height:32px;object-fit:contain" alt="{{ team_b.name }}" />{% endif %}
+      <strong>{{ team_b.nickname or team_b.name }}</strong>
+    </div>
+  </div>
+  <div style="display:flex; gap:.5rem; justify-content:center; margin-top:.5rem">
+    <a href="{{ url_for('nba.index') }}" class="sp-badge sp-badge--muted" style="text-decoration:none">Back to games</a>
+    <a href="{{ url_for('nba.matchup') }}" class="sp-badge sp-badge--muted" style="text-decoration:none">Matchup</a>
+    <a href="{{ url_for('nba.prediction') }}" class="sp-badge sp-badge--strong" style="text-decoration:none">Full prediction</a>
+  </div>
+</section>
+
+{% if error %}
+<div class="sp-notice sp-notice--error">{{ error }}</div>
+{% endif %}
+
+{% set tipoff = game_snapshot.date.start if game_snapshot and game_snapshot.date else (selected_game.date if selected_game else '') %}
+{% set venue_name = game_snapshot.venue.name if game_snapshot and game_snapshot.venue else (selected_game.venue_name if selected_game else '') %}
+{% if selected_game or game_snapshot %}
+<div class="sp-panel sp-panel--tight sp-meta-strip" style="margin-bottom:1rem">
+  {% if tipoff %}<span>{{ tipoff[:10] }}{% if tipoff|length > 10 %} {{ tipoff[11:16] }} UTC{% endif %}</span>{% endif %}
+  {% if venue_name %}<span>{{ venue_name }}</span>{% endif %}
+  {% if game_snapshot and game_snapshot.scores %}
+  <span style="color:var(--c-caution); font-weight:700">{{ game_snapshot.scores.home.points }} – {{ game_snapshot.scores.visitors.points }}</span>
+  {% endif %}
+</div>
+{% endif %}
+
+{# ── Key Threats ── #}
+<div class="sp-panel">
+  <span class="sp-kicker">Key Threats</span>
+  <p style="font-size:.82rem; color:var(--text-2); margin-bottom:.75rem">Players expected to make the biggest impact in this matchup</p>
+
+  <div class="sp-threats">
+    {% for team, threats in [(team_a, threats_a), (team_b, threats_b)] %}
+    <div class="sp-threat-col">
+      <div class="sp-threat-hdr">
+        {% if team.logo %}<img src="{{ team.logo }}" alt="" />{% endif %}
+        <h2>{{ team.nickname or team.name }}</h2>
+      </div>
+      {% if threats %}
+        {% for p in threats %}
+        <div class="sp-threat {% if loop.index == 1 %}sp-threat--top{% elif p.is_featured %}sp-threat--feat{% endif %}">
+          <div class="sp-threat__rank">{{ loop.index }}</div>
+          {% if p.photo %}
+          <img src="{{ p.photo }}" alt="{{ p.name }}" class="sp-threat__photo" onerror="this.style.display='none'" />
+          {% else %}
+          <div class="sp-threat__photo" style="display:flex;align-items:center;justify-content:center;font-size:1.2rem">🏀</div>
+          {% endif %}
+          <div class="sp-threat__info">
+            <div class="sp-threat__name">{{ p.name }}</div>
+            <div style="display:flex; flex-wrap:wrap; gap:.25rem; margin-bottom:.25rem">
+              <span class="sp-badge sp-badge--caution">{{ p.position }}</span>
+              <span class="sp-badge sp-badge--active">{{ p.threat_label }}</span>
+              {% if p.is_featured %}<span class="sp-badge sp-badge--strong">Live Leader</span>{% endif %}
+              {% if p.injured %}
+              <span class="sp-badge sp-badge--danger">Injured</span>
+              {% else %}
+              <span class="sp-badge sp-badge--strong">Active</span>
+              {% endif %}
+            </div>
+            <div class="sp-threat__contrib">Expect: <strong>{{ p.contribution }}</strong></div>
+            {% if p.live_stat %}<div class="sp-threat__live">{{ p.live_stat }}</div>{% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p style="color:var(--text-3); font-size:.85rem">No roster data available.</p>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{# ── Full Rosters ── #}
+<div class="sp-panel">
+  <span class="sp-kicker">Full Rosters</span>
+  <div class="sp-rosters" style="margin-top:.5rem">
+    {% for team, roster in [(team_a, roster_a), (team_b, roster_b)] %}
+    <div>
+      <strong style="font-size:.92rem">{{ team.nickname or team.name }}</strong>
+      {% if roster %}
+        {% set positions = [('PG','Point Guards'),('SG','Shooting Guards'),('SF','Small Forwards'),('PF','Power Forwards'),('C','Centers'),('G','Guards'),('F','Forwards')] %}
+        {% set seen = namespace(pos=[]) %}
+        {% for pos_key, pos_name in positions %}
+          {% set pos_players = [] %}
+          {% for p in roster %}
+            {% set player_pos = (p.leagues.standard.pos if p.leagues and p.leagues.standard else p.get('position','')) %}
+            {% if player_pos == pos_key and pos_key not in seen.pos %}
+              {% if pos_players.append(p) %}{% endif %}
+            {% endif %}
+          {% endfor %}
+          {% if pos_players %}
+            {% if seen.pos.append(pos_key) %}{% endif %}
+            <div class="sp-pos-label">{{ pos_name }}</div>
+            {% for p in pos_players %}
+            <div class="sp-roster-player">
+              {% if p.photo %}<img src="{{ p.photo }}" alt="" onerror="this.style.display='none'" />
+              {% else %}<div style="width:24px;height:24px;border-radius:50%;background:rgba(148,163,184,.1);flex-shrink:0"></div>{% endif %}
+              <span style="flex:1">{{ p.firstname }} {{ p.lastname }}</span>
+              {% if p.injuries %}
+                {% set inj = p.injuries[0] %}
+                <span style="font-size:.7rem; color:{% if (inj.status or '')|lower == 'out' %}var(--c-danger){% else %}var(--c-caution){% endif %}">{{ inj.status or 'Inj' }}</span>
+              {% endif %}
+            </div>
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+        {% for p in roster %}
+          {% set player_pos = (p.leagues.standard.pos if p.leagues and p.leagues.standard else '') %}
+          {% if player_pos not in ['PG','SG','SF','PF','C','G','F'] %}
+          <div class="sp-roster-player">
+            {% if p.photo %}<img src="{{ p.photo }}" alt="" onerror="this.style.display='none'" />
+            {% else %}<div style="width:24px;height:24px;border-radius:50%;background:rgba(148,163,184,.1);flex-shrink:0"></div>{% endif %}
+            <span style="flex:1">{{ p.firstname }} {{ p.lastname }}</span>
+          </div>
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        <p style="color:var(--text-3); font-size:.85rem">Roster unavailable.</p>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

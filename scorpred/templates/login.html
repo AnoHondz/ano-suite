@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Login | ScorPred{% endblock %}
+{% block body_class %}sp-auth-page{% endblock %}
+
+{% block content %}
+<section class="sp-auth-wrap">
+  <div class="sp-auth-card">
+    <div class="sp-auth-brand">
+      <span class="sp-auth-brand__icon"><img src="{{ url_for('static', filename='media/scorpred-player-logo.png') }}" alt=""></span>
+      <div>
+        <span class="sp-auth-brand__name">ScorPred</span>
+        <span class="sp-auth-brand__sub">Decision Intelligence</span>
+      </div>
+    </div>
+
+    <h1 class="sp-auth-title">Welcome back</h1>
+    <p class="sp-auth-subtitle">Sign in to access your saved picks, tracking history, and decision workspace.</p>
+
+    <form method="POST" action="/login" class="sp-auth-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <input type="hidden" name="next" value="{{ next_url or '' }}" />
+
+      <div class="sp-auth-field">
+        <label for="email" class="sp-label">Email</label>
+        <input type="email" name="email" id="email" class="sp-input sp-auth-input" placeholder="you@example.com" required autofocus />
+      </div>
+
+      <div class="sp-auth-field">
+        <label for="password" class="sp-label">Password</label>
+        <input type="password" name="password" id="password" class="sp-input sp-auth-input" placeholder="Enter your password" required />
+      </div>
+
+      <div class="sp-auth-field sp-auth-remember">
+        <label class="sp-label sp-remember-label">
+          <input type="checkbox" name="remember" id="remember" checked />
+          Keep me signed in on this device
+        </label>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full sp-auth-submit">Sign in</button>
+    </form>
+
+    <div class="sp-auth-links">
+      <a href="/signup" class="sp-auth-secondary">Create an account</a>
+      <a href="/" class="sp-auth-guest">Continue in guest mode</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

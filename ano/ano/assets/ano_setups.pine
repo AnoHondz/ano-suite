@@ -1,0 +1,660 @@
+//@version=6
+// Ano Setups: the SMC / ICT rules Ano's paper bots trade, on one clean chart.
+// Shows only what matters: key highs and lows, when they get swept, and each setup's entry, stop,
+// target and how it ended. Forex sessions (Tokyo, London, New York) run on their own local clocks;
+// stocks use New York regular hours.
+// ICT: in a kill zone, price takes untouched liquidity, closes back through the last opposite swing (MSS)
+//      with displacement, and leaves a fair value gap. Limit entry at the gap midpoint, stop beyond the
+//      sweep, target the nearest untouched opposite liquidity, at least 1.5R. Unfilled after 30 bars: expired.
+// SMC: H4 and H1 structure agree (daily not opposed), a break of structure that way, then an order-block
+//      retest with a rejection close. Entry at that close; same stop / 1.5R-to-liquidity target rule.
+// Stops: like the bots since Nov 2, a stop is never closer than 1.5x the 5-minute ATR (widened, never tightened).
+// Stocks also get Ano's two equity strategies:
+// Gap fill: the day opens 0.05-0.6% away from yesterday's close and the first five minutes move toward it.
+//      Limit at the 9:34 close (filled by 9:40), target yesterday's close, stop 1.5x the gap; flat at 11:00.
+// Opening range: the first close outside the 9:30-10:00 range, 10:00-11:00. Stop at the range middle
+//      (or the volatility floor), target 1.5R plus costs; flat at 12:00.
+// Spread: candles are bid prices, so every buy-side price (long entry, short stop, short target) includes
+//      the spread, and the 2R check uses those real fill prices.
+// Like the bots: one setup at a time, closed at the session end. The bots also check news, spread, risk
+// and account limits, so not every marked setup becomes a trade. No broker connection or orders.
+indicator("Ano Setups", shorttitle="Ano", overlay=true, max_lines_count=500, max_labels_count=500, max_boxes_count=100, max_bars_back=1500)
+
+market = input.string("Auto", "Market", options=["Auto", "Forex", "Stocks"])
+gLook = "Look"
+textSize = input.string("Normal", "Text size", options=["Small", "Normal", "Large"], group=gLook)
+mutedCandles = input.bool(true, "Muted grey candles", group=gLook)
+showKill = input.bool(true, "Kill zone tint", group=gLook)
+levelsEachSide = input.int(3, "Key levels shown above / below price", minval=1, maxval=6, group=gLook)
+showSweeps = input.bool(true, "Sweeps of key levels", group=gLook)
+keepSetups = input.int(4, "Past setups kept", minval=1, maxval=20, group=gLook)
+showPanel = input.bool(true, "Status box", group=gLook)
+gDetail = "Detail"
+showBreak = input.bool(true, "Latest BOS / CHoCH", group=gDetail)
+showGaps = input.bool(true, "Unfilled fair value gaps near price", group=gDetail)
+gapsShown = input.int(2, "Gaps shown", minval=1, maxval=6, group=gDetail)
+showMss = input.bool(true, "MSS level while ICT waits", group=gDetail)
+showZones = input.bool(true, "FVG / order block behind each setup", group=gDetail)
+showOpens = input.bool(true, "Session opens", group=gDetail)
+gWhich = "Setups"
+showIct = input.bool(true, "ICT", group=gWhich)
+showSmc = input.bool(true, "SMC", group=gWhich)
+showGapFill = input.bool(true, "Gap fill (stocks)", group=gWhich)
+showOr = input.bool(true, "Opening range (stocks)", group=gWhich)
+showOrBox = input.bool(true, "Opening range box (stocks)", group=gDetail)
+gRule = "Rules (defaults match Ano's bots)"
+pivotN = input.int(3, "Swing confirmation bars", minval=1, maxval=10, group=gRule)
+dispMult = input.float(1.5, "Displacement: body vs 20-bar average", minval=1.0, step=0.1, group=gRule)
+minRR = input.float(1.5, "Minimum reward : risk", minval=1.0, step=0.25, group=gRule)
+shiftBars = input.int(30, "Bars from sweep to structure shift", minval=5, maxval=120, group=gRule)
+ictExpiry = input.int(30, "ICT limit order lifetime (bars)", minval=5, maxval=120, group=gRule)
+volMult = input.float(1.5, "Stop at least x 5-minute ATR", minval=0.0, step=0.25, group=gRule)
+spreadPips = input.float(1.5, "Spread (pips)", minval=0, step=0.1, group=gRule,
+     tooltip="Candles show the sell (bid) price; buys fill on the ask. Use your broker's normal spread for this pair so longs, short stops and short targets are priced where they really fill.")
+
+isForex = market == "Forex" or (market == "Auto" and syminfo.type == "forex")
+isStocks = not isForex
+pipSize = isForex ? syminfo.mintick * 10 : syminfo.mintick
+spread = spreadPips * pipSize
+cInk = #e6e8ec
+cSoft = #9a9daa
+cDim = #5d606b
+cUp = #5fb3a6
+cDown = #d0646f
+clear = color.new(color.black, 100)
+txtBig = textSize == "Small" ? size.small : textSize == "Normal" ? size.normal : size.large
+txtSmall = textSize == "Small" ? size.tiny : textSize == "Normal" ? size.small : size.normal
+
+barcolor(mutedCandles ? (close >= open ? #c4c7ce : #4c505b) : na, title="Muted candles")
+
+// ── Sessions on their own clocks, Monday to Friday
+inSess(string sess, string tz) => not na(time(timeframe.period, sess + ":23456", tz))
+tkOn = isForex and inSess("0900-1450", "Asia/Tokyo")
+tkIct = isForex and inSess("0900-1100", "Asia/Tokyo")
+tkRange = isForex and inSess("0600-0900", "Asia/Tokyo")
+ldOn = isForex and inSess("0800-1650", "Europe/London")
+ldIct = isForex and inSess("0800-1000", "Europe/London")
+ldRange = isForex and inSess("0000-0800", "Europe/London")
+nyOn = inSess(isForex ? "0930-1510" : "0930-1600", "America/New_York")
+nyIct = inSess("0930-1100", "America/New_York") or inSess("1330-1500", "America/New_York")
+nyRange = inSess("0000-0930", "America/New_York")
+inEntry = tkOn or ldOn or nyOn
+inIct = tkIct or ldIct or nyIct
+sessName = nyOn and ldOn ? "London + New York" : nyOn ? "New York" : ldOn ? "London" : tkOn ? "Tokyo" : "Between sessions"
+bgcolor(showKill and inIct ? color.new(cInk, 94) : na, title="Kill zone")
+
+// Pre-session range, frozen when the session opens: the liquidity the bots measure from.
+sessionRange(bool inRange, bool inSession) =>
+    var float hi = na
+    var float lo = na
+    var float sHi = na
+    var float sLo = na
+    if inRange and not inRange[1]
+        hi := high
+        lo := low
+    else if inRange
+        hi := na(hi) ? high : math.max(hi, high)
+        lo := na(lo) ? low : math.min(lo, low)
+    opened = inSession and not inSession[1]
+    if opened
+        sHi := hi
+        sLo := lo
+        hi := na
+        lo := na
+    [sHi, sLo, opened]
+[tkHi, tkLo, tkOpen] = sessionRange(tkRange, tkOn)
+[ldHi, ldLo, ldOpen] = sessionRange(ldRange, ldOn)
+[nyHi, nyLo, nyOpen] = sessionRange(nyRange, nyOn)
+pdH = request.security(syminfo.tickerid, "D", high[1], lookahead=barmerge.lookahead_on)
+pdL = request.security(syminfo.tickerid, "D", low[1], lookahead=barmerge.lookahead_on)
+prevClose = request.security(syminfo.tickerid, "D", close[1], lookahead=barmerge.lookahead_on)
+
+// Stocks-only windows (New York time).
+orBuild = isStocks and inSess("0930-1000", "America/New_York")
+orTrade = isStocks and inSess("1000-1100", "America/New_York")
+orLive = isStocks and inSess("0930-1200", "America/New_York")
+gapDecide = isStocks and inSess("0934-0935", "America/New_York")
+gapLive = isStocks and inSess("0930-1100", "America/New_York")
+
+// The bots' volatility floor: a stop inside normal 5-minute noise is moved out to 1.5x the 5-minute ATR.
+atr5 = request.security(syminfo.tickerid, "5", ta.atr(14)[1], lookahead=barmerge.lookahead_on)
+volStop(int dir, float entry, float stop) =>
+    floor = volMult * atr5
+    na(floor) or math.abs(entry - stop) >= floor ? stop : entry - dir * floor
+
+// Higher-timeframe bias: the latest close through a confirmed swing sets direction.
+htfBias() =>
+    ph2 = ta.pivothigh(high, 2, 2)
+    pl2 = ta.pivotlow(low, 2, 2)
+    var float lh = na
+    var float ll = na
+    var int dir = 0
+    if not na(ph2)
+        lh := ph2
+    if not na(pl2)
+        ll := pl2
+    if not na(lh) and close > lh
+        dir := 1
+        lh := na
+    if not na(ll) and close < ll
+        dir := -1
+        ll := na
+    dir
+biasD = request.security(syminfo.tickerid, "D", htfBias()[1], lookahead=barmerge.lookahead_on)
+biasH4 = request.security(syminfo.tickerid, "240", htfBias()[1], lookahead=barmerge.lookahead_on)
+biasH1 = request.security(syminfo.tickerid, "60", htfBias()[1], lookahead=barmerge.lookahead_on)
+bias = biasH4 != 0 and biasH1 == biasH4 and (biasD == biasH4 or biasD == 0) ? biasH4 : 0
+
+body = math.abs(close - open)
+avgBody20 = ta.sma(body, 20)
+twoBars = time - time[2] == 2 * timeframe.in_seconds() * 1000
+bullGap = twoBars and low > high[2]
+bearGap = twoBars and high < low[2]
+ph = ta.pivothigh(high, pivotN, pivotN)
+pl = ta.pivotlow(low, pivotN, pivotN)
+newDay = timeframe.change("D")
+minGap = (ta.highest(high, 300) - ta.lowest(low, 300)) * 0.02
+
+// ── Untouched liquidity (removed once price trades through it)
+var poolPrice = array.new_float()
+var poolIsHigh = array.new_bool()
+var poolName = array.new_string()
+var poolBar = array.new_int()
+var poolKey = array.new_bool()
+addPool(float p, bool isHigh, string name, bool key) =>
+    if not na(p)
+        array.push(poolPrice, p)
+        array.push(poolIsHigh, isHigh)
+        array.push(poolName, name)
+        array.push(poolBar, bar_index)
+        array.push(poolKey, key)
+        if array.size(poolPrice) > 120
+            array.shift(poolPrice)
+            array.shift(poolIsHigh)
+            array.shift(poolName)
+            array.shift(poolBar)
+            array.shift(poolKey)
+removePool(int i) =>
+    array.remove(poolPrice, i)
+    array.remove(poolIsHigh, i)
+    array.remove(poolName, i)
+    array.remove(poolBar, i)
+    array.remove(poolKey, i)
+nearestPool(int dir, float entry) =>
+    float best = na
+    if array.size(poolPrice) > 0
+        for i = 0 to array.size(poolPrice) - 1
+            p = array.get(poolPrice, i)
+            isHi = array.get(poolIsHigh, i)
+            if dir > 0 and isHi and p > entry
+                best := na(best) ? p : math.min(best, p)
+            if dir < 0 and not isHi and p < entry
+                best := na(best) ? p : math.max(best, p)
+    best
+fmt(float v) => str.tostring(v, format.mintick)
+
+// ── A setup and its drawings, kept until it ends and then while it is among the latest few.
+type Setup
+    string name
+    string kind
+    int dir
+    float entry
+    float stop
+    float target
+    bool filled
+    int expiresAt
+    line entryLine
+    line stopLine
+    line targetLine
+    box risk
+    box reward
+    box zone
+    label card
+    label result
+var Setup active = na
+var history = array.new<Setup>()
+var lastResult = array.new_string(1, "none yet")
+forget(Setup s) =>
+    box.delete(s.zone)
+    line.delete(s.entryLine)
+    line.delete(s.stopLine)
+    line.delete(s.targetLine)
+    box.delete(s.risk)
+    box.delete(s.reward)
+    label.delete(s.card)
+    label.delete(s.result)
+openSetup(string name, int dir, float entry, float stop, float target, bool filled, string why, int zoneLeft, float zoneTop, float zoneBottom, string zoneName, int life, string kind) =>
+    rr = math.abs(target - entry) / math.abs(entry - stop)
+    head = name + (dir > 0 ? " LONG" : " SHORT") + "  " + str.tostring(rr, "#.0") + "R"
+    zoneBox = showZones ? box.new(math.max(zoneLeft, bar_index - 900), zoneTop, bar_index, zoneBottom, border_color=color.new(dir > 0 ? cUp : cDown, 50),
+         bgcolor=color.new(dir > 0 ? cUp : cDown, 88), text=zoneName, text_color=color.new(cInk, 30), text_size=txtSmall, text_halign=text.align_left, text_valign=text.align_top) : na
+    s = Setup.new(name, kind, dir, entry, stop, target, filled, bar_index + life,
+         line.new(bar_index, entry, bar_index + 1, entry, color=cInk, width=2),
+         line.new(bar_index, stop, bar_index + 1, stop, color=cDown, width=1, style=line.style_dashed),
+         line.new(bar_index, target, bar_index + 1, target, color=cUp, width=1, style=line.style_dashed),
+         box.new(bar_index, math.max(entry, stop), bar_index + 1, math.min(entry, stop), border_color=clear, bgcolor=color.new(cDown, 90)),
+         box.new(bar_index, math.max(entry, target), bar_index + 1, math.min(entry, target), border_color=clear, bgcolor=color.new(cUp, 90)),
+         zoneBox,
+         label.new(bar_index, dir > 0 ? stop : stop, head + "\n" + why + "\nentry " + fmt(entry) + (filled ? "" : " (limit)") + "\nstop " + fmt(stop) + "   target " + fmt(target),
+             style=dir > 0 ? label.style_label_up : label.style_label_down, color=color.new(dir > 0 ? cUp : cDown, 25), textcolor=cInk, size=txtSmall, textalign=text.align_left),
+         na)
+    alert("Ano " + head + " · entry " + fmt(entry) + " · stop " + fmt(stop) + " · target " + fmt(target) + " · " + syminfo.ticker, alert.freq_once_per_bar_close)
+    s
+closeSetup(Setup s, string txt, color c, float price) =>
+    s.result := label.new(bar_index, price, txt, style=label.style_label_left, color=color.new(c, 20), textcolor=cInk, size=txtSmall)
+    array.set(lastResult, 0, s.name + (s.dir > 0 ? " long " : " short ") + txt)
+    array.push(history, s)
+    if array.size(history) > keepSetups
+        forget(array.shift(history))
+
+// ── State for the rules
+var float lastPH = na
+var int lastPHBar = na
+var bool lastPHBroken = true
+var float lastPL = na
+var int lastPLBar = na
+var bool lastPLBroken = true
+var int ictDir = 0
+var int sweepBar = na
+var float extreme = na
+var int extremeBar = na
+var float pivotLevel = na
+var float avgBody = na
+var float maxBody = 0.0
+var float gLo = na
+var float gHi = na
+var bool shifted = false
+var int shiftBar = na
+var string sweptName = ""
+var int obDir = 0
+var float obHi = na
+var float obLo = na
+var int obBreakBar = na
+var sweepMarks = array.new_label()
+var string lastNote = "watching"
+var int gLeft = na
+var int pivotBar = na
+var int obBar = na
+var int trend = 0
+var float breakLevel = na
+var int breakFrom = na
+var int breakBar = na
+var int breakDir = 0
+var string breakKind = ""
+var gapTop = array.new_float()
+var gapBot = array.new_float()
+var gapBar = array.new_int()
+var gapDir = array.new_int()
+var openMarks = array.new_line()
+var openTags = array.new_label()
+var float dayOpen = na
+var float orHi = na
+var float orLo = na
+var int orLeft = na
+var bool orTaken = false
+var box orBox = na
+bool ictLongNow = false
+bool ictShortNow = false
+bool smcLongNow = false
+bool smcShortNow = false
+
+if barstate.isconfirmed
+    // 1. Manage the open setup: fill, stop, target, expiry and session close, like the bots.
+    if not na(active)
+        s = active
+        line.set_x2(s.entryLine, bar_index)
+        line.set_x2(s.stopLine, bar_index)
+        line.set_x2(s.targetLine, bar_index)
+        box.set_right(s.risk, bar_index)
+        box.set_right(s.reward, bar_index)
+        risk = math.abs(s.entry - s.stop)
+        // Each strategy's own flat time: gap fill 11:00, opening range 12:00, the rest at the session end.
+        over = s.kind == "gap" ? not gapLive : s.kind == "or" ? not orLive : not inEntry
+        // Buys (long entries, short exits) fill on the ask = bid candle + spread.
+        if not s.filled
+            if s.dir > 0 ? low + spread <= s.entry : high >= s.entry
+                s.filled := true
+            else if bar_index >= s.expiresAt or over
+                closeSetup(s, "not filled", cDim, s.entry)
+                active := na
+        if not na(active) and s.filled
+            hitStop = s.dir > 0 ? low <= s.stop : high + spread >= s.stop
+            hitTarget = s.dir > 0 ? high >= s.target : low + spread <= s.target
+            // Both inside one bar: count the stop, as the safer assumption.
+            if hitStop
+                closeSetup(s, "stop  −1.0R", cDown, s.stop)
+                active := na
+            else if hitTarget
+                closeSetup(s, "target  +" + str.tostring(math.abs(s.target - s.entry) / risk, "#.0") + "R", cUp, s.target)
+                active := na
+            else if over
+                r = (s.dir > 0 ? close - s.entry : s.entry - (close + spread)) / risk
+                closeSetup(s, "session close  " + (r >= 0 ? "+" : "") + str.tostring(r, "#.0") + "R", cDim, close)
+                active := na
+
+    // 2. Liquidity taken this bar. Key levels taken by a wick that closes back inside are marked as sweeps.
+    if array.size(poolPrice) > 0
+        for i = array.size(poolPrice) - 1 to 0
+            p = array.get(poolPrice, i)
+            isHi = array.get(poolIsHigh, i)
+            if array.get(poolBar, i) < bar_index and (isHi ? high > p : low < p)
+                nm = array.get(poolName, i)
+                if showSweeps and array.get(poolKey, i) and (isHi ? close < p : close > p)
+                    array.push(sweepMarks, label.new(bar_index, isHi ? high : low, "✕ " + nm + " swept",
+                         style=isHi ? label.style_label_down : label.style_label_up, color=clear, textcolor=cSoft, size=txtSmall))
+                    if array.size(sweepMarks) > 8
+                        label.delete(array.shift(sweepMarks))
+                opposite = isHi ? lastPL : lastPH
+                if ictDir == 0 and inIct and not na(opposite)
+                    ictDir := isHi ? -1 : 1
+                    sweepBar := bar_index
+                    extreme := na
+                    extremeBar := na
+                    pivotLevel := opposite
+                    pivotBar := isHi ? lastPLBar : lastPHBar
+                    avgBody := avgBody20[1]
+                    maxBody := 0.0
+                    gLo := na
+                    gHi := na
+                    shifted := false
+                    shiftBar := na
+                    sweptName := nm
+                removePool(i)
+
+    // 3. ICT: follow the raid until it shifts structure, then grade it once.
+    if ictDir != 0
+        if not shifted and bar_index - sweepBar > shiftBars
+            ictDir := 0
+        else
+            if not shifted
+                if ictDir < 0
+                    if na(extreme) or high > extreme
+                        extreme := high
+                        extremeBar := bar_index
+                        gLo := na
+                        gHi := na
+                    if close < open
+                        maxBody := math.max(maxBody, body)
+                    if bar_index - 2 >= extremeBar and bearGap
+                        gLo := high
+                        gHi := low[2]
+                        gLeft := bar_index - 2
+                    if close < pivotLevel
+                        shifted := true
+                        shiftBar := bar_index
+                else
+                    if na(extreme) or low < extreme
+                        extreme := low
+                        extremeBar := bar_index
+                        gLo := na
+                        gHi := na
+                    if close > open
+                        maxBody := math.max(maxBody, body)
+                    if bar_index - 2 >= extremeBar and bullGap
+                        gLo := high[2]
+                        gHi := low
+                        gLeft := bar_index - 2
+                    if close > pivotLevel
+                        shifted := true
+                        shiftBar := bar_index
+            else if bar_index == shiftBar + 1
+                if ictDir < 0 and bar_index - 2 >= extremeBar and bearGap
+                    gLo := high
+                    gHi := low[2]
+                    gLeft := bar_index - 2
+                if ictDir > 0 and bar_index - 2 >= extremeBar and bullGap
+                    gLo := high[2]
+                    gHi := low
+                    gLeft := bar_index - 2
+            if shifted and ((bar_index == shiftBar and not na(gLo)) or bar_index == shiftBar + 1)
+                displaced = avgBody > 0 and maxBody >= dispMult * avgBody
+                if na(gLo)
+                    lastNote := "ICT: shift without a fair value gap"
+                else if not displaced
+                    lastNote := "ICT: shift too weak"
+                else
+                    mid = (gLo + gHi) / 2
+                    // Prices are where each order fills: buy-side ones on the ask.
+                    entry = ictDir > 0 ? mid + spread : mid
+                    stop = volStop(ictDir, entry, ictDir < 0 ? extreme + syminfo.mintick + spread : extreme - syminfo.mintick)
+                    pool = nearestPool(ictDir, mid)
+                    target = ictDir < 0 and not na(pool) ? pool + spread : pool
+                    if na(target) or math.abs(target - entry) < minRR * math.abs(entry - stop)
+                        lastNote := "ICT: target under " + str.tostring(minRR) + "R"
+                    else if showIct and na(active)
+                        active := openSetup("ICT", ictDir, entry, stop, target, false, sweptName + " swept, MSS + FVG", gLeft, gHi, gLo, "FVG", ictExpiry, "ict")
+                        lastNote := "ICT setup"
+                        ictLongNow := ictDir > 0
+                        ictShortNow := ictDir < 0
+                ictDir := 0
+
+    // 4. Structure breaks, and the order block that caused them.
+    // A break with the trend is a BOS, against it a CHoCH.
+    if not na(lastPH) and not lastPHBroken and close > lastPH
+        lastPHBroken := true
+        breakKind := trend < 0 ? "CHoCH" : "BOS"
+        trend := 1
+        breakLevel := lastPH
+        breakFrom := lastPHBar
+        breakBar := bar_index
+        breakDir := 1
+        for j = 1 to 20
+            if close[j] < open[j]
+                obDir := 1
+                obHi := high[j]
+                obLo := low[j]
+                obBar := bar_index - j
+                obBreakBar := bar_index
+                break
+    if not na(lastPL) and not lastPLBroken and close < lastPL
+        lastPLBroken := true
+        breakKind := trend > 0 ? "CHoCH" : "BOS"
+        trend := -1
+        breakLevel := lastPL
+        breakFrom := lastPLBar
+        breakBar := bar_index
+        breakDir := -1
+        for j = 1 to 20
+            if close[j] > open[j]
+                obDir := -1
+                obHi := high[j]
+                obLo := low[j]
+                obBar := bar_index - j
+                obBreakBar := bar_index
+                break
+
+    // 5. SMC: order-block retest with a rejection close, in the higher-timeframe direction.
+    if obDir != 0 and bar_index > obBreakBar
+        if obDir > 0 ? close < obLo : close > obHi
+            obDir := 0
+        else if obDir > 0 ? (low <= obHi and close > obHi and close > open) : (high >= obLo and close < obLo and close < open)
+            if bias == obDir and inEntry
+                entry = obDir > 0 ? close + spread : close
+                stop = volStop(obDir, entry, obDir > 0 ? math.min(low, obLo) - syminfo.mintick : math.max(high, obHi) + syminfo.mintick + spread)
+                pool = nearestPool(obDir, close)
+                target = obDir < 0 and not na(pool) ? pool + spread : pool
+                if na(target) or math.abs(target - entry) < minRR * math.abs(entry - stop)
+                    lastNote := "SMC: target under " + str.tostring(minRR) + "R"
+                else if showSmc and na(active)
+                    active := openSetup("SMC", obDir, entry, stop, target, true, "order block retest with bias", obBar, obHi, obLo, "OB", ictExpiry, "smc")
+                    lastNote := "SMC setup"
+                    smcLongNow := obDir > 0
+                    smcShortNow := obDir < 0
+            obDir := 0
+
+    // 6. Stocks only: the opening range and gap fill, Ano's two equity strategies.
+    if isStocks
+        if nyOn and not nyOn[1]
+            dayOpen := open
+            orHi := high
+            orLo := low
+            orLeft := bar_index
+            orTaken := false
+            box.delete(orBox)
+            orBox := showOrBox ? box.new(bar_index, high, bar_index, low, border_color=color.new(cSoft, 60), bgcolor=color.new(cInk, 96),
+                 text="Opening range", text_color=cSoft, text_size=txtSmall, text_halign=text.align_left, text_valign=text.align_top) : na
+        else if orBuild
+            orHi := math.max(orHi, high)
+            orLo := math.min(orLo, low)
+            if not na(orBox)
+                box.set_top(orBox, orHi)
+                box.set_bottom(orBox, orLo)
+                box.set_right(orBox, bar_index)
+        // Gap fill: decided on the 9:34 close, a limit order that must fill within five bars.
+        if gapDecide and na(active) and showGapFill and not na(prevClose) and not na(dayOpen)
+            gapPct = (dayOpen - prevClose) / prevClose
+            if math.abs(gapPct) >= 0.0005 and math.abs(gapPct) <= 0.006
+                dir = gapPct > 0 ? -1 : 1
+                toward = dir < 0 ? close < dayOpen : close > dayOpen
+                notFilled = dir < 0 ? close > prevClose : close < prevClose
+                if toward and notFilled
+                    entry = dir > 0 ? close + spread : close
+                    stop = entry - dir * 1.5 * math.abs(dayOpen - prevClose)
+                    target = dir < 0 ? prevClose + spread : prevClose
+                    active := openSetup("Gap fill", dir, entry, stop, target, false, "gap " + str.tostring(gapPct * 100, "+0.00;-0.00") + "%, first 5 min toward the fill",
+                         orLeft, math.max(dayOpen, prevClose), math.min(dayOpen, prevClose), "gap", 5, "gap")
+                    lastNote := "Gap fill setup"
+        // Opening range: only the first close outside the range after 10:00 counts.
+        if orTrade and not orTaken and not na(orHi)
+            if close > orHi or close < orLo
+                orTaken := true
+                if showOr and na(active)
+                    dir = close > orHi ? 1 : -1
+                    entry = dir > 0 ? close + spread : close
+                    stop = volStop(dir, entry, (orHi + orLo) / 2 + (dir < 0 ? spread : 0))
+                    target = entry + dir * (minRR * math.abs(entry - stop) + (minRR + 1) * 0.02)
+                    active := openSetup("Opening range", dir, entry, stop, target, true, "first close outside the 9:30-10:00 range",
+                         orLeft, orHi, orLo, "range", ictExpiry, "or")
+                    lastNote := "Opening range setup"
+
+    // 7. New liquidity confirmed this bar, eligible from the next bar.
+    if not na(ph)
+        lastPH := ph
+        lastPHBar := bar_index - pivotN
+        lastPHBroken := false
+        addPool(ph, true, "swing high", false)
+    if not na(pl)
+        lastPL := pl
+        lastPLBar := bar_index - pivotN
+        lastPLBroken := false
+        addPool(pl, false, "swing low", false)
+    if newDay
+        addPool(pdH, true, "PDH", true)
+        addPool(pdL, false, "PDL", true)
+    if tkOpen
+        addPool(tkHi, true, "Tokyo high", true)
+        addPool(tkLo, false, "Tokyo low", true)
+    if ldOpen
+        addPool(ldHi, true, "London high", true)
+        addPool(ldLo, false, "London low", true)
+    if nyOpen
+        addPool(nyHi, true, "NY high", true)
+        addPool(nyLo, false, "NY low", true)
+
+    // Session opens: a faint vertical line and its name, the last three kept.
+    if showOpens and (tkOpen or ldOpen or nyOpen)
+        array.push(openMarks, line.new(bar_index, low, bar_index, high, extend=extend.both, color=color.new(cDim, 40), style=line.style_dotted))
+        array.push(openTags, label.new(bar_index, high, tkOpen ? "Tokyo open" : ldOpen ? "London open" : "New York open",
+             style=label.style_label_lower_left, color=clear, textcolor=cSoft, size=txtSmall))
+        if array.size(openMarks) > 3
+            line.delete(array.shift(openMarks))
+            label.delete(array.shift(openTags))
+
+    // Unfilled gaps: removed once price trades back through all of the gap.
+    if array.size(gapTop) > 0
+        for i = array.size(gapTop) - 1 to 0
+            if array.get(gapDir, i) > 0 ? low <= array.get(gapBot, i) : high >= array.get(gapTop, i)
+                array.remove(gapTop, i)
+                array.remove(gapBot, i)
+                array.remove(gapBar, i)
+                array.remove(gapDir, i)
+    if bullGap or bearGap
+        array.push(gapTop, bullGap ? low : low[2])
+        array.push(gapBot, bullGap ? high[2] : high)
+        array.push(gapBar, bar_index - 2)
+        array.push(gapDir, bullGap ? 1 : -1)
+        if array.size(gapTop) > 30
+            array.shift(gapTop)
+            array.shift(gapBot)
+            array.shift(gapBar)
+            array.shift(gapDir)
+
+// ── Key levels near price, redrawn on the latest bar: untouched highs and lows, nearest first.
+var levelLines = array.new_line()
+var levelLabels = array.new_label()
+var levelBoxes = array.new_box()
+if barstate.islast
+    for l in levelLines
+        line.delete(l)
+    for lb in levelLabels
+        label.delete(lb)
+    for b in levelBoxes
+        box.delete(b)
+    array.clear(levelLines)
+    array.clear(levelLabels)
+    array.clear(levelBoxes)
+    shown = array.new_float()
+    // While ICT waits after a sweep: the swing whose break (MSS) would confirm the setup.
+    if showMss and ictDir != 0 and not shifted and not na(pivotLevel)
+        array.push(shown, pivotLevel)
+        c = ictDir > 0 ? cUp : cDown
+        array.push(levelLines, line.new(math.max(pivotBar, bar_index - 900), pivotLevel, bar_index + 15, pivotLevel, color=c, width=1, style=line.style_dotted))
+        array.push(levelLabels, label.new(bar_index + 15, pivotLevel, "MSS level  " + fmt(pivotLevel) + (ictDir > 0 ? "  (close above = ICT long)" : "  (close below = ICT short)"),
+             style=label.style_label_left, color=clear, textcolor=c, size=txtSmall))
+    // The latest structure break only.
+    if showBreak and breakDir != 0 and bar_index - breakFrom < 900
+        c = breakDir > 0 ? cUp : cDown
+        array.push(levelLines, line.new(breakFrom, breakLevel, breakBar, breakLevel, color=color.new(c, 30), style=line.style_dotted))
+        array.push(levelLabels, label.new(math.round((breakFrom + breakBar) / 2), breakLevel, breakKind,
+             style=breakDir > 0 ? label.style_label_down : label.style_label_up, color=clear, textcolor=c, size=txtSmall))
+    // The most recent gaps price has not filled yet.
+    if showGaps and array.size(gapTop) > 0
+        count = 0
+        for i = array.size(gapTop) - 1 to 0
+            if count < gapsShown and bar_index - array.get(gapBar, i) < 900
+                c = array.get(gapDir, i) > 0 ? cUp : cDown
+                array.push(levelBoxes, box.new(array.get(gapBar, i), array.get(gapTop, i), bar_index + 15, array.get(gapBot, i), border_color=clear,
+                     bgcolor=color.new(c, 88), text="FVG", text_color=color.new(c, 20), text_size=txtSmall, text_halign=text.align_right))
+                count += 1
+    for side = 0 to 1
+        for k = 1 to levelsEachSide
+            int pick = na
+            if array.size(poolPrice) > 0
+                for i = 0 to array.size(poolPrice) - 1
+                    p = array.get(poolPrice, i)
+                    // Only the latest swing on each side counts as a key level; older swings stay off screen.
+                    isLatestSwing = not array.get(poolKey, i) and (p == lastPH or p == lastPL)
+                    near = false
+                    for q in shown
+                        if math.abs(q - p) < minGap
+                            near := true
+                    if (side == 0 ? p > close : p <= close) and (array.get(poolKey, i) or isLatestSwing) and not near
+                        if na(pick) or math.abs(p - close) < math.abs(array.get(poolPrice, pick) - close)
+                            pick := i
+            if not na(pick)
+                p = array.get(poolPrice, pick)
+                key = array.get(poolKey, pick)
+                array.push(shown, p)
+                // TradingView only draws from bars within the script's history buffer; older levels start at the cap.
+                array.push(levelLines, line.new(math.max(array.get(poolBar, pick), bar_index - 900), p, bar_index + 15, p, color=key ? color.new(cInk, 35) : cDim, width=1, style=key ? line.style_solid : line.style_dashed))
+                array.push(levelLabels, label.new(bar_index + 15, p, array.get(poolName, pick) + "  " + fmt(p), style=label.style_label_left, color=clear, textcolor=key ? cInk : cSoft, size=txtSmall))
+
+// ── Status box: four short lines
+var table panel = table.new(position.top_right, 2, 4, bgcolor=color.new(#000000, 40))
+if showPanel and barstate.islast
+    string watching = ictDir != 0 ? "ICT: " + sweptName + " swept, waiting for MSS" : lastNote
+    if not na(active)
+        watching := active.name + (active.filled ? " trade open" : " limit waiting for fill")
+    table.cell(panel, 0, 0, "Session", text_color=cSoft, text_size=txtSmall, text_halign=text.align_left)
+    table.cell(panel, 1, 0, sessName + (inIct ? " · kill zone" : ""), text_color=cInk, text_size=txtSmall, text_halign=text.align_left)
+    table.cell(panel, 0, 1, "Bias H4/H1", text_color=cSoft, text_size=txtSmall, text_halign=text.align_left)
+    table.cell(panel, 1, 1, bias > 0 ? "up" : bias < 0 ? "down" : "mixed (SMC waits)", text_color=bias > 0 ? cUp : bias < 0 ? cDown : cInk, text_size=txtSmall, text_halign=text.align_left)
+    table.cell(panel, 0, 2, "Now", text_color=cSoft, text_size=txtSmall, text_halign=text.align_left)
+    table.cell(panel, 1, 2, watching + (timeframe.period == "1" ? "" : " · use 1m"), text_color=cInk, text_size=txtSmall, text_halign=text.align_left)
+    table.cell(panel, 0, 3, "Last", text_color=cSoft, text_size=txtSmall, text_halign=text.align_left)
+    table.cell(panel, 1, 3, array.get(lastResult, 0), text_color=cInk, text_size=txtSmall, text_halign=text.align_left)
+
+alertcondition(ictLongNow, "Ano ICT long", "Ano ICT possible long on {{ticker}} at {{close}}")
+alertcondition(ictShortNow, "Ano ICT short", "Ano ICT possible short on {{ticker}} at {{close}}")
+alertcondition(smcLongNow, "Ano SMC long", "Ano SMC possible long on {{ticker}} at {{close}}")
+alertcondition(smcShortNow, "Ano SMC short", "Ano SMC possible short on {{ticker}} at {{close}}")

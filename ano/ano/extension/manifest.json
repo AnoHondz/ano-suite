@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Ano",
+  "version": "1.4",
+  "description": "Connects tabs and task navigation to Ano. Saved logins fill or sign in once only after explicit local approval.",
+  "minimum_chrome_version": "116",
+  "permissions": ["tabs", "alarms", "scripting"],
+  "host_permissions": ["<all_urls>"],
+  "background": { "service_worker": "background.js" },
+  "icons": { "128": "icon.png" }
+}

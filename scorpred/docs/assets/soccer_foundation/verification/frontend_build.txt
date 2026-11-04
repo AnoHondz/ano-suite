@@ -1,0 +1,15 @@
+
+> frontend@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.8 building client environment for production...
+
+transforming...✓ 1746 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                  0.61 kB │ gzip:  0.34 kB
+dist/assets/scorpred-player-logo-bd_ksRHA.png   82.17 kB
+dist/assets/index-BU4ly9zT.css                  56.77 kB │ gzip: 11.47 kB
+dist/assets/index-ByMs0xSJ.js                  291.07 kB │ gzip: 85.78 kB
+
+✓ built in 6.14s

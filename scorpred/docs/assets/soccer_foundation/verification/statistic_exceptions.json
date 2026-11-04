@@ -1,0 +1,22 @@
+{
+  "contract_version": "soccer-stats-v1",
+  "exceptions": [
+    {
+      "fixture_id": "soccer:e0:research:v1:48570a4113cd4445eab05534",
+      "side": "away",
+      "source_reference": {
+        "file": "data/processed/matches_stage1.csv",
+        "sha256": "7c03dfef6e777714bc4b6cc677428ba2bf6385f601cbd6e1f5cc89f1ce8cb3bf",
+        "csv_line": 770,
+        "row_sha256": "f11e75861ea4cf74d1eba6faed6989c087fec9ded1f516860d3eb6ac3438ce9b"
+      },
+      "issues": [
+        {
+          "field": "shots/shots_on_target",
+          "reason": "on_target_exceeds_total; pair_quarantined"
+        }
+      ]
+    }
+  ],
+  "original_values_modified": false
+}

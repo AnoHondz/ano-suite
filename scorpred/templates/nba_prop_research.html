@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% block title %}NBA Points Research — {% endblock %}
+{% block content %}
+<section class="container" style="max-width:1000px;margin:2rem auto;padding:1rem">
+  <h1>NBA points research · rebounds and assists</h1>
+  <details><summary>Pipeline status and missing evidence</summary><button type="button" id="pipeline-status-load">Check pipeline</button><pre id="pipeline-status"></pre></details>
+  <label>Strategy <select id="research-mode"><option value="individual">Individual props</option><option value="parlay">Small parlays</option></select></label>
+  <label>Market <select id="research-market"><option value="points">Points</option><option value="rebounds">Rebounds</option><option value="assists">Assists</option><option value="all">All three markets</option></select></label>
+  <p>Inspect projected minutes, the model distribution and exact sportsbook prices. Research only; no bets are placed.</p>
+  <form id="research-form">
+    <label>NBA game <select id="research-game" required><option value="">Load games for a date</option></select></label>
+    <label>Game date <input id="research-date" type="date" required></label>
+    <button type="button" id="research-load-games">Load games</button>
+    <button type="submit">Load research</button>
+  </form>
+  <form id="parlay-form" hidden><label>Legs <select id="parlay-legs"><option>2</option><option>3</option></select></label><label>Target decimal odds <input id="parlay-target" type="number" value="2" min="1.01" step="0.05" required></label><button>Evaluate stored research</button></form>
+  <p id="research-status" role="status">Choose a scheduled game. Missing evidence produces WAIT.</p>
+  <form id="bet365-form" hidden style="border:1px solid #64748b;padding:1rem;margin:1rem 0">
+    <h2>Check your bet365 prop</h2>
+    <p>Enter the line and both American prices shown in bet365. This uses no odds-feed credits. Results are unvalidated model leans.</p>
+    <label>Player and market <select id="bet365-player" required></select></label>
+    <label>Line <input id="bet365-line" type="number" min="0" step="0.5" required></label>
+    <label>Over price <input id="bet365-over" type="number" placeholder="-110" required></label>
+    <label>Under price <input id="bet365-under" type="number" placeholder="-110" required></label>
+    <button type="submit">Check bet365 line</button>
+    <div id="bet365-result" role="status"></div>
+  </form>
+  <details><summary>Paper results and calibration</summary><button type="button" id="research-load-results">Load recorded results</button><pre id="research-paper-results">No results loaded.</pre></details>
+  <div id="research-results"></div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+(() => {
+  const form=document.getElementById('research-form'), status=document.getElementById('research-status'), results=document.getElementById('research-results');
+  const parlay=document.getElementById('parlay-form');
+  const manual=document.getElementById('bet365-form');
+  for(const id of ['research-game','research-date','research-mode'])document.getElementById(id).addEventListener('change',()=>{manual.hidden=true;});
+  manual.addEventListener('submit',async event=>{
+    event.preventDefault();const target=document.getElementById('bet365-result'),button=manual.querySelector('button');button.disabled=true;target.replaceChildren();text(target,'p','Checking your bet365 prices…');
+    try{const [player_id,market]=JSON.parse(document.getElementById('bet365-player').value);
+      const response=await fetch('/api/nba/props/research/bet365-line',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({snapshot_id:Number(manual.dataset.snapshotId),player_id,market,line:Number(document.getElementById('bet365-line').value),over_american:Number(document.getElementById('bet365-over').value),under_american:Number(document.getElementById('bet365-under').value),csrf_token:document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')})});
+      const payload=await response.json();if(!response.ok)throw new Error(payload.error||'Comparison unavailable');target.replaceChildren();
+      const row=payload.result.rows[0],lean=row.model_lean;
+      text(target,'h3',row.player+' · '+(lean?lean.side+' '+lean.line+' '+row.market+' LEAN — UNVALIDATED':row.decision));
+      renderForecast(target,row);
+      if(lean){const value=row.two_sided_value[lean.side.toLowerCase()];text(target,'p','Your decimal price: '+lean.decimal_odds+' · Unvalidated model win probability: '+(value.model_win_probability*100).toFixed(1)+'% · Estimated return/unit: '+value.expected_profit_per_unit.toFixed(3));}
+      text(target,'p',payload.result.notice);for(const reason of row.reasons)text(target,'p',reason);for(const warning of row.warnings||[])text(target,'p',warning);
+    }catch(error){target.replaceChildren();text(target,'p',error.message);}finally{button.disabled=false;}
+  });
+  const marketFilter=document.getElementById('research-market');
+  marketFilter.addEventListener('change',()=>{for(const card of results.querySelectorAll('article[data-market]'))card.hidden=marketFilter.value!=='all'&&card.dataset.market!==marketFilter.value;});
+  document.getElementById('pipeline-status-load').addEventListener('click',async()=>{
+    const target=document.getElementById('pipeline-status');target.textContent='Checking…';
+    try{const response=await fetch('/api/nba/props/research/readiness');const payload=await response.json();if(!response.ok)throw new Error('Pipeline status unavailable');target.textContent=JSON.stringify(payload.result,null,2);}catch(error){target.textContent=error.message;}
+  });
+  document.getElementById('research-mode').addEventListener('change',event=>{const small=event.target.value==='parlay';form.hidden=small;parlay.hidden=!small;results.replaceChildren();status.textContent=small?'Uses saved pregame research. Unvalidated legs and missing combination prices cannot qualify.':'Load the scheduled games for a date.';});
+  const dateParts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+  const part=type=>dateParts.find(p=>p.type===type).value;
+  document.getElementById('research-date').value=part('year')+'-'+part('month')+'-'+part('day');
+  document.getElementById('research-load-games').addEventListener('click',async()=>{
+    const selector=document.getElementById('research-game');selector.replaceChildren();status.textContent='Loading schedule…';
+    try{const response=await fetch('/api/nba/props/research/games?date='+encodeURIComponent(document.getElementById('research-date').value));const payload=await response.json();if(!response.ok)throw new Error(payload.error||'Schedule unavailable');
+      for(const game of payload.slate||[]){if(!game.pregameAvailable)continue;const option=document.createElement('option');option.value=game.matchId;option.textContent=game.teamA+' vs '+game.teamB;selector.appendChild(option);}
+      status.textContent=selector.options.length?'Choose a game and load research.':payload.error||'WAIT — No verified pregame games for this date.';
+    }catch(error){status.textContent='WAIT — '+error.message;}
+  });
+  parlay.addEventListener('submit',async event=>{event.preventDefault();results.replaceChildren();status.textContent='Checking stored pregame research…';try{
+    const response=await fetch('/api/nba/props/research/parlays?legs='+encodeURIComponent(document.getElementById('parlay-legs').value)+'&target='+encodeURIComponent(document.getElementById('parlay-target').value));const payload=await response.json();if(!response.ok)throw new Error(payload.error||'Parlay research unavailable');status.textContent=payload.result.status;text(results,'pre',JSON.stringify(payload.result,null,2));
+  }catch(error){status.textContent='WAIT — '+error.message;}});
+  document.getElementById('research-load-results').addEventListener('click',async()=>{
+    const target=document.getElementById('research-paper-results');target.textContent='Loading…';
+    try{const response=await fetch('/api/nba/props/research/results');if(!response.ok)throw new Error('Results unavailable');const payload=await response.json();target.textContent=JSON.stringify(payload.result,null,2);}
+    catch(error){target.textContent=error.message;}
+  });
+  function text(parent,tag,value){const el=document.createElement(tag);el.textContent=value;parent.appendChild(el);return el;}
+  function renderForecast(parent,row){
+    if(!row.forecast)return;const f=row.forecast,h=f.historical;
+    text(parent,'p','Forecast at '+f.line+' '+row.market+' — '+f.line_basis);
+    text(parent,'p','Unvalidated model estimates: OVER '+(100*f.over_probability).toFixed(1)+'% · UNDER '+(100*f.under_probability).toFixed(1)+'%'+(f.push_probability?' · PUSH '+(100*f.push_probability).toFixed(1)+'%':''));
+    text(parent,'p',h.games?'Historical hit rate: OVER '+h.over_hits+'/'+h.games+' ('+(100*h.over_hit_rate).toFixed(0)+'%) · UNDER '+h.under_hits+'/'+h.games+' ('+(100*h.under_hit_rate).toFixed(0)+'%). '+h.scope:'Historical hit rate unavailable for identified current-team appearances.');
+    text(parent,'p',f.notice);
+  }
+  form.addEventListener('submit',async event=>{
+    event.preventDefault(); results.replaceChildren(); manual.hidden=true;status.textContent='Loading pregame evidence…';
+    const button=form.querySelector('button[type="submit"]');button.disabled=true;
+    try{
+      const response=await fetch('/api/nba/matches/'+encodeURIComponent(document.getElementById('research-game').value)+'/props?date='+encodeURIComponent(document.getElementById('research-date').value));
+      const payload=await response.json();
+      if(!response.ok)throw new Error(payload.error||'Research unavailable');
+      const report=payload.result?.research;
+      if(!report)throw new Error('This server has no research report available');
+      if(report.snapshot_id&&report.rows.length){
+        const options=document.getElementById('bet365-player');options.replaceChildren();const seen=new Set();
+        for(const row of report.rows){const key=JSON.stringify([String(row.player_id),row.market]);if(seen.has(key))continue;seen.add(key);const option=document.createElement('option');option.value=key;option.textContent=row.player+' · '+row.market;options.appendChild(option);}
+        manual.dataset.snapshotId=report.snapshot_id;manual.hidden=false;document.getElementById('bet365-result').replaceChildren();
+      }
+      status.textContent=report.notice+' Paper snapshot: '+(report.paper_recorded?'saved':'not saved')+'.';
+      if(report.snapshot_id){
+        const explanation=text(results,'pre','');
+        for(const [label,mode] of [['Explain saved evidence','deterministic'],['Ask local AI (free)','local_ai']]){
+          const explainButton=text(results,'button',label);explainButton.type='button';
+          explainButton.addEventListener('click',async()=>{explainButton.disabled=true;explanation.textContent='Preparing explanation…';try{
+            const csrfToken=document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            const response=await fetch('/api/nba/props/research/snapshots/'+report.snapshot_id+'/explanation',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode,csrf_token:csrfToken})});const payload=await response.json();if(!response.ok)throw new Error(payload.error||'Explanation unavailable');explanation.textContent=payload.result.text+'\n\n'+(payload.result.ai_commentary||'')+'\n'+(payload.result.ai_notice||'');
+          }catch(error){explanation.textContent=error.message;}finally{explainButton.disabled=false;}});
+        }
+      }
+      if(report.market_evidence){text(results,'p',report.market_evidence.reason||'Market evidence unavailable');
+        if(report.market_evidence.schedule_conflict)text(results,'pre',JSON.stringify(report.market_evidence.schedule_conflict,null,2));}
+      if(report.external_research){const external=text(results,'details','');text(external,'summary','External analyst research · '+report.external_research.status);text(external,'pre',JSON.stringify(report.external_research,null,2));}
+      if(!report.rows.length)text(results,'p','WAIT — No eligible NBA points projections with sufficient current coverage.');
+      for(const row of report.rows){
+        const card=text(results,'article','');card.style.cssText='border:1px solid #64748b;padding:1rem;margin:1rem 0;border-radius:8px';
+        card.dataset.market=row.market;card.hidden=marketFilter.value!=='all'&&row.market!==marketFilter.value;
+        const headline=row.model_lean&&!row.model_lean.validated?row.model_lean.side+' LEAN (unvalidated)':row.decision;
+        text(card,'h2',row.player+' · '+row.market+' · '+headline);
+        renderForecast(card,row);
+        if(row.model_lean){const lean=row.model_lean;text(card,'p','Model lean: '+lean.side+' '+lean.line+' '+row.market+' at decimal '+lean.decimal_odds+' · '+(lean.validated?'research gate passed':'UNVALIDATED')+'. '+lean.notice);}
+        for(const warning of row.warnings||[])text(card,'p',warning);
+        text(card,'p','Projected '+row.market+': '+(row.projected_value??row.projected_points??'unavailable')+' · Minutes: '+(row.expected_minutes??'unavailable')+' · Games: '+(row.sample_games??'unavailable'));
+        if(row.projected_range){text(card,'p','Model 10th–90th percentile: '+(row.projected_range.p10??'unavailable')+'–'+(row.projected_range.p90??'beyond stored range')+' '+row.market+'. '+row.projected_range.basis);}
+        const quote=row.quote;
+        text(card,'p',quote?quote.bookmaker+' · '+quote.side+' '+quote.line+' '+row.market+' · decimal odds '+quote.decimal_odds+' · updated '+quote.updated_at:'No verified sportsbook line or price.');
+        text(card,'p','Estimated profit per unit: '+(row.expected_profit_per_unit===null?'unavailable':row.expected_profit_per_unit.toFixed(3))+' (unvalidated estimate)');
+        text(card,'p',row.reasons.join('; '));text(card,'p',row.counterargument);
+        for(const sentence of row.explanation||[])text(card,'p',sentence);
+        if(row.two_sided_value){
+          for(const side of ['over','under']){
+            const value=row.two_sided_value[side];
+            text(card,'p',side.toUpperCase()+': odds '+value.decimal_odds+' · model '+(100*value.model_win_probability).toFixed(1)+'% · break-even '+(100*value.break_even_conditional_on_no_push).toFixed(1)+'% · margin-adjusted market '+(100*value.market_no_vig_probability).toFixed(1)+'% · estimated return/unit '+value.expected_profit_per_unit.toFixed(3));
+          }
+        }
+        const details=text(card,'details','');text(details,'summary','Distribution and source evidence');
+        text(details,'pre',JSON.stringify({game_environment:report.game_environment,projection_model:row.projection_model,opportunity_evidence:row.opportunity_evidence,matchup_context:row.matchup_context,distribution:row.distribution,range_notice:row.range_notice,lineup_status:row.lineup_status,injury_source:report.injury_source,quote},null,2));
+      }
+    }catch(error){status.textContent='WAIT — '+error.message;}finally{button.disabled=false;}
+  });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,303 @@
+{% extends "base.html" %}
+{% import "components/decision.html" as ui with context %}
+
+{% block title %}ScorPred | Soccer{% endblock %}
+{% block topbar_title %}Soccer{% endblock %}
+
+{% block topbar_actions %}
+  <form class="sp-filter-row" method="get" action="/soccer">
+    <select class="sp-filter-control" name="league" onchange="this.form.submit()" aria-label="Competition">
+      {% for league in supported_leagues %}
+        <option value="{{ league.id }}" {% if current_league_id == league.id %}selected{% endif %}>{{ league.name }}</option>
+      {% endfor %}
+    </select>
+  </form>
+{% endblock %}
+
+{% block content %}
+
+{# ── Header with league context ─────────────────────────────────────────────── #}
+<div class="sp-soccer-header">
+  <div class="sp-soccer-header__left">
+    <h1>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:28px;height:28px;display:inline-block;vertical-align:middle;margin-right:.4rem"><circle cx="12" cy="12" r="9"/><path d="m9 8 3-2 3 2 1 4-4 3-4-3 1-4Z"/><path d="m4.5 13.5 3.5-1.5M16 12l3.5 1.5M12 15v4"/></svg>
+      {{ current_league.name if current_league else 'Soccer' }}
+    </h1>
+    <p>AI-powered predictions and match analysis</p>
+  </div>
+  <div style="display:flex;gap:.6rem;align-items:center">
+    <a class="btn btn-secondary btn-sm" href="/today-soccer-predictions">Today's Predictions</a>
+    <a class="btn btn-secondary btn-sm" href="/fixtures">Fixture View</a>
+  </div>
+</div>
+
+{% if selection_notice %}
+  <div class="sp-flash sp-flash--warn">{{ selection_notice }}</div>
+{% endif %}
+
+{# ── KPI Cards ───────────────────────────────────────────────────────────────── #}
+{% set plan = today_plan or {} %}
+{% set all_cards = (top_opportunities or []) + (full_slate or []) %}
+{% set total_matches = all_cards|length %}
+{% set conf_sum = namespace(v=0, n=0) %}
+{% for card in all_cards %}
+  {% if card.confidence_pct %}
+    {% set conf_sum.v = conf_sum.v + card.confidence_pct %}
+    {% set conf_sum.n = conf_sum.n + 1 %}
+  {% endif %}
+{% endfor %}
+{% set avg_conf = (conf_sum.v / conf_sum.n)|round|int if conf_sum.n > 0 else 0 %}
+
+<div class="sp-kpi-row" style="grid-template-columns:repeat(5,1fr)">
+  <div class="sp-kpi-card sp-kpi-card--bet">
+    <span class="sp-kpi-card__label">BET</span>
+    <span class="sp-kpi-card__value">{{ plan.bet or 0 }}</span>
+    <span class="sp-kpi-card__meta">High confidence</span>
+    <span class="sp-kpi-card__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    </span>
+  </div>
+  <div class="sp-kpi-card sp-kpi-card--consider">
+    <span class="sp-kpi-card__label">CONSIDER</span>
+    <span class="sp-kpi-card__value">{{ plan.consider or 0 }}</span>
+    <span class="sp-kpi-card__meta">Medium confidence</span>
+    <span class="sp-kpi-card__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </span>
+  </div>
+  <div class="sp-kpi-card sp-kpi-card--skip">
+    <span class="sp-kpi-card__label">SKIP</span>
+    <span class="sp-kpi-card__value">{{ plan.skip or 0 }}</span>
+    <span class="sp-kpi-card__meta">Low confidence</span>
+    <span class="sp-kpi-card__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+    </span>
+  </div>
+  <div class="sp-kpi-card sp-kpi-card--accuracy">
+    <span class="sp-kpi-card__label">Total Matches</span>
+    <span class="sp-kpi-card__value">{{ total_matches }}</span>
+    <span class="sp-kpi-card__meta">Today</span>
+    <span class="sp-kpi-card__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    </span>
+  </div>
+  <div class="sp-kpi-card sp-kpi-card--roi">
+    <span class="sp-kpi-card__label">Avg. Confidence</span>
+    <span class="sp-kpi-card__value">{{ avg_conf }}%</span>
+    <span class="sp-kpi-card__meta">Today</span>
+    <span class="sp-kpi-card__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l3-4 3 2 4-6"/><path d="M17 7h3v3"/></svg>
+    </span>
+  </div>
+</div>
+
+{# ── Page Tabs ────────────────────────────────────────────────────────────────── #}
+<div class="sp-page-tabs">
+  <a href="#top-opportunities" class="sp-page-tab active" onclick="showTab('top-opportunities',this)">Top Opportunities</a>
+  <a href="#full-slate" class="sp-page-tab" onclick="showTab('full-slate',this)">Full Slate</a>
+  <a href="#todays-plan" class="sp-page-tab" onclick="showTab('todays-plan',this)">Today's Plan</a>
+  <a href="/watchlist" class="sp-page-tab">Watchlist</a>
+</div>
+
+{# ── Sort Bar ─────────────────────────────────────────────────────────────────── #}
+<div class="sp-sort-bar">
+  <p class="sp-sort-bar__desc">The best AI-identified opportunities based on edge, form, and data quality.</p>
+  <div class="sp-sort-control">
+    Sort by:
+    <select onchange="return false;">
+      <option>Confidence</option>
+      <option>League</option>
+      <option>Time</option>
+    </select>
+  </div>
+</div>
+
+{# ── Top Opportunities Tab ────────────────────────────────────────────────────── #}
+<div id="tab-top-opportunities">
+  {% if top_opportunities %}
+    <div class="sp-match-table">
+      <div class="sp-match-table__header">
+        <span>Match</span>
+        <span>AI Pick</span>
+        <span>Confidence</span>
+        <span>Win Probabilities</span>
+        <span>Data Quality</span>
+        <span>Action</span>
+      </div>
+      {% for card in top_opportunities %}
+        {% include "components/match_row.html" ignore missing %}
+        {# Fallback if include fails - render inline #}
+        <div class="sp-match-row">
+          {# Match identity #}
+          <div class="sp-match-row__identity sp-match-cell">
+            <form method="post" action="/watchlist/team">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+              <input type="hidden" name="team" value="{{ card.team_a }}" />
+              <button class="sp-match-row__star" aria-label="Add {{ card.team_a }} to watchlist" type="submit">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              </button>
+            </form>
+            <div class="sp-match-row__meta">
+              <span class="sp-match-row__league">{{ card.competition or 'Soccer' }}</span>
+              <span class="sp-match-row__time">Today</span>
+            </div>
+            <div class="sp-match-row__teams">
+              {% if card.team_a_logo %}<img src="{{ card.team_a_logo }}" alt="{{ card.team_a }}" class="sp-match-row__logo" onerror="this.style.display='none'">{% else %}<span class="sp-match-row__logo-placeholder">{{ card.team_a_initials or card.team_a[:2] }}</span>{% endif %}
+              <span class="sp-match-row__vs">vs</span>
+              {% if card.team_b_logo %}<img src="{{ card.team_b_logo }}" alt="{{ card.team_b }}" class="sp-match-row__logo" onerror="this.style.display='none'">{% else %}<span class="sp-match-row__logo-placeholder">{{ card.team_b_initials or card.team_b[:2] }}</span>{% endif %}
+            </div>
+            <div class="sp-match-row__names">
+              <span class="sp-match-row__team-name">{{ card.team_a }}</span>
+              <span class="sp-match-row__team-name" style="color:var(--text-3)">{{ card.team_b }}</span>
+            </div>
+          </div>
+          {# AI Pick #}
+          <div class="sp-match-row__pick sp-match-cell">
+            <span class="sp-match-row__pick-side">{{ card.recommended_side }}</span>
+            <span class="sp-match-row__pick-type">{{ card.action_label or card.action }}</span>
+          </div>
+          {# Confidence #}
+          <div class="sp-match-row__conf sp-match-cell">
+            <span class="sp-match-row__conf-pct" style="color:var(--{% if card.action_class == 'bet' %}c-strong{% elif card.action_class == 'consider' %}c-caution{% else %}text-3{% endif %})">{{ card.confidence_pct }}%</span>
+            <div class="sp-match-row__conf-bar">
+              <div class="sp-match-row__conf-fill sp-match-row__conf-fill--{{ card.action_class }}" style="width:{{ card.confidence_pct }}%"></div>
+            </div>
+          </div>
+          {# Win Probabilities #}
+          <div class="sp-match-row__probs sp-match-cell">
+            {% if card.probability_rows %}
+              {% for row in card.probability_rows %}
+                {% set short_label = 'H' if loop.index == 1 else ('D' if loop.index == 2 else 'A') %}
+                {% set prob_value = (row.value if row.value is not none else 0) %}
+                <div class="sp-match-row__prob-row">
+                  <span class="sp-match-row__prob-label">{{ short_label }}</span>
+                  <div class="sp-match-row__prob-bar">
+                    <div class="sp-match-row__prob-fill sp-match-row__prob-fill--{{ 'home' if loop.index == 1 else ('draw' if loop.index == 2 else 'away') }}" style="width:{{ prob_value }}%"></div>
+                  </div>
+                  <span class="sp-match-row__prob-val">{{ prob_value|round|int }}%</span>
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+          {# Data Quality #}
+          <div class="sp-match-row__dq sp-match-cell">
+            {% set dq = card.data_confidence %}
+            {% set dq_state = (dq.state if dq else 'limited') %}
+            <div class="sp-dq-dots">
+              {% set filled = 5 if dq_state == 'strong' else (3 if dq_state == 'partial' else 1) %}
+              {% for i in range(5) %}
+                <span class="sp-dq-dot {% if i < filled %}{{ 'sp-dq-dot--on' if dq_state == 'strong' else 'sp-dq-dot--on-caution' }}{% endif %}"></span>
+              {% endfor %}
+            </div>
+            <span class="sp-dq-label">{{ dq.label if dq else 'Limited' }}</span>
+          </div>
+          {# Action #}
+          <div class="sp-match-row__action sp-match-cell">
+            <button
+              type="button"
+              class="sp-action-btn sp-action-btn--track"
+              data-bet-button="1"
+              onclick='addBet(this, {{ {
+                "match_id": card.match_id,
+                "matchup": card.matchup,
+                "recommended_side": card.recommended_side,
+                "action": card.action,
+                "confidence": card.confidence,
+                "probabilities": card.probabilities
+              }|tojson }})'
+            >Track</button>
+            {% if card.cta_url %}
+              {% if card.cta_method == 'post' %}
+                <form method="post" action="{{ card.cta_url }}">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                  {% for key, value in card.cta_payload.items() %}
+                    <input type="hidden" name="{{ key }}" value="{{ value }}" />
+                  {% endfor %}
+                  <button type="submit" class="sp-action-btn sp-action-btn--analyze">Analyze</button>
+                </form>
+              {% else %}
+                <a href="{{ card.cta_url }}" class="sp-action-btn sp-action-btn--analyze">Analyze</a>
+              {% endif %}
+            {% else %}
+              <a href="/prediction" class="sp-action-btn sp-action-btn--analyze">Analyze</a>
+            {% endif %}
+            <button class="sp-match-row__expand" aria-label="Expand">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    {{ ui.empty_state('No top opportunities yet', fixtures_error or 'ScorPred needs baseline fixture data before ranking opportunities.') }}
+  {% endif %}
+</div>
+
+{# ── Full Slate Tab ───────────────────────────────────────────────────────────── #}
+<div id="tab-full-slate" style="display:none">
+  {% if full_slate %}
+    <div class="sp-card-grid">
+      {% for card in full_slate %}
+        {{ ui.decision_card(card) }}
+      {% endfor %}
+    </div>
+  {% else %}
+    {{ ui.empty_state('No full slate yet', 'Full slate data will appear here.') }}
+  {% endif %}
+</div>
+
+{# ── Today's Plan Tab ─────────────────────────────────────────────────────────── #}
+<div id="tab-todays-plan" style="display:none">
+  {{ ui.plan_strip(today_plan) }}
+  {% if top_opportunities %}
+    <div class="sp-card-grid">
+      {% for card in top_opportunities %}
+        {{ ui.decision_card(card, 'featured') }}
+      {% endfor %}
+    </div>
+  {% else %}
+    {{ ui.empty_state('Today\'s plan loading', 'Check back when the slate refreshes.') }}
+  {% endif %}
+</div>
+
+{# ── Legend ────────────────────────────────────────────────────────────────────── #}
+<div class="sp-match-legend">
+  <span class="sp-match-legend__how">HOW TO READ</span>
+  <div class="sp-match-legend__item">
+    <span class="sp-match-legend__badge sp-match-legend__badge--bet">BET</span>
+    <span>High confidence · Strong edge detected</span>
+  </div>
+  <div class="sp-match-legend__item">
+    <span class="sp-match-legend__badge sp-match-legend__badge--consider">CONSIDER</span>
+    <span>Medium confidence · Possible value</span>
+  </div>
+  <div class="sp-match-legend__item">
+    <span class="sp-match-legend__badge sp-match-legend__badge--skip">SKIP</span>
+    <span>Low confidence · Low edge</span>
+  </div>
+  <div class="sp-match-legend__item" style="margin-left:auto">
+    Win Probabilities: <strong style="color:var(--c-strong);margin-left:.3rem">H</strong> = Home &nbsp;
+    <strong style="color:var(--c-caution)">D</strong> = Draw &nbsp;
+    <strong style="color:var(--c-active)">A</strong> = Away
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function showTab(id, el) {
+  // Hide all
+  ['top-opportunities','full-slate','todays-plan'].forEach(function(t) {
+    var el = document.getElementById('tab-' + t);
+    if (el) el.style.display = 'none';
+  });
+  document.querySelectorAll('.sp-page-tab').forEach(function(a) { a.classList.remove('active'); });
+  // Show target
+  var target = document.getElementById('tab-' + id);
+  if (target) target.style.display = '';
+  if (el) el.classList.add('active');
+  return false;
+}
+</script>
+{% endblock %}

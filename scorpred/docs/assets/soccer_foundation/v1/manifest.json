@@ -1,0 +1,16 @@
+{
+  "view_version": "soccer-research-v1",
+  "lineage_version": "soccer-lineage-v1",
+  "stat_contract_version": "soccer-stats-v1",
+  "audit_timestamp": "2026-10-22T13:24:25.580469+00:00",
+  "production_enabled": false,
+  "training_enabled": false,
+  "artifact_fingerprints": {
+    "lineage_sidecar.json": "66ee282a5f1bd1eadb2537e42a15b00e64309a5271dea5ab285cb630a9be1b43",
+    "duplicate_view.json": "350a55bab71281bca46c2bd41937765bdce0f1b411a15b6db42d85d211d200eb",
+    "canonical_fixtures.json": "5bfbcc716d5ac8dfec8d02126eba7d430365be41fd7e273cf2097040a3c83038",
+    "corrected_statistics.json": "b92c3e0aeb98f8f0b0a090ba14cf0561899c4f59905fd8cebfb7dd7629897d16",
+    "quality_report.json": "c3ec08b26dc0c7233c288386c1ccfe5e6ae111ccb0493b5107aded97c96c1872",
+    "input_manifest.json": "e91a68cd69575913480e685056cfc9eaf6698162a29d0b56919c66f9b2867c51"
+  }
+}

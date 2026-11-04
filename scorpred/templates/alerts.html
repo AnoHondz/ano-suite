@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% import "components/decision.html" as ui with context %}
+
+{% block title %}ScorPred | Alerts{% endblock %}
+{% block topbar_title %}Alerts{% endblock %}
+
+{% block content %}
+
+{# ── Header ──────────────────────────────────────────────────────────────────── #}
+<div class="sp-dash-header">
+  <div class="sp-dash-header__left">
+    <h1>Alerts</h1>
+    <p>Stay notified about high-value opportunities and important updates.</p>
+  </div>
+  <a href="/settings" class="btn btn-secondary btn-sm">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:14px;height:14px;display:block"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    Settings
+  </a>
+</div>
+
+{# ── Tabs ─────────────────────────────────────────────────────────────────────── #}
+<div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap">
+  <div class="sp-page-tabs" style="border:none;margin:0">
+    <a href="#" class="sp-page-tab active">Active Alerts <span class="sp-badge sp-badge--danger" style="margin-left:.3rem">{{ active_alerts|length if active_alerts else 0 }}</span></a>
+    <a href="#" class="sp-page-tab">Alert History</a>
+  </div>
+  <a href="/settings" class="btn btn-secondary btn-sm">Alert Preferences</a>
+</div>
+
+{# ── Alert Feed ───────────────────────────────────────────────────────────────── #}
+{% if active_alerts %}
+  <div class="sp-alert-feed">
+    {% for alert in active_alerts %}
+      <div class="sp-alert-card sp-alert-card--{{ alert.level or 'info' }}">
+        <div class="sp-alert-card__icon">
+          {% if alert.level == 'high' %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          {% elif alert.level == 'caution' %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          {% else %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          {% endif %}
+        </div>
+        <div class="sp-alert-card__body">
+          <div class="sp-alert-card__type">{{ alert.type or 'Alert' }}</div>
+          <div class="sp-alert-card__title">{{ alert.title }}</div>
+          <div class="sp-alert-card__desc">{{ alert.description }}</div>
+          <div class="sp-alert-card__meta">{{ alert.time or 'Just now' }}</div>
+        </div>
+        <div class="sp-alert-card__action">
+          {% if alert.match_url %}
+            <a href="{{ alert.match_url }}" class="btn btn-secondary btn-sm">View Match</a>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  {{ ui.empty_state('No active alerts', 'Alerts will appear when live opportunities or data changes are detected.') }}
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,271 @@
+{
+  "verified_at": "2026-10-20T11:38:22.137210+00:00",
+  "run_id": "run_30fe98722d5901403574f017",
+  "historical_evidence_class": "B",
+  "frozen_hash_verified": true,
+  "independent_sklearn_scoring_agrees": true,
+  "portable_probabilities_replayed": 770,
+  "maximum_absolute_error": 0.0,
+  "folds_checked": 10,
+  "identical_test_games": 385,
+  "sealed_final_holdout_games": 109,
+  "holdout_outcomes_evaluated": 0,
+  "preserved_existing_observations": 1530347,
+  "preserved_history_sha256": "a83d4d8dd0b5310dc88548c31c96e06393adc8f01b8fd9bcf4c353a675cdc94f",
+  "current_records": 1516580,
+  "versioned_write_guard_enabled": true,
+  "collector": {
+    "version": "nfl-prospective-collector-v1",
+    "pid": 4532,
+    "database": "C:\\Users\\User\\Documents\\scorpred\\cache\\nflverse\\nflverse.sqlite3",
+    "started_at": "2026-10-20T11:35:14.191852+00:00",
+    "code_sha256": "16bb0179d44454934bee826983673b86cc9c7d25a3e31e1fa846e2af6d5ad826",
+    "interval_seconds": 240,
+    "pbp_interval_seconds": 21600,
+    "research_only": true,
+    "enabled": false,
+    "production_active": false,
+    "last_cycle": {
+      "started_at": "2026-10-20T11:35:14.194916+00:00",
+      "collector_version": "nfl-prospective-collector-v1",
+      "collector_pid": 4532,
+      "writer_code_sha256": "16bb0179d44454934bee826983673b86cc9c7d25a3e31e1fa846e2af6d5ad826",
+      "schedule_received_at": "2026-10-20T11:35:15.401946+00:00",
+      "snapshot_count": 28,
+      "snapshot_exclusions": [],
+      "completed_at": "2026-10-20T11:35:50.103971+00:00",
+      "errors": [],
+      "status": "success"
+    },
+    "state": "waiting",
+    "heartbeat_at": "2026-10-20T11:38:20.572924+00:00",
+    "cycles": 1
+  },
+  "class_a_pregame_snapshots_verified": [
+    {
+      "game_id": "2026_07_PIT_NO",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:38:58.696546+00:00",
+      "kickoff": "2026-10-25T13:30:00+00:00"
+    },
+    {
+      "game_id": "2026_08_ATL_TB",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:34:37.062926+00:00",
+      "kickoff": "2026-11-01T18:00:00+00:00"
+    },
+    {
+      "game_id": "2026_07_CLE_TEN",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:34:37.062926+00:00",
+      "kickoff": "2026-10-25T17:00:00+00:00"
+    },
+    {
+      "game_id": "2026_08_KC_DEN",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:34:37.062926+00:00",
+      "kickoff": "2026-11-01T21:25:00+00:00"
+    },
+    {
+      "game_id": "2026_08_LAC_LA",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:34:37.062926+00:00",
+      "kickoff": "2026-11-01T21:05:00+00:00"
+    },
+    {
+      "game_id": "2026_07_TB_CAR",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:34:37.062926+00:00",
+      "kickoff": "2026-10-25T17:00:00+00:00"
+    },
+    {
+      "game_id": "2026_07_IND_MIN",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:38:58.696546+00:00",
+      "kickoff": "2026-10-25T17:00:00+00:00"
+    },
+    {
+      "game_id": "2026_08_PHI_WAS",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:34:37.062926+00:00",
+      "kickoff": "2026-11-02T01:20:00+00:00"
+    },
+    {
+      "game_id": "2026_07_NE_CHI",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T11:06:57.235575+00:00",
+      "kickoff": "2026-10-23T00:15:00+00:00"
+    },
+    {
+      "game_id": "2026_08_TEN_CIN",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:34:37.062926+00:00",
+      "kickoff": "2026-11-01T18:00:00+00:00"
+    },
+    {
+      "game_id": "2026_08_CLE_PIT",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:34:37.062926+00:00",
+      "kickoff": "2026-11-01T18:00:00+00:00"
+    },
+    {
+      "game_id": "2026_07_CIN_BAL",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T11:19:12.442939+00:00",
+      "kickoff": "2026-10-25T17:00:00+00:00"
+    },
+    {
+      "game_id": "2026_08_MIN_DET",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:34:37.062926+00:00",
+      "kickoff": "2026-11-01T18:00:00+00:00"
+    },
+    {
+      "game_id": "2026_07_NYG_HOU",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:38:58.696546+00:00",
+      "kickoff": "2026-10-25T17:00:00+00:00"
+    },
+    {
+      "game_id": "2026_08_IND_JAX",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:34:37.062926+00:00",
+      "kickoff": "2026-11-01T18:00:00+00:00"
+    },
+    {
+      "game_id": "2026_08_NE_MIA",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:34:37.062926+00:00",
+      "kickoff": "2026-11-01T21:25:00+00:00"
+    },
+    {
+      "game_id": "2026_07_LA_LV",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:38:58.696546+00:00",
+      "kickoff": "2026-10-25T20:25:00+00:00"
+    },
+    {
+      "game_id": "2026_08_CHI_SEA",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:34:37.062926+00:00",
+      "kickoff": "2026-11-03T01:15:00+00:00"
+    },
+    {
+      "game_id": "2026_07_DAL_PHI",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T11:06:57.235575+00:00",
+      "kickoff": "2026-10-27T00:15:00+00:00"
+    },
+    {
+      "game_id": "2026_07_SF_ATL",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T11:02:53.734704+00:00",
+      "kickoff": "2026-10-25T17:00:00+00:00"
+    },
+    {
+      "game_id": "2026_07_DEN_ARI",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T11:06:57.235575+00:00",
+      "kickoff": "2026-10-25T20:05:00+00:00"
+    },
+    {
+      "game_id": "2026_07_KC_SEA",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T11:02:53.734704+00:00",
+      "kickoff": "2026-10-26T00:20:00+00:00"
+    },
+    {
+      "game_id": "2026_07_MIA_NYJ",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:34:37.062926+00:00",
+      "kickoff": "2026-10-25T17:00:00+00:00"
+    },
+    {
+      "game_id": "2026_08_BAL_BUF",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:34:37.062926+00:00",
+      "kickoff": "2026-11-01T18:00:00+00:00"
+    },
+    {
+      "game_id": "2026_08_LV_NYJ",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:34:37.062926+00:00",
+      "kickoff": "2026-11-01T18:00:00+00:00"
+    },
+    {
+      "game_id": "2026_08_ARI_DAL",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:34:37.062926+00:00",
+      "kickoff": "2026-11-01T18:00:00+00:00"
+    },
+    {
+      "game_id": "2026_07_GB_DET",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:38:58.696546+00:00",
+      "kickoff": "2026-10-25T20:25:00+00:00"
+    },
+    {
+      "game_id": "2026_08_CAR_GB",
+      "generated_at": "2026-10-20T11:35:15.485637+00:00",
+      "source_observed_max": "2026-10-20T04:34:37.062926+00:00",
+      "kickoff": "2026-10-30T00:15:00+00:00"
+    }
+  ],
+  "collection": [
+    {
+      "id": 42,
+      "dataset": "pbp",
+      "season": 2026,
+      "attempted_at": "2026-10-20T11:35:06.510213+00:00",
+      "collected_at": "2026-10-20T11:35:08.848004+00:00",
+      "ingested_at": "2026-10-20T11:35:08.848004+00:00",
+      "source_identifier": "nflverse/nflreadpy:load_pbp",
+      "source_publication_at": null,
+      "status": "success",
+      "content_sha256": "08bc3a89fd5eba28f5e9ca62f78879f615c1decad503eb22a2793c13f1d4aac3",
+      "row_count": 16380,
+      "writer_version": "nflverse-collection-v4",
+      "error": null,
+      "metadata": {
+        "loader_cache_seconds": 0,
+        "publication_timestamp_verified": false
+      },
+      "last_successful_collection_at": "2026-10-20T11:35:08.848004+00:00",
+      "age_seconds": 193.289206,
+      "maximum_age_seconds": 86400,
+      "freshness": "fresh",
+      "associated_games": 93
+    },
+    {
+      "id": 43,
+      "dataset": "schedules",
+      "season": 2026,
+      "attempted_at": "2026-10-20T11:35:14.194916+00:00",
+      "collected_at": "2026-10-20T11:35:15.401946+00:00",
+      "ingested_at": "2026-10-20T11:35:15.401946+00:00",
+      "source_identifier": "https://github.com/nflverse/nflverse-data/releases/download/schedules/games.csv.gz",
+      "source_publication_at": null,
+      "status": "success",
+      "content_sha256": "f1696d30dc496d408c9a44a3ee79900bb46c6c49bcb00e5c337a125434756bbc",
+      "row_count": 272,
+      "writer_version": "nflverse-collection-v4",
+      "error": null,
+      "metadata": {
+        "collector_pid": 4532,
+        "collector_version": "nfl-prospective-collector-v1",
+        "http_etag": "\"0x8DF2E9B9B61C841\"",
+        "http_last_modified": "Tue, 20 Oct 2026 11:16:37 GMT",
+        "publication_timestamp_verified": false,
+        "writer_code_sha256": "16bb0179d44454934bee826983673b86cc9c7d25a3e31e1fa846e2af6d5ad826"
+      },
+      "last_successful_collection_at": "2026-10-20T11:35:15.401946+00:00",
+      "age_seconds": 186.735264,
+      "maximum_age_seconds": 300,
+      "freshness": "fresh",
+      "associated_games": 272
+    }
+  ],
+  "research_only": true,
+  "enabled": false,
+  "production_active": false
+}

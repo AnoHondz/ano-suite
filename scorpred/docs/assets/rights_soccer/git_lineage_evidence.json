@@ -1,0 +1,80 @@
+{
+  "import_commit": "c26606d50f1aedca63ec5da897f05701529b887c",
+  "history": [
+    "c26606d50f1aedca63ec5da897f05701529b887c 2026-04-19T22:39:33-04:00 feat: real historical data pipeline + ML retrain on 7888 matches",
+    "b1e9287f7d0be30cd0ff2277ae8a43d0dd06838a 2026-04-14T08:03:20Z mastermind_ml"
+  ],
+  "historical_csv_commit_sha256": "b713fa97bc8e3c189dfb6c0196f334386256fbb81fa31d366b0c00384121e07b",
+  "current_file_identical_to_commit": true,
+  "producer_script": "scripts/fetch_training_data.py; same commit documents ESPN and drops provider identities/league/receipts",
+  "batch_id": null,
+  "original_observed_at": null,
+  "historical_availability": "unverified",
+  "commit_time_is_provider_observation": false,
+  "cached_sources": [
+    {
+      "locator": "git:c26606d50f1aedca63ec5da897f05701529b887c:cache/football/1fd09e2b4c54cdc8dc8756dfc28a730e.json",
+      "sha256": "cf159be2d252030d6f6353a1746e1202cea5d9dbfd0609f0151537e0a4ae2fc6"
+    },
+    {
+      "locator": "git:c26606d50f1aedca63ec5da897f05701529b887c:cache/football/2c2a7cf68195576ef1035140bc46a400.json",
+      "sha256": "3907977204c3afe13e0dd48eb0babe0cad1cd6b425d9ebd480fc341d4f8026ab"
+    },
+    {
+      "locator": "git:c26606d50f1aedca63ec5da897f05701529b887c:cache/football/34aa7de83424cd87d7d72d38c37ea500.json",
+      "sha256": "5067690027da793b3f32587d8f668e9112398f0c4af11dd53c2cc5f22c0830d4"
+    },
+    {
+      "locator": "git:c26606d50f1aedca63ec5da897f05701529b887c:cache/football/44d24372e3711f540c2cbbbb6e8c6bea.json",
+      "sha256": "cf5ed8f9b08020e8d318f260b37b12057031e27bbe88d31714b636e91b801464"
+    },
+    {
+      "locator": "git:c26606d50f1aedca63ec5da897f05701529b887c:cache/football/47c3f59560a5c6b58c3198682b8c9558.json",
+      "sha256": "c54703a30591af1a3f95d467ab58f607aae69cfa8ac619a7a1001802eedec3fe"
+    },
+    {
+      "locator": "git:c26606d50f1aedca63ec5da897f05701529b887c:cache/football/4c91d18b01f5bdff39f1f216ed192f59.json",
+      "sha256": "21a1939caba5f0efbde9b0fad4629d1aa8ab0ab063d5e90f5f6575fb27d0c768"
+    },
+    {
+      "locator": "git:c26606d50f1aedca63ec5da897f05701529b887c:cache/football/5a92a08f856b5a2ed4cb21ab7b442ea3.json",
+      "sha256": "5ed7d1bb9ad24f8d6cd86c74d9e5e3e9fa26530f07d56e3be1e9a323e98c098d"
+    },
+    {
+      "locator": "git:c26606d50f1aedca63ec5da897f05701529b887c:cache/football/647167e112617154aa09d1803be991d0.json",
+      "sha256": "86bedbbc38eafe226ca55aafeeb246189a620058d019ffb8feeae9f92cf44186"
+    },
+    {
+      "locator": "git:c26606d50f1aedca63ec5da897f05701529b887c:cache/football/6ea71aab96b9b543dc24670d45e9c367.json",
+      "sha256": "812ff8401586644476c3f29344258ed8df27a46cce1e150a22ce373d21211952"
+    },
+    {
+      "locator": "git:c26606d50f1aedca63ec5da897f05701529b887c:cache/football/98a730b6a6928d774b33cf4e270a7dd1.json",
+      "sha256": "e67285820339f3814c38e530d94473e4d686d480cd770c92b01c89b42de0bdc8"
+    },
+    {
+      "locator": "git:c26606d50f1aedca63ec5da897f05701529b887c:cache/football/9f1f6c9e5b2f783c517772f0da357ba2.json",
+      "sha256": "69dadb35324e616127dde4afa5aa960edb1579fa7106340bf8ae256d7e7e2eb0"
+    },
+    {
+      "locator": "git:c26606d50f1aedca63ec5da897f05701529b887c:cache/football/a6960712575212c264eab1666e7aa0b6.json",
+      "sha256": "f9b48fadfe79655cec4664a57996105126ed290bcdfb4b8ef9080f8b4e04317e"
+    },
+    {
+      "locator": "git:c26606d50f1aedca63ec5da897f05701529b887c:cache/football/bbabe9643b503f5087ad94ef038451b6.json",
+      "sha256": "34cb17fe34f221b44f9cc815fd5461479f218a835b4c1be054e7b6a764beafc4"
+    },
+    {
+      "locator": "git:c26606d50f1aedca63ec5da897f05701529b887c:cache/football/d09fc0a0fa651f268d29a1f81e248452.json",
+      "sha256": "bff20691737fd6676aa23c6ac519be5a0c9bde18b3ad2d10218affc206138837"
+    },
+    {
+      "locator": "git:c26606d50f1aedca63ec5da897f05701529b887c:cache/football/e6ceb290fe34be858cac0088fc34732c.json",
+      "sha256": "80ad72214942c86cd64d7c2cade2ff498a2bf818a10524ca44d98e1d8b9fc0b6"
+    },
+    {
+      "locator": "git:c26606d50f1aedca63ec5da897f05701529b887c:cache/football/ecfe82c92ba9797ac6b5d6204114275a.json",
+      "sha256": "ee64b2dd613dd37a210616545ba5c4e2184cff8836b872d46165264adaa9e293"
+    }
+  ]
+}

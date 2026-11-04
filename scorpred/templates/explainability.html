@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %}ScorPred | Explainability{% endblock %}
+{% block topbar_title %}Model Explainability{% endblock %}
+
+{% block content %}
+<div class="sp-soccer-header">
+  <div class="sp-soccer-header__left">
+    <h1>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:28px;height:28px;display:inline-block;vertical-align:middle;margin-right:.4rem"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+      Model Explainability
+    </h1>
+    <p>Feature attribution analysis — why predictions are correct or incorrect.</p>
+  </div>
+  <div style="display:flex;gap:.6rem;align-items:center">
+    <a class="btn btn-secondary btn-sm" href="/compare">ML vs Rules</a>
+    <a class="btn btn-secondary btn-sm" href="/backtesting">Backtesting</a>
+  </div>
+</div>
+
+{% if sample_size < 10 %}
+<div class="sp-flash sp-flash--warn">
+  Only {{ sample_size }} completed predictions available. Attribution improves with more graded results — track predictions and check back once you have 20+ completed.
+</div>
+{% endif %}
+
+{# ── Impact Chart ─────────────────────────────────────────────────────────── #}
+<div class="sp-perf-panel" style="margin-top:.75rem">
+  <div class="sp-perf-panel__head">
+    <span class="sp-perf-panel__title">Feature Impact on Prediction Accuracy</span>
+    <span style="font-size:.75rem;color:var(--text-3)">Positive = higher values correlate with correct calls · Negative = opposite</span>
+  </div>
+  <div class="sp-perf-panel__body">
+    {% if chart_labels %}
+    <div style="position:relative;height:280px"><canvas id="featureChart"></canvas></div>
+    {% else %}
+    <div class="sp-empty"><p>No feature attribution data available yet. Complete more predictions to enable this analysis.</p></div>
+    {% endif %}
+  </div>
+</div>
+
+{# ── Positive / Negative signal cards ─────────────────────────────────────── #}
+<div class="sp-grid-2" style="margin-top:1rem">
+  {# Positive signals #}
+  <div class="sp-perf-panel">
+    <div class="sp-perf-panel__head"><span class="sp-perf-panel__title" style="color:var(--c-strong)">+ Positive Signals</span></div>
+    <div class="sp-perf-panel__body" style="padding:.75rem">
+      {% if top_positive %}
+        {% for sig in top_positive %}
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:.6rem .5rem;border-bottom:1px solid var(--border)">
+          <div>
+            <div style="font-weight:600;font-size:.875rem">{{ sig.feature.replace('_', ' ').title() }}</div>
+            <div style="font-size:.75rem;color:var(--text-3)">Correct avg: {{ sig.correct_avg }} · Wrong avg: {{ sig.wrong_avg }}</div>
+          </div>
+          <div style="text-align:right">
+            <span style="color:var(--c-strong);font-weight:700">+{{ sig.impact }}</span>
+            <div style="font-size:.7rem;color:var(--text-3)">n={{ sig.sample_size }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="sp-empty" style="padding:1rem"><p>No positive signals identified yet.</p></div>
+      {% endif %}
+    </div>
+  </div>
+
+  {# Negative signals #}
+  <div class="sp-perf-panel">
+    <div class="sp-perf-panel__head"><span class="sp-perf-panel__title" style="color:var(--c-danger)">− Negative Signals</span></div>
+    <div class="sp-perf-panel__body" style="padding:.75rem">
+      {% if top_negative %}
+        {% for sig in top_negative %}
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:.6rem .5rem;border-bottom:1px solid var(--border)">
+          <div>
+            <div style="font-weight:600;font-size:.875rem">{{ sig.feature.replace('_', ' ').title() }}</div>
+            <div style="font-size:.75rem;color:var(--text-3)">Correct avg: {{ sig.correct_avg }} · Wrong avg: {{ sig.wrong_avg }}</div>
+          </div>
+          <div style="text-align:right">
+            <span style="color:var(--c-danger);font-weight:700">{{ sig.impact }}</span>
+            <div style="font-size:.7rem;color:var(--text-3)">n={{ sig.sample_size }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="sp-empty" style="padding:1rem"><p>No negative signals identified yet.</p></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{# ── All Features Table ────────────────────────────────────────────────────── #}
+{% if all_features %}
+<div class="sp-section" style="margin-top:1.25rem">
+  <div class="sp-section__header"><div><h2>All Feature Signals</h2><p>Ranked by absolute impact on prediction accuracy ({{ sample_size }} completed predictions).</p></div></div>
+  <div class="sp-bets-table">
+    <div class="sp-bets-table__head" style="grid-template-columns:1fr 100px 120px 120px 100px 100px">
+      <span>Feature</span><span>Signal</span><span>Impact</span><span>Bar</span><span>Correct Avg</span><span>Wrong Avg</span>
+    </div>
+    {% for feat in all_features %}
+    <div class="sp-bets-row" style="grid-template-columns:1fr 100px 120px 120px 100px 100px">
+      <span><strong>{{ feat.feature }}</strong></span>
+      <span>
+        {% if feat.signal == 'positive' %}
+          <span style="color:var(--c-strong)">▲ Positive</span>
+        {% elif feat.signal == 'negative' %}
+          <span style="color:var(--c-danger)">▼ Negative</span>
+        {% else %}
+          <span style="color:var(--text-3)">● Neutral</span>
+        {% endif %}
+      </span>
+      <span style="color:{{ 'var(--c-strong)' if feat.impact > 0 else 'var(--c-danger)' if feat.impact < 0 else 'var(--text-3)' }};font-weight:600">
+        {{ '+' if feat.impact > 0 else '' }}{{ feat.impact }}
+      </span>
+      <span>
+        {% set bar_width = ([feat.impact|abs * 200, 100]|min)|int %}
+        <div style="height:6px;background:var(--bg-elevated);border-radius:3px">
+          <div style="height:6px;border-radius:3px;width:{{ bar_width }}%;background:{{ 'var(--c-strong)' if feat.impact > 0 else 'var(--c-danger)' }}"></div>
+        </div>
+      </span>
+      <span style="color:var(--text-2)">{{ feat.correct_avg }}</span>
+      <span style="color:var(--text-3)">{{ feat.wrong_avg }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{# ── Plain-English Explanation ────────────────────────────────────────────── #}
+<div class="sp-section" style="margin-top:1.25rem">
+  <div class="sp-section__header"><div><h2>How to Read This</h2></div></div>
+  <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:.75rem;padding:1.25rem;font-size:.875rem;line-height:1.7;color:var(--text-2)">
+    <p style="margin:0 0 .75rem"><strong style="color:var(--c-strong)">+ Positive impact</strong> means: when this feature has a higher value in a given prediction, the model tends to be <em>correct</em>. A strong positive-impact feature is a reliable signal.</p>
+    <p style="margin:0 0 .75rem"><strong style="color:var(--c-danger)">− Negative impact</strong> means: when this feature has a higher value, the model tends to be <em>wrong</em>. This can indicate a feature the model over-weights, or a situation type that confounds the prediction.</p>
+    <p style="margin:0"><strong>Method:</strong> For each completed prediction, we compare feature values between correct calls and incorrect calls. Impact = mean(correct) − mean(wrong). Minimum {{ [attribution.get('feature_impacts', {}) | length, 5] | min }} samples required per feature.</p>
+  </div>
+</div>
+
+<div class="sp-match-legend" style="margin-top:1.5rem">
+  <span class="sp-match-legend__how">METHODOLOGY</span>
+  <div class="sp-match-legend__item"><span class="sp-match-legend__badge sp-match-legend__badge--bet">LIVE</span><span>Attribution from {{ sample_size }} real graded predictions (not synthetic)</span></div>
+  <div class="sp-match-legend__item"><span class="sp-match-legend__badge sp-match-legend__badge--consider">DELTA</span><span>Impact = mean feature value (correct calls) − mean (incorrect calls)</span></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+  var labels = {{ chart_labels | tojson }};
+  var impacts = {{ chart_impacts | tojson }};
+  var colors = {{ chart_colors | tojson }};
+  var ctx = document.getElementById('featureChart');
+  if (!ctx || !labels.length) return;
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Feature Impact',
+        data: impacts,
+        backgroundColor: colors,
+        borderRadius: 5,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: function(ctx) { return ' Impact: ' + (ctx.raw > 0 ? '+' : '') + ctx.raw; } } }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          ticks: { color: '#94a3b8' },
+          title: { display: true, text: '← Negative  |  Positive →', color: '#64748b', font: { size: 11 } }
+        },
+        y: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 11 } } }
+      }
+    }
+  });
+})();
+</script>
+{% endblock %}

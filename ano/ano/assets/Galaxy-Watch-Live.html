@@ -1,0 +1,327 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Ano / Galaxy Watch</title>
+<!-- ano.watch: a slowly turning 3D nebula. Each part of Ano is a lobe of the cloud; a crawler (Ano's attention)
+     crawls through it, reads each lobe and pins live facts on dotted tentacles. When a part is broken it spins
+     silk over it while Ano's Supervisor does the real repair. Lobes come from Ano (ano/wallpaper_status.py);
+     adding a station there adds a lobe here. Click a lobe for its card. The wallpaper only shows status. -->
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0c0a08}
+#scene{position:absolute;left:50%;top:50%;width:1500px;height:1000px;transform-origin:center;background:radial-gradient(ellipse 65% 60% at 50% 50%,#1a1612 0%,#0c0a08 72%);font-family:'JetBrains Mono','Cascadia Mono',Consolas,monospace}
+canvas{position:absolute;left:0;top:0;width:1500px;height:1000px}#bloom{filter:blur(4px);opacity:.6;mix-blend-mode:screen}
+#card{position:absolute;width:300px;padding:12px 14px;background:#100e0bf5;border:1px solid #3a352f;color:#b8b1a6;font-size:11px;opacity:0;transform:translateY(6px);
+ transition:opacity .3s,transform .3s;pointer-events:none;box-shadow:0 10px 40px #000}
+#card.open{opacity:1;transform:none;pointer-events:auto}
+#card h1{margin:0;font-size:15px;letter-spacing:2px;color:#ece6dc}#card .role{color:#8a847a;margin:3px 0 9px}
+#card .pill{display:inline-block;padding:1px 7px;font-size:9.5px;letter-spacing:1.5px;margin-bottom:8px;border:1px solid currentColor}
+#card table{width:100%;border-collapse:collapse}#card td{padding:3px 0;border-top:1px solid #221f1b;vertical-align:top}#card td:first-child{color:#8a847a;width:42%}
+#card .say{margin-top:9px;color:#8a847a}#card .say span{display:inline-block;margin:4px 4px 0 0;padding:1px 6px;background:#1a2a20;color:#5ee08f}
+
+#watchHud{position:fixed;left:5%;top:5%;color:#d2dde9;font:11px Consolas,monospace;letter-spacing:2px;pointer-events:none;text-shadow:0 1px 8px #000}#watchHud small{display:block;margin-top:9px;letter-spacing:1px;color:#8292a5;font-size:10px}#defense{position:fixed;bottom:6%;left:5%;max-width:65%;font:11px Consolas,monospace;color:#8ba79f;line-height:1.7;text-shadow:0 1px 8px #000;pointer-events:none}#defense b{font-weight:400;color:#b5d8c9;letter-spacing:2px}#defense span{display:block;color:#8394a5;font-size:10px}#watchControls{position:fixed;bottom:6%;right:5%;display:flex;gap:8px}#watchControls button{background:#08121bce;color:#a9bfce;border:1px solid #29404d;border-radius:4px;font:10px Consolas,monospace;padding:9px 12px;cursor:pointer}#watchControls button:hover{border-color:#8bb8c9}#help{position:fixed;right:5%;top:8%;width:min(350px,85vw);padding:20px;background:#08121bf5;border:1px solid #365062;color:#b6c6d5;font:12px/1.8 Consolas,monospace;box-shadow:0 15px 50px #0009}#help[hidden]{display:none}#help b{color:#d6e4f1;font-weight:400}#card{border-radius:8px;background:linear-gradient(125deg,#10202bf5,#07101af7);border-color:#36505d;box-shadow:0 18px 60px #000b,inset 0 1px #a2c8dd12;max-height:520px;overflow:auto}#card td:first-child{color:#8b9eae}#card .role{color:#8b9eae}
+@media(max-width:600px){#watchHud{top:3%;font-size:10px}#defense{max-width:60%;bottom:4%;font-size:9px}#watchControls{bottom:4%;right:3%}}
+#watchHud,#defense{display:none}#watchControls{opacity:0;transition:opacity .25s;bottom:3%;right:3%}#watchControls:hover,#watchControls:focus-within{opacity:.8}#card{border:0;border-radius:0;background:#100e0bd9;box-shadow:none;padding:12px;max-height:480px}.fact{margin:7px 0;color:#d6cfc1}.fact b{color:#92897d;font-weight:400;display:block;font-size:10px}.fact span{display:block;overflow-wrap:anywhere}#card .say{display:none}
+</style></head><body><div id="scene"><canvas id="bloom"></canvas><canvas id="web"></canvas><div id="card"></div></div><div id="watchHud">ANO / GALAXY WATCH<small id="telemetryState">Waiting for station evidence</small></div><div id="defense"><b id="defenseMode">WATCHING</b><span id="defenseDetail">No verified status received yet.</span></div><div id="watchControls"><button id="motion" type="button">Pause motion</button><button id="helpToggle" type="button">Recovery scope</button></div><aside id="help" hidden><b>CALM RECOVERY</b><p>Colours identify departments. Amber means observation is needed; grey means stale or unavailable evidence.</p><p>Ano can restore its own verified wallpaper files, recover stopped services under existing limits, and unload idle local models. It never invents a repair result.</p><p>Degraded data feeds wait for fresh evidence. Unknown corruption needs inspection. Trading permissions and risk limits are unchanged.</p><p>Click a cluster for its live details. These controls do not send commands.</p></aside>
+<script>
+(()=>{const W=1500,H=1000,scene=document.getElementById('scene'),canvas=document.getElementById('web'),ctx=canvas.getContext('2d'),bloomC=document.getElementById('bloom'),bctx=bloomC.getContext('2d'),card=document.getElementById('card');
+const INK=[238,232,222],YEL=[232,212,77],PINK=[255,79,139],GREY=[95,88,80],GREEN=[94,224,143],TEAL=[45,170,160],LILAC=[214,190,220];
+const rgb=(c,a)=>`rgba(${c[0]},${c[1]},${c[2]},${Math.max(0,Math.min(1,a)).toFixed(3)})`,FONT=s=>`${s}px "JetBrains Mono","Cascadia Mono",Consolas,monospace`;
+let S=1;const reduced=matchMedia("(prefers-reduced-motion: reduce)");let paused=reduced.matches,dirty=true,quality="balanced",frozen=0;function fit(){S=Math.max(innerWidth/W,innerHeight/H);const dpr=Math.min(2,window.devicePixelRatio||1);scene.style.transform=`translate(-50%,-50%) scale(${S})`;
+ canvas.width=Math.round(W*S*dpr);canvas.height=Math.round(H*S*dpr);ctx.setTransform(S*dpr,0,0,S*dpr,0,0);bloomC.width=W;bloomC.height=H;bctx.setTransform(1,0,0,1,0,0)}
+fit();addEventListener('resize',fit);
+let seed=23;const rnd=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};const g3=()=>(rnd()+rnd()+rnd()-1.5)/1.5;
+// Each department keeps its own colour; health shows on top of it (grey when broken or silent, brighter when live).
+const DEPT={scorpred:[255,154,92],forex:[72,214,234],stocks:[180,140,255],system:[139,224,164],mail:[240,207,110],assistant:[127,157,255],models:[99,211,185],memory_manager:[191,218,111],work:[225,153,210],risk:[238,139,154]};
+function deptColour(id){if(DEPT[id])return DEPT[id];let h=0;for(const ch of String(id))h=(h*31+ch.charCodeAt(0))%360;
+ const f=n=>{const k=(n+h/30)%12;return Math.round(255*(.62-.3*Math.max(-1,Math.min(k-3,9-k,1))))};return [f(0),f(8),f(4)]}  // new departments: a stable hue of their own
+const mix=(a,b,u)=>[a[0]+(b[0]-a[0])*u,a[1]+(b[1]-a[1])*u,a[2]+(b[2]-a[2])*u];
+const broken=s=>s&&s.state!=='healthy';
+let frameColours=new Map();
+function departmentShade(s){if(!s)return INK;if(s.state==='stale')return mix(deptColour(s.id),GREY,.55);
+ const c=deptColour(s.id),here=data&&crawler.phase==='read'&&data.stations[crawler.at]?.id===s.id;
+ const light=here?Math.min(1,(performance.now()-crawler.since)/1500):0;
+ return mix(INK,c,.86+.14*light)}
+function colourOf(s){return s?(frameColours.get(s.id)||departmentShade(s)):INK}
+
+// ── Camera ────────────────────────────────────────────────────────────────────────────────
+// A chase camera: it rides just behind and above the crawler, turns to face where it is heading, and follows it in.
+const cam={yaw:.3,pitch:-.3,F:1000,D:40,cx:750,cy:590,f:{x:0,y:0,z:0}};  // a little further back than before, so the cloud breathes
+// mouse parallax: the view leans a little toward the pointer (only if Lively passes the mouse through)
+const par={x:0,y:0,tx:0,ty:0};addEventListener('mousemove',e=>{par.tx=(e.clientX/innerWidth-.5)*.22;par.ty=(e.clientY/innerHeight-.5)*.1});
+let view={cy:1,sy:0,cp:1,sp:0},webFit={scale:.7,x:0,y:0};
+function rawProjection(p){const x=p.x*view.cy-p.z*view.sy,z0=p.x*view.sy+p.z*view.cy,
+ y=p.y*view.cp-z0*view.sp,z=p.y*view.sp+z0*view.cp,k=1350/(1350+z);return {x:x*k,y:y*k,k,z}}
+function updateView(){const yaw=Math.sin(frozen/19000)*.28+Math.sin(cam.yaw)*.1+par.x*.55,pitch=-.18+Math.cos(frozen/23000)*.1+par.y*.6;
+ view={cy:Math.cos(yaw),sy:Math.sin(yaw),cp:Math.cos(pitch),sp:Math.sin(pitch)};
+ let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+ for(const p of pts){if(p.r<0)continue;const q=rawProjection(p);minX=Math.min(minX,q.x);maxX=Math.max(maxX,q.x);minY=Math.min(minY,q.y);maxY=Math.max(maxY,q.y)}
+ if(Number.isFinite(minX)){webFit.scale=Math.min(1450/Math.max(1,maxX-minX),890/Math.max(1,maxY-minY));const follow=rawProjection(crawler.p);webFit.x=(minX+maxX)/2+follow.x*.025;webFit.y=(minY+maxY)/2+follow.y*.02}}
+function proj(p){const q=rawProjection(p);return {x:750+(q.x-webFit.x)*webFit.scale,y:470+(q.y-webFit.y)*webFit.scale,k:q.k*webFit.scale,z:q.z}}
+function steer(dt){const p=crawler.p,walking=crawler.phase==='walk'&&crawler.path.length,
+ q=walking?crawler.path[Math.min(8,crawler.path.length-1)]:p,e=1-Math.exp(-dt*3.6);
+ // The camera trails the body while looking along the upcoming curve, rather than orbiting a diagram.
+ const aim={x:p.x+(q.x-p.x)*.18,y:p.y+(q.y-p.y)*.18,z:p.z+(q.z-p.z)*.18};
+ for(const k of ['x','y','z'])cam.f[k]+=(aim[k]-cam.f[k])*e;
+ if(walking){const want=Math.atan2(q.x-p.x,q.z-p.z),d=Math.atan2(Math.sin(want-cam.yaw),Math.cos(want-cam.yaw));
+  cam.yaw+=Math.max(-dt*.9,Math.min(dt*.9,d*(1-Math.exp(-dt*1.35))))}
+ else if(!openId)cam.yaw+=dt*.025;
+ cam.D+=((walking?-160:40)-cam.D)*(1-Math.exp(-dt*1.8));
+ cam.pitch+=(-.24+.025*Math.sin(performance.now()/11000)-cam.pitch)*(1-Math.exp(-dt*1.6));
+ cam.cy=590+(walking?Math.sin(performance.now()/580)*1.6:0);
+ const m=1-Math.pow(.2,dt);par.x+=(par.tx-par.x)*m;par.y+=(par.ty-par.y)*m}
+const depth=q=>Math.max(0,Math.min(1,.5-q.z/800));
+const FOG=[52,62,84],FLOOR=430;
+// a floor of fine dots under the cloud, shrinking and fading with distance: depth without a boxy grid
+function floorGrid(){const span=1800,gap=160;
+ for(let x=-span;x<=span;x+=gap)for(let z=-span;z<=span;z+=gap){const q=proj({x,y:FLOOR,z});if(q.hidden||q.k>2.5)continue;
+  const dp=depth(q),s=Math.max(.6,q.k*1.6);ctx.fillStyle=rgb(TEAL,.05+.32*dp*dp);ctx.fillRect(q.x-s/2,q.y-s/2,s,s)}}
+
+// ── The nebula: one organic cloud, a lobe per part of Ano, filaments between, dust around ─────
+let lobes=[],pts=[],links=[],built='',data=null,openId=null,grid=new Map();const CELL=64;
+function near(p,r){const out=[],k=Math.ceil(r/CELL),bx=Math.floor(p.x/CELL),by=Math.floor(p.y/CELL),bz=Math.floor(p.z/CELL);
+ for(let dx=-k;dx<=k;dx++)for(let dy=-k;dy<=k;dy++)for(let dz=-k;dz<=k;dz++)for(const j of grid.get(`${bx+dx},${by+dy},${bz+dz}`)||[]){const q=pts[j],d=Math.hypot(q.x-p.x,q.y-p.y,q.z-p.z);if(d<=r)out.push([d,j])}return out}
+let silkBridges=[];
+function connectWeb(){silkBridges=[];const parent=lobes.map((_,i)=>i),root=i=>parent[i]===i?i:(parent[i]=root(parent[i])),pairs=[];
+ for(let i=0;i<lobes.length;i++)for(let j=i+1;j<lobes.length;j++)pairs.push({i,j,d:Math.hypot(lobes[i].c.x-lobes[j].c.x,lobes[i].c.y-lobes[j].c.y,lobes[i].c.z-lobes[j].c.z)});
+ pairs.sort((a,b)=>a.d-b.d);
+ for(const pair of pairs){const {i,j}=pair;if(root(i)===root(j))continue;parent[root(i)]=root(j);
+  const nearest=(g,c)=>g.pts.slice().sort((a,b)=>Math.hypot(pts[a].x-c.x,pts[a].y-c.y,pts[a].z-c.z)-Math.hypot(pts[b].x-c.x,pts[b].y-c.y,pts[b].z-c.z)).slice(0,3);
+  const aa=nearest(lobes[i],lobes[j].c),bb=nearest(lobes[j],lobes[i].c);
+  silkBridges.push({i,j,ends:aa.map((a,k)=>[a,bb[k%bb.length]])})}}
+function drawConnectedWeb(t){for(const bridge of silkBridges){const col=mix(deptColour(data.stations[bridge.i].id),deptColour(data.stations[bridge.j].id),.5);
+ ctx.strokeStyle=rgb(mix(INK,col,.22),.22);ctx.lineWidth=.65;
+ bridge.ends.forEach(([ai,bi],strand)=>{const a=pts[ai],b=pts[bi];ctx.beginPath();
+  for(let k=0;k<=16;k++){const u=k/16,envelope=Math.sin(Math.PI*u),w=Math.sin(u*17+strand*2+bridge.i)*12*envelope;
+   const q=proj({x:a.x+(b.x-a.x)*u+w*.35,y:a.y+(b.y-a.y)*u+w,z:a.z+(b.z-a.z)*u+Math.sin(u*13+strand)*9*envelope});
+   if(k===0)ctx.moveTo(q.x,q.y);else ctx.lineTo(q.x,q.y)}ctx.stroke()})}}
+function lanePoint(edge,u){const n=lobes.length,p0=lobes[(edge-1+n)%n].c,p1=lobes[edge].c,p2=lobes[(edge+1)%n].c,p3=lobes[(edge+2)%n].c;
+ const t2=u*u,t3=t2*u,out={};for(const k of ['x','y','z'])out[k]=.5*(2*p1[k]+(-p0[k]+p2[k])*u+(2*p0[k]-5*p1[k]+4*p2[k]-p3[k])*t2+(-p0[k]+3*p1[k]-3*p2[k]+p3[k])*t3);
+ return out}
+function build(stations){built=stations.map(s=>s.id).join('|');seed=23;pts=[];links=[];grid=new Map();const n=stations.length;
+ // lobes spread wide and at staggered heights so the cloud fills the whole screen
+ lobes=stations.map((s,i)=>{const a=i/n*6.2832+.3;return {id:s.id,i,c:{x:({mail:-510,assistant:250,stocks:-510,forex:190,scorpred:610,system:-650,models:-160,memory_manager:610,work:-170,risk:600}[s.id]??Math.cos(a)*600),y:({mail:-190,assistant:-160,stocks:130,forex:180,scorpred:160,system:420,models:-390,memory_manager:-360,work:390,risk:490}[s.id]??Math.sin(a)*350),z:Math.sin(i*2.4)*170},pts:[],cut:[]}});
+ const add=(p,r,b,m)=>{pts.push({x:p.x,y:p.y,z:p.z,r,b,m,lit:0,ph:rnd()*6.28});return pts.length-1};
+ for(const g of lobes)for(let k=0;k<260;k++){const d=Math.pow(rnd(),.72)*205,u=rnd()*6.2832,v=Math.acos(2*rnd()-1);
+  g.pts.push(add({x:g.c.x+Math.sin(v)*Math.cos(u)*d*1.3,y:g.c.y+Math.cos(v)*d*.8,z:g.c.z+Math.sin(v)*Math.sin(u)*d*1.5},g.i,.3+rnd()*.6))}
+ for(let i=0;i<n;i++){const g=lobes[i],others=lobes.filter(h=>h!==g).sort((a,b)=>Math.hypot(a.c.x-g.c.x,a.c.y-g.c.y)-Math.hypot(b.c.x-g.c.x,b.c.y-g.c.y));
+ const h=others[0];if(!h)continue;for(let k=0;k<75;k++){const u=rnd(),width=25+65*Math.sin(Math.PI*u);
+ add({x:g.c.x+(h.c.x-g.c.x)*u+g3()*width,y:g.c.y+(h.c.y-g.c.y)*u+g3()*width,z:g.c.z+(h.c.z-g.c.z)*u+g3()*70},g.i,.3+rnd()*.45)}}
+ for(let k=0;k<300;k++){const r=200+Math.pow(rnd(),.6)*820,u=rnd()*6.2832,v=Math.acos(2*rnd()-1);add({x:Math.sin(v)*Math.cos(u)*r*1.45,y:Math.cos(v)*r*.85,z:Math.sin(v)*Math.sin(u)*r*.8},-3,.06+rnd()*.16)}
+ pts.forEach((p,i)=>{const kk=`${Math.floor(p.x/CELL)},${Math.floor(p.y/CELL)},${Math.floor(p.z/CELL)}`;(grid.get(kk)||grid.set(kk,[]).get(kk)).push(i)});
+ pts.forEach((p,i)=>{if(p.r===-3&&rnd()<.6)return;near(p,45).filter(([,j])=>j>i).sort((a,b)=>a[0]-b[0]).slice(0,2).forEach(([,j])=>links.push([i,j]))});
+ links=links.filter(([a,b])=>pts[a].r>=0&&pts[b].r>=0);
+ for(const g of lobes)g.cut=links.map((l,k)=>[l,k]).filter(([[a,b]])=>pts[a].r===g.i&&pts[b].r===g.i).filter(()=>rnd()<.2).map(([,k])=>k);
+ connectWeb();for(const leg of crawler.legs){leg.foot=null;leg.step=null;leg.node=null;leg.flash=0}crawler.silk=[];crawler.at=Math.min(crawler.at,lobes.length-1);crawler.target=Math.min(crawler.target,lobes.length-1);if(!crawler.started){crawler.p={...lobes[0].c};crawler.at=0;crawler.started=true}}
+
+// ── The crawler ───────────────────────────────────────────────────────────────────────────
+const crawler={p:{x:0,y:0,z:0},at:0,target:0,path:[],phase:'walk',since:0,trail:[],silk:[],tent:[],seen:new Map(),hd:0,legs:Array.from({length:24},(_,k)=>({k,foot:null,lift:0}))};
+// Repairs come from Ano (ano/wallpaper_status.py repairs()): the crawler goes wherever Ano is fixing something and shows
+// the real steps. It never acts itself; the Supervisor and overnight guard do the actual work.
+const repairsAt=i=>((data&&data.repairs)||[]).filter(r=>data.stations[i]&&r.station===data.stations[i].id);
+const jobKey=r=>[r.station,r.by,r.status,r.at||''].join('|');
+const busyAt=i=>repairsAt(i).some(r=>r.status==='working');
+function choose(preferred){const st=data.stations,now=Date.now();
+ const jobs=(data.repairs||[]).map(r=>[r,st.findIndex(s=>s.id===r.station)]).filter(([,i])=>i>=0);
+ // a repair in progress comes first; then any repair it has not reported in the last five minutes
+ const job=jobs.find(([r])=>r.status==='working')||jobs.find(([r])=>!(now-(crawler.seen.get(jobKey(r))||0)<300000));
+ let next;if(Number.isInteger(preferred)&&preferred>=0&&preferred<st.length)next=preferred;else if(job)next=job[1];else{const urgent=st.map((s,i)=>[s,i]).filter(([s])=>broken(s)||s.active).map(([,i])=>i);
+  const pool=urgent.length&&Math.random()<.65?urgent:st.map((_,i)=>i);next=pool[(Math.random()*pool.length)|0];
+  if(next===crawler.at&&st.length>1)next=(next+1+((Math.random()*(st.length-1))|0))%st.length}
+ crawler.target=next;
+ // Follow the visible lane graph, taking the shorter way round the connected departments.
+ const n=st.length,start=lobes.reduce((best,g,i)=>Math.hypot(g.c.x-crawler.p.x,g.c.y-crawler.p.y,g.c.z-crawler.p.z)<Math.hypot(lobes[best].c.x-crawler.p.x,lobes[best].c.y-crawler.p.y,lobes[best].c.z-crawler.p.z)?i:best,0);
+ crawler.path=[];crawler.routeEdges=[];const origin={...crawler.p},home=lobes[start].c;
+ if(Math.hypot(origin.x-home.x,origin.y-home.y,origin.z-home.z)>8)for(let k=1;k<=20;k++){const u=k/20; crawler.path.push({x:origin.x+(home.x-origin.x)*u,y:origin.y+(home.y-origin.y)*u,z:origin.z+(home.z-origin.z)*u})}
+ const forward=(next-start+n)%n,backward=(start-next+n)%n,dir=forward<=backward?1:-1;let current=start;
+ for(let hop=0;current!==next&&hop<n;hop++){const edge=dir>0?current:(current-1+n)%n;crawler.routeEdges.push(edge);
+  for(let k=1;k<=65;k++)crawler.path.push(lanePoint(edge,dir>0?k/65:1-k/65));current=(current+dir+n)%n}
+ if(!crawler.path.length)crawler.path.push({...lobes[next].c});
+ crawler.phase='walk';crawler.silk=[];crawler.tent=[]}
+function plant(home,leg){const used=new Set(crawler.legs.filter(l=>l!==leg).map(l=>l.node));
+ const candidates=near(home,115).filter(([,i])=>pts[i].r!==-3).sort((a,b)=>a[0]-b[0]);
+ const pick=candidates.find(([,i])=>!used.has(i))||candidates[0];
+ return pick?{p:{x:pts[pick[1]].x,y:pts[pick[1]].y,z:pts[pick[1]].z},node:pick[1]}:{p:home,node:null}}
+function step(dt){let left=210*dt;const p=crawler.p;
+ while(crawler.phase==='walk'&&left>0){const q=crawler.path[0];if(!q){arrive();break}const d=Math.hypot(q.x-p.x,q.y-p.y,q.z-p.z);
+  if(d<=left){Object.assign(p,q);crawler.path.shift();left-=d}else{p.x+=(q.x-p.x)/d*left;p.y+=(q.y-p.y)/d*left;p.z+=(q.z-p.z)/d*left;left=0}}
+ crawler.trail.push({...p});if(crawler.trail.length>90)crawler.trail.shift();
+ // gait: two alternating groups of four legs. A foot only steps on its group's turn, gliding in an arc to a spot
+ // fanned around the way the crawler faces (a little ahead while walking, spread wider while reading).
+ const walking=crawler.phase==='walk',reach=walking?95:125,ahead=crawler.path[0];
+ if(walking&&ahead){const dx=ahead.x-p.x,dz=ahead.z-p.z,d=Math.hypot(dx,dz);if(d>1){const ease=1-Math.exp(-dt*4);crawler.fx=(crawler.fx??dx/d)+((dx/d)-(crawler.fx??dx/d))*ease;crawler.fz=(crawler.fz??dz/d)+((dz/d)-(crawler.fz??dz/d))*ease;const norm=Math.hypot(crawler.fx,crawler.fz)||1;crawler.fx/=norm;crawler.fz/=norm}}
+ const fx=crawler.fx||1,fz=crawler.fz||0;let stepping=false;
+ for(const leg of crawler.legs){const side=leg.k<12?-1:1,i=leg.k%12,a=(20+i*140/11)*Math.PI/180,ox=Math.cos(a),oy=side*Math.sin(a);
+  const lead=walking?reach*.35:0,home={x:p.x+(fx*ox-fz*oy)*reach+fx*lead,y:p.y+14,z:p.z+(fz*ox+fx*oy)*reach+fz*lead};
+  if(!leg.foot){const anchor=plant(home,leg);leg.foot=anchor.p;leg.node=anchor.node}leg.flash=Math.max(0,(leg.flash||0)-dt);
+  if(leg.step){const st=leg.step;st.u=Math.min(1,st.u+dt*7);const e=st.u*st.u*(3-2*st.u);
+   leg.foot={x:st.from.x+(st.to.x-st.from.x)*e,y:st.from.y+(st.to.y-st.from.y)*e,z:st.from.z+(st.to.z-st.from.z)*e};
+   leg.lift=Math.sin(Math.PI*st.u);if(st.u>=1){leg.step=null;leg.node=st.node;leg.flash=.65;if(leg.node!==null&&pts[leg.node])pts[leg.node].lit=1}else stepping=true}
+  else{leg.lift=0;if((i+(side>0?1:0))%2===(crawler.gait||0)&&Math.hypot(leg.foot.x-home.x,leg.foot.y-home.y,leg.foot.z-home.z)>reach*.45){const anchor=plant(home,leg);leg.step={from:{...leg.foot},to:anchor.p,node:anchor.node,u:0};stepping=true}}}
+ if(!stepping)crawler.gait=crawler.gait?0:1;  // this group has landed: the other group's turn
+ const s=data.stations[crawler.at],busy=busyAt(crawler.at);
+ if(crawler.phase==='read'&&busy&&crawler.silk.length<30&&Math.random()<dt*7){const g=lobes[crawler.at];crawler.silk.push({to:pts[g.pts[(Math.random()*g.pts.length)|0]],u:0})}
+ for(const w of crawler.silk)w.u=Math.min(1,w.u+dt*.9);for(const t of crawler.tent)t.u=Math.min(1,t.u+dt*1.6);
+ // it stays with a repair in progress (up to a minute), a little longer at problems, ten seconds elsewhere
+ if(crawler.phase==='read'&&performance.now()-crawler.since>(busy?12000:broken(s)||repairsAt(crawler.at).length?6500:4500))choose()}
+// A fact is [name, value, kind]. kind: g = Ano fixing / fine, y = live or worth watching, p = needs you, w = plain reading.
+function severity(name,value,kind){if(kind!=='w')return kind;const v=String(value).toLowerCase(),n=Number((v.match(/(\d+(?:\.\d+)?)%/)||[])[1]);
+ if(/not running|not responding|not seen|offline|missing|stale|error|unavailable|failed/.test(v))return 'p';
+ if(name==='ram'&&n>=92)return 'p';if(name==='ram'&&n>=80)return 'y';
+ if(/battery/.test(v)&&n<25)return 'p';if(/battery/.test(v)&&n<50)return 'y';
+ if(/degraded|no_games|none due/.test(v))return 'y';
+ return /running|^on\b|watching|ready|\bok\b|sent|approved|available|all good|connected|listening/.test(v)?'g':'w'}  // plain readings stay neutral
+function factsFor(i){const s=data.stations[i],facts=[],job=repairsAt(i).find(r=>r.status==='working');
+ if(job)facts.push(['recovering',job.what,'g']);else if(broken(s))facts.push(['watch',s.state==='stale'?'stale evidence':s.state,'p']);else if(s.active)facts.push(['live',String(s.headline),'y']);
+ for(const [k,v]of s.details)facts.push([k.toLowerCase(),String(v),'w']);
+ return facts.slice(0,4).map(([n,v,k])=>[n,v,severity(n,v,k)])}
+// Facts hang in two tidy columns either side of the crawler: right column first, then left, top to bottom.
+function tentacles(facts){const right=facts.filter((_,k)=>k%2===0),left=facts.filter((_,k)=>k%2===1);
+ const place=(col,side)=>col.map((f,r)=>({fact:f,side,row:r,rows:col.length,angle:(side>0?-1.0:2.1)+r*.82,u:0,delay:(r*2+(side<0?1:0))*.12}));
+ return [...place(right,1),...place(left,-1)]}
+function arrive(){crawler.routeEdges=[];crawler.phase='read';crawler.at=crawler.target;crawler.since=performance.now();
+ for(const r of repairsAt(crawler.at))crawler.seen.set(jobKey(r),Date.now());crawler.tent=tentacles(factsFor(crawler.at))}
+
+// ── Drawing ───────────────────────────────────────────────────────────────────────────────
+let lastT=null,prevP=null,paintMs=0,paintCount=0;
+function dotsAdd(batches,col,alpha,x,y,w,h,dp=1){if(alpha<.035)return;const fog=(1-Math.round(dp*3)/3)*.55;
+ const c=col.map((v,k)=>Math.max(0,Math.min(255,Math.round((v+(FOG[k]-v)*fog)/16)*16))),a=Math.max(1/12,Math.min(1,Math.round(alpha*12)/12));
+ const style=`rgba(${c[0]},${c[1]},${c[2]},${a})`;let points=batches.get(style);if(!points){points=[];batches.set(style,points)}points.push(x,y,w,h)}
+function dotsPaint(context,batches){for(const [style,points]of batches){context.fillStyle=style;context.beginPath();for(let j=0;j<points.length;j+=4)context.rect(points[j],points[j+1],points[j+2],points[j+3]);context.fill()}}
+function frame(ms){requestAnimationFrame(frame);if(document.hidden)return;if(paused&&!dirty)return;const interval=paused?1000:quality==='economy'?50:33;if(lastT!==null&&ms-lastT<interval)return;const dt=paused||lastT===null?0:Math.min(.1,(ms-lastT)/1000);lastT=ms;dirty=false;const renderStarted=performance.now();if(!paused)frozen=ms;
+ ctx.clearRect(0,0,W,H);bctx.clearRect(0,0,W,H);if(!data||!lobes.length)return;const t=frozen/1000,st=data.stations;
+ if(!paused&&Date.now()-data.received<45000){step(dt);steer(dt);}updateView();frameColours=new Map(st.map(s=>[s.id,departmentShade(s)]));const P=pts.map(proj),reading=crawler.phase==='read',scan=reading?((performance.now()-crawler.since)/1000*150)%560:-1;
+
+ // Node tissue provides the connections; no cable overlay.
+ // each lobe glows from inside, larger when near: gives the cloud volume
+ for(const g of lobes){const q=proj(g.c);if(q.hidden)continue;const r=Math.min(900,240*q.k),c=colourOf(st[g.i]),gr=bctx.createRadialGradient(q.x,q.y,0,q.x,q.y,r);
+  gr.addColorStop(0,rgb(c,.05+.14*depth(q)));gr.addColorStop(1,rgb(c,0));bctx.fillStyle=gr;bctx.fillRect(q.x-r,q.y-r,r*2,r*2)}
+ // while it walks, the dust streaks past: each far point draws a short line from where it was a moment ago
+ if(!reading&&prevP){ctx.lineWidth=.6;ctx.strokeStyle=rgb(INK,.06);ctx.beginPath();  // kept faint and sparse: a hint of speed, not noise
+  for(let i=0;i<pts.length;i+=5){const a=prevP[i],b=P[i];if(a.hidden||b.hidden)continue;const d=Math.hypot(b.x-a.x,b.y-a.y);if(d>2.5&&d<60){ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y)}}ctx.stroke()}
+ prevP=P;
+ // links, in three depth bands: far ones fade into the fog, near ones are brighter and thicker
+ const silkBatches=new Map();for(const [a,b]of links){const A=P[a],B=P[b];if(A.hidden||B.hidden)continue;
+ const station=st[pts[a].r],band=depth(A)<.35?0:depth(A)<.65?1:2,key=station.id+':'+band;
+ let batch=silkBatches.get(key);if(!batch){batch={col:colourOf(station),band,points:[]};silkBatches.set(key,batch)}batch.points.push(A,B)}
+ for(const batch of silkBatches.values()){ctx.lineWidth=[.45,.6,.8][batch.band];ctx.strokeStyle=rgb(batch.col,[.13,.23,.36][batch.band]);ctx.beginPath();
+ for(let j=0;j<batch.points.length;j+=2){const a=batch.points[j],b=batch.points[j+1];ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y)}ctx.stroke()}
+ for(const g of lobes){if(!broken(st[g.i]))continue;const mend=0;
+  ctx.setLineDash([3,4]);ctx.strokeStyle=rgb(PINK,(.32+.06*Math.sin(t*.8+g.i))*(1-mend));ctx.lineWidth=.9;ctx.beginPath();for(const k of g.cut){const [a,b]=links[k];if(P[a].hidden||P[b].hidden)continue;ctx.moveTo(P[a].x,P[a].y);ctx.lineTo(P[b].x,P[b].y)}ctx.stroke();ctx.setLineDash([])}
+ const dotBatches=new Map(),bloomBatches=new Map();
+ // particles (also drawn into the half-size bloom layer for a soft glow)
+ for(let i=0;i<pts.length;i++){const p=pts[i],q=P[i];if(q.hidden)continue;const dp=depth(q),s=p.r>=0?st[p.r]:null,dim=openId&&s&&openId!==s.id?.35:1;
+  if(reading&&p.r===crawler.at){const d=Math.hypot(p.x-crawler.p.x,p.y-crawler.p.y,p.z-crawler.p.z);if(Math.abs(d-scan)<16)p.lit=1}if(p.lit)p.lit=Math.max(0,p.lit-dt*.6);
+  const a=(p.b*(.3+.7*dp)*(.8+.2*Math.sin(t*1.1+p.ph))+p.lit*.6)*dim*(broken(s)?.78:1);
+  const filament=p.m&&(p.m[1]>=0?mix(colourOf(st[p.m[0]]),colourOf(st[p.m[1]]),p.m[2]):mix(colourOf(st[p.m[0]]),INK,p.m[2]));
+  const col=p.lit>.05?deptColour(s?.id||st[crawler.at].id):p.r===-3?(i%3?INK:LILAC):filament||colourOf(s),z=(p.b>.65?1.6:1)*Math.max(.45,Math.min(2.8,q.k*1.3));
+  if(s&&s.active&&!broken(s))p.lit=Math.max(p.lit,.15+.15*Math.sin(t*3+p.ph));  // a live trade makes its lobe shimmer
+  // perspective size, far points tinted into the fog, very near points blur into soft bokeh
+  dotsAdd(dotBatches,col,a,q.x-z/2,q.y-z/2,z,z,dp);
+  if(q.k>1.45&&p.b>.35){const r=z*2.4;dotsAdd(bloomBatches,col,a*.35,q.x-r,q.y-r,r*2,r*2)}
+  else if(p.b>.5&&dp>.35){dotsAdd(bloomBatches,col,a*.9,q.x-1,q.y-1,z+2,z+2)}}
+ dotsPaint(ctx,dotBatches);dotsPaint(bctx,bloomBatches);
+ for(const g of lobes){const q=proj(g.c);g.screen=q.hidden?null:q}  // labels are drawn last, clear of everything
+ const body=proj(crawler.p),bs=Math.max(.7,body.k*1.35);
+ if(reading){const g=lobes[crawler.at],col=deptColour(st[crawler.at].id);
+  for(let k=0;k<8;k++){const pi=g.pts[(k*43+17)%g.pts.length],q=P[pi];if(q.hidden)continue;
+   const u=(t*.55+k/8)%1,mx=(body.x+q.x)/2+Math.sin(t*1.7+k)*14,my=Math.min(body.y,q.y)-25+Math.cos(t*1.9+k)*10,ax=(1-u)*(1-u)*body.x+2*(1-u)*u*mx+u*u*q.x,ay=(1-u)*(1-u)*body.y+2*(1-u)*u*my+u*u*q.y;
+   ctx.strokeStyle=rgb(col,.10+.13*Math.sin(u*Math.PI));ctx.lineWidth=.65;ctx.beginPath();ctx.moveTo(body.x,body.y);
+   ctx.quadraticCurveTo(mx,my,q.x,q.y);ctx.stroke();
+   ctx.fillStyle=rgb(col,.8);ctx.beginPath();ctx.arc(ax,ay,1.7,0,6.283);ctx.fill();if(u>.94)pts[pi].lit=.9}}
+ // trail and repair silk
+ const tr=crawler.trail.map(proj);ctx.lineWidth=1.2;for(let k=1;k<tr.length;k++){if(tr[k].hidden||tr[k-1].hidden)continue;ctx.strokeStyle=rgb(GREEN,k/tr.length*.35);ctx.beginPath();ctx.moveTo(tr[k-1].x,tr[k-1].y);ctx.lineTo(tr[k].x,tr[k].y);ctx.stroke()}
+ for(const w of crawler.silk){const e=proj({x:crawler.p.x+(w.to.x-crawler.p.x)*w.u,y:crawler.p.y+(w.to.y-crawler.p.y)*w.u,z:crawler.p.z+(w.to.z-crawler.p.z)*w.u});
+  if(e.hidden)continue;ctx.strokeStyle='rgba(225,255,238,.55)';ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(body.x,body.y);ctx.lineTo(e.x,e.y);ctx.stroke()}
+ const jobs=reading?repairsAt(crawler.at):[];
+ // Fact tags, in the wallpaper's original style: thin one-line tags on dotted tentacles, stacked close beside the
+ // crawler. A small dot says how it is: green fine, yellow worth watching, pink needs you, grey just a reading.
+ const placed=[];
+ // Quiet wallpaper: a single fading observation appears only after arrival.
+ const facts=reading?crawler.tent.filter(tn=>tn.u*2.2>tn.delay):[];
+ if(facts.length){const elapsed=Math.max(0,(performance.now()-crawler.since)/1000),tn=facts[Math.floor(elapsed/4)%facts.length],age=elapsed%4;
+ const [name,value,kind]=tn.fact,alpha=Math.min(1,age/.5,(4-age)/.6)*.78;
+ ctx.font=FONT(10);const text=labelLines(`${name} · ${value}`,285,1)[0]||'',w=ctx.measureText(text).width;
+ const x=Math.max(28,Math.min(W-28-w,body.x-w/2)),y=Math.max(50,Math.min(890,body.y+65));
+ ctx.save();ctx.shadowColor='#0c0a08';ctx.shadowBlur=5;ctx.textAlign='left';ctx.fillStyle=rgb(kind==='p'?PINK:INK,alpha);ctx.fillText(text,x,y);ctx.restore();
+ placed.push({x,y:y-12,w,h:18})}
+ // ── the crawler: the original design, eight simple legs, a spiny teal disc and a pink core ──
+ // A pulsing ring shows Ano's work: green repairing, pink needs you, yellow live trade.
+ const s=st[crawler.at],working=jobs.some(j=>j.status==='working'),alarm=broken(s)||jobs.some(j=>j.status==='needs-you'),R=18*bs;
+ for(const leg of crawler.legs){if(!leg.foot)continue;const f=proj(leg.foot);if(f.hidden)continue;if(leg.flash>0){const node=leg.node!==null?pts[leg.node]:null,c=deptColour(node&&node.r>=0?st[node.r].id:st[crawler.at].id);
+  ctx.strokeStyle=rgb(c,leg.flash);ctx.lineWidth=.8;ctx.beginPath();ctx.arc(f.x,f.y,3+(1-leg.flash/.65)*9,0,6.283);ctx.stroke();
+  ctx.fillStyle=rgb(c,.85);ctx.fillRect(f.x-1.5,f.y-1.5,3,3)}const dx=f.x-body.x,dy=f.y-body.y,len=Math.hypot(dx,dy)||1,side=leg.k%2?1:-1;
+  const kx=body.x+dx*.42-dy/len*side*(15+leg.lift*8)*bs,ky=body.y+dy*.42+dx/len*side*(15+leg.lift*8)*bs-(9+leg.lift*8)*bs;
+  ctx.strokeStyle=rgb(leg.k%3?GREEN:TEAL,.85);ctx.lineWidth=.8*bs;ctx.beginPath();ctx.moveTo(body.x,body.y);const wave=Math.sin(t*2.6-leg.k*.65)*(8+leg.lift*12)*bs,px=-dy/len,py=dx/len;
+  ctx.bezierCurveTo(body.x+dx*.28+px*wave,body.y+dy*.28+py*wave-8*bs,
+   body.x+dx*.72-px*wave*.8,body.y+dy*.72-py*wave*.8-leg.lift*14*bs,f.x,f.y);ctx.stroke()}
+ // the body: the original crawler, a hatched teal disc with a fringe of green spines and a pink core
+ const pulse=1+.06*Math.sin(t*4),R1=R*pulse;
+ for(let k=0;k<64;k++){const a=k/64*6.283+t*.3,r2=R1+(9+5*Math.sin(t*3+k*1.7))*bs;ctx.strokeStyle=k%3?rgb(GREEN,.8):rgb([150,240,200],.7);ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(body.x+Math.cos(a)*R1,body.y+Math.sin(a)*R1);ctx.lineTo(body.x+Math.cos(a)*r2,body.y+Math.sin(a)*r2);ctx.stroke()}
+ ctx.save();ctx.beginPath();ctx.arc(body.x,body.y,R1,0,6.283);ctx.fillStyle='rgba(20,90,85,.92)';ctx.fill();ctx.clip();ctx.strokeStyle='rgba(120,230,210,.35)';ctx.lineWidth=.7;
+ for(let k=-R1;k<R1;k+=3.2){ctx.beginPath();ctx.moveTo(body.x+k,body.y-R1);ctx.lineTo(body.x+k+R1,body.y+R1);ctx.stroke()}ctx.restore();
+ ctx.strokeStyle=rgb(GREEN,.9);ctx.lineWidth=1;ctx.beginPath();ctx.arc(body.x,body.y,R1,0,6.283);ctx.stroke();
+ const sq=4.2*bs;ctx.fillStyle='#ff4f8b';ctx.globalAlpha=broken(s)||(s&&s.active)?1:.75;ctx.fillRect(body.x-sq,body.y-sq,sq*2,sq*2);ctx.globalAlpha=1;
+ const glow=bctx.createRadialGradient(body.x,body.y,0,body.x,body.y,40*bs);glow.addColorStop(0,'rgba(94,224,143,.6)');glow.addColorStop(1,'rgba(94,224,143,0)');bctx.fillStyle=glow;bctx.fillRect(body.x-40*bs,body.y-40*bs,80*bs,80*bs);
+ // Ano's status ring
+ if(working||alarm||(s&&s.active&&reading)){const c=working?GREEN:alarm?PINK:YEL,pr=R+6+4*Math.sin(t*4);ctx.strokeStyle=rgb(c,.55+.35*Math.sin(t*5));ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(body.x,body.y,pr,0,6.283);ctx.stroke();
+  const au=bctx.createRadialGradient(body.x,body.y,0,body.x,body.y,50);au.addColorStop(0,rgb(c,.45));au.addColorStop(1,rgb(c,0));bctx.fillStyle=au;bctx.fillRect(body.x-50,body.y-50,100,100)}
+ labels(st,body,reading,placed);paintMs=paintCount?paintMs*.9+(performance.now()-renderStarted)*.1:performance.now()-renderStarted;paintCount++}
+// ── Labels: a ring on each lobe's core, a leader line out to a chip placed away from the centre ──
+const SX=750,SY=480,EDGE={l:36,r:W-36,t:36,b:905};
+let labelBounds=[];
+function labelLines(value,width,max){const words=value.split(/\s+/),lines=[];let line='';
+ for(const word of words){const next=line?line+' '+word:word;if(ctx.measureText(next).width>width&&line){lines.push(line);line=word}else line=next}if(line)lines.push(line);
+ if(lines.length>max){lines.length=max;let last=lines[max-1];while(last&&ctx.measureText(last+'…').width>width)last=last.slice(0,-1);lines[max-1]=last+'…'}return lines}
+function labelSpot(w,h,preferred,boxes){let best=null,score=Infinity;
+ const choices=[...preferred];for(const p of preferred)for(let k=1;k<=12;k++)for(const sign of [-1,1])choices.push({x:p.x,y:p.y+sign*k*35});
+ for(const p of choices){const x=Math.max(24,Math.min(W-24-w,p.x)),y=Math.max(24,Math.min(910-h,p.y));let penalty=0;
+  for(const b of boxes){const overlap=Math.max(0,Math.min(x+w+8,b.x+b.w)-Math.max(x-8,b.x))*Math.max(0,Math.min(y+h+8,b.y+b.h)-Math.max(y-8,b.y));penalty+=overlap*100}
+  const cost=penalty+Math.hypot(x-preferred[0].x,y-preferred[0].y);if(cost<score){score=cost;best={x,y,w,h}}}return best}
+function labels(st,body,reading,taken){const boxes=[...taken,{x:body.x-45,y:body.y-45,w:90,h:90}];labelBounds=[];
+ const order=[...lobes].sort((a,b)=>(b.i===crawler.at)-(a.i===crawler.at));
+ for(const g of order){const s=st[g.i],q=g.screen;if(!s||!q)continue;const c=deptColour(s.id),here=reading&&g.i===crawler.at;
+ const name=s.name.toLowerCase();
+ ctx.font=FONT(here?12:10);const w=ctx.measureText(name).width,h=17;
+ const spot=labelSpot(w,h,here?[{x:q.x-w/2,y:q.y-65},{x:q.x-w/2,y:q.y+45}]:[{x:q.x+(q.x<750?-w-35:35),y:q.y-12},{x:q.x-w/2,y:q.y-65}],boxes);
+ boxes.push(spot);labelBounds.push({id:s.id,...spot});const {x,y}=spot;
+ ctx.save();ctx.shadowColor='#0c0a08';ctx.shadowBlur=4;ctx.textAlign='left';ctx.font=FONT(here?12:10);ctx.fillStyle=rgb(c,here?.95:.65);ctx.fillText(name,x,y+12);ctx.restore()}}
+requestAnimationFrame(frame);
+
+// ── Card ──────────────────────────────────────────────────────────────────────────────────
+function esc(t){return String(t).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'})[c])}
+function showCard(){const s=data&&data.stations.find(x=>x.id===openId),g=lobes.find(r=>r.id===openId);if(!s||!g||!g.screen){card.classList.remove('open');return}
+ const col=s.state==='healthy'?(s.active?'#e8d44d':'#5ee08f'):'#e7ab70',label=s.state==='healthy'?(s.active?'LIVE':'OK'):s.state.toUpperCase(),rows=[...s.details,...(s.repair?[['Repair',s.repair]]:[])];
+ card.innerHTML=`<h1>${esc(s.name)}</h1><div class="role">${esc(s.role)}</div><span class="pill" style="color:${col}">${label}</span>
+  <div class="facts">${rows.map(([k,v])=>`<div class="fact"><b>${esc(k)}</b><span>${esc(v)}</span></div>`).join('')}</div>${s.say.length?`<div class="say">say to ano<br>${s.say.map(x=>`<span>${esc(x)}</span>`).join('')}</div>`:''}`;
+ card.style.left=Math.max(20,Math.min(W-320,g.screen.x+(g.screen.x>W/2?-340:40)))+'px';card.style.top=Math.max(40,Math.min(560,g.screen.y-90))+'px';card.classList.add('open')}
+scene.addEventListener('click',e=>{const r=scene.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*W,y=(e.clientY-r.top)/r.height*H;
+ const hit=lobes.filter(g=>g.screen).map(g=>[Math.hypot(g.screen.x-x,g.screen.y-y),g]).filter(([d])=>d<130).sort((a,b)=>a[0]-b[0])[0];openId=hit&&openId!==hit[1].id?hit[1].id:null;if(openId)choose(lobes.findIndex(g=>g.id===openId));showCard()});
+card.addEventListener('click',e=>e.stopPropagation());
+
+function hud(){const fresh=data&&Date.now()-data.received<45000,def=data?.defense||{};
+ document.getElementById('telemetryState').textContent=fresh?data.stations.length+' STATIONS · '+new Date(data.received).toLocaleTimeString()+' · '+quality.toUpperCase():'TELEMETRY STALE / LAST OBSERVATIONS';
+ document.getElementById('defenseMode').textContent=!fresh?'WAITING FOR EVIDENCE':def.mode==='recovering'?'VERIFIED RECOVERY IN PROGRESS':def.mode==='attention'?'OBSERVING / SYSTEM ISOLATED':'MONITORING / STEADY';
+ document.getElementById('defenseDetail').textContent=!fresh?'No fresh data; the last graph remains visible.':(def.active_repairs?.length?def.active_repairs.join(' · '):def.asset_integrity==='attention'?def.asset_detail:def.issues?.length?def.issues.length+' station(s) need observation. Safe recovery '+(def.automatic_repairs?'enabled.':'off.'):'Verified components online. Local monitoring; no paid AI.');}
+const PARENT={models:'assistant',work:'assistant',memory_manager:'system',risk:'forex'};
+function groupedStations(rows){return rows.map(s=>({...s,details:[...s.details],say:[...s.say]}))}
+window.receiveAnoStatus=function(d){
+ if(!d||!Array.isArray(d.stations)||!d.stations.length||!Number.isFinite(Date.parse(d.at)))return;
+ if(d.stations.some(s=>!s||typeof s.id!=='string'||!Array.isArray(s.details)||s.details.some(r=>!Array.isArray(r)||r.length!==2)||!Array.isArray(s.say)))return;
+ if(new Set(d.stations.map(s=>s.id)).size!==d.stations.length)return;
+ const at=Date.parse(d.at);if(at>Date.now()+5000)return;
+ const repairRows=Array.isArray(d.repairs)?d.repairs.filter(r=>r&&typeof r.station==='string'&&['working','done','needs-you'].includes(r.status)).map(r=>({...r,station:r.station,steps:Array.isArray(r.steps)?r.steps:[]})):[];
+ const first=!data;data={...d,repairs:repairRows,rawCount:d.stations.length,stations:groupedStations(d.stations),received:at};
+ const mem=d.stations.find(s=>s.id==='memory_manager'),ram=Number((mem?.details.find(r=>r[0]==='RAM')?.[1]||'').replace('%',''));quality=ram>=85?'economy':'balanced';
+ if(Date.now()-at>=45000){data.repairs=[];for(const st of data.stations){st.state='stale';st.active=false}}
+ if(data.stations.map(s=>s.id).join('|')!==built)build(data.stations);
+ if(first)choose();else if(crawler.phase==='read'){crawler.tent=tentacles(factsFor(crawler.at));for(const tn of crawler.tent)tn.u=1}
+ dirty=true;hud();if(openId)showCard();};
+function refresh(){if(document.hidden)return;document.getElementById('telemetry-source')?.remove();const script=document.createElement('script');script.id='telemetry-source';script.src='telemetry.js?t='+Date.now();document.body.append(script);
+ if(data&&Date.now()-data.received>=45000){data.repairs=[];for(const st of data.stations){st.state='stale';st.active=false}dirty=true;if(openId)showCard()}hud()}
+document.getElementById('motion').onclick=()=>{paused=!paused;dirty=true;document.getElementById('motion').textContent=paused?'Resume motion':'Pause motion'};
+document.getElementById('motion').textContent=paused?'Resume motion':'Pause motion';
+document.getElementById('helpToggle').onclick=()=>{const panel=document.getElementById('help');panel.hidden=!panel.hidden};
+document.addEventListener('visibilitychange',()=>{lastT=null;if(!document.hidden){dirty=true;refresh()}});
+window.anoGalaxyFocus=id=>{const i=data?.stations.findIndex(s=>s.id===id);if(!Number.isInteger(i)||i<0)return false;choose(i);dirty=true;return true};window.anoGalaxyDiagnostics=()=>({stations:data?.stations.length||0,rawStations:data?.rawCount||0,phase:crawler.phase,clusterRadius:205,clusterCenters:lobes.map(g=>({...g.c})),paths:lobes.length,routeEdges:crawler.routeEdges||[],wigglyArms:true,permanentDepartmentColours:true,colouredFilaments:true,screenFit:true,perspective3D:true,visiblePathways:false,connectedWeb:silkBridges.length===Math.max(0,lobes.length-1),webConnections:silkBridges.length,webRings:0,organicStructure:true,paintMs,paintCount,labelBounds,resolution:{width:canvas.width,height:canvas.height,pixelRatio:Math.min(2,devicePixelRatio||1),bloomWidth:bloomC.width},legs:crawler.legs.length,contacts:crawler.legs.filter(l=>l.node!==null&&l.node!==undefined).length,camera:{distance:cam.D,yaw:cam.yaw,focus:{...cam.f}},departmentColors:Object.fromEntries((data?.stations||[]).map(s=>[s.id,deptColour(s.id)])),paused,quality,points:pts.length,links:links.length,
+ stale:!data||Date.now()-data.received>=45000,defense:data?.defense?.mode||'unverified',hubs:lobes.map(g=>({id:g.id,screen:g.screen}))});
+refresh();setInterval(refresh,5000);})();
+
+</script></body></html>

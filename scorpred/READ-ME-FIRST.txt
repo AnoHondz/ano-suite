@@ -1,0 +1,37 @@
+SCORPRED — MOVE TO YOUR MICROSOFT SURFACE
+
+1. Download the whole transfer ZIP from your private OneDrive/cloud storage.
+2. Right-click the ZIP, choose Extract All, and extract to a LOCAL folder such as
+   Documents\ScorPred. Allow roughly 12 GB of free space for the extracted copy.
+   Run the extracted app outside a syncing OneDrive folder so live database files
+   are not edited by two computers through cloud synchronization.
+3. Inside the extracted ScorPred folder, double-click Open-ScorPred.cmd.
+   The script repairs the Python environment's location and starts the app.
+4. Open http://127.0.0.1:5173 if the browser does not open automatically.
+
+The package contains the project, historical databases, saved accounts, settings,
+model artifacts, installed Python packages, frontend dependencies and Node/Python
+runtimes from the working old computer. No model is retrained during setup.
+
+The supplied runtime is Windows x64. Windows 11 on an ARM Surface supports x64
+apps through emulation. An actual check on your Surface is still necessary.
+You need an internet connection for fresh sports data and optional email feeds.
+
+This is a PRIVATE backup: it includes local account data and .env settings.
+Keep it in your own private cloud storage rather than publishing it on GitHub.
+
+The database snapshots are from the export time recorded in transfer-manifest.json.
+Changes made on the old computer after that snapshot are not in this copy.
+After the Surface is working, stop the old app to avoid two daily email schedulers.
+The independent NFL collector is NOT started automatically by this transfer helper.
+Hand that collector over separately so there is only one collection writer.
+
+Development history is preserved in transfer-metadata\scorpred-repository.bundle.
+GitHub repository: https://github.com/AnoHondz/scorpred
+Saved branch: scorpred-hardening-2026-10-22
+Git credentials and Windows browser sign-ins are not copied.
+
+Official runtime and ARM information:
+https://www.python.org/downloads/release/python-31210/
+https://nodejs.org/en/download/archive/v22.23.3
+https://support.microsoft.com/en-us/windows/experience/platform-variants/windows-arm-based-pcs-faq

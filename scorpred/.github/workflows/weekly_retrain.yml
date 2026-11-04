@@ -1,0 +1,40 @@
+name: Weekly Model Release
+on:
+  schedule:
+    - cron: "0 3 * * 0"
+  workflow_dispatch:
+concurrency:
+  group: artifact-publishing
+  cancel-in-progress: false
+jobs:
+  retrain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - name: Train and evaluate the production pipeline
+        run: python production_model.py
+      - name: Run inference and integrity regression tests
+        run: pytest tests/test_integrity_regressions.py tests/test_production_model.py -q
+      - name: Publish immutable model and checksum manifest
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MODEL_TAG: models-${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          python scripts/model_artifacts.py --create --release-tag "$MODEL_TAG"
+          gh release create "$MODEL_TAG" data/models/soccer_random_forest_clean.pkl --target "$GITHUB_SHA" --title "ScorPred model $MODEL_TAG" --notes "Chronological evaluation is recorded in data/validation/production_model.json. Profitability is not established."
+      - name: Commit the release pointer and matching evaluation
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "ScorPred Pipeline"
+          git add data/models/manifest.json data/validation/production_model.json
+          git diff --staged --quiet && exit 0
+          git commit -m "chore(models): publish validated production model"
+          git push

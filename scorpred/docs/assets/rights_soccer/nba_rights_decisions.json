@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "review_scope": "Metadata review and conditional local 2023 reconciliation only; no sports asset entitlement established",
+  "providers": [
+    {
+      "provider_id": "sportsdataverse_espn_nba",
+      "repository_url": "https://github.com/sportsdataverse/sportsdataverse-data",
+      "status": "Unclear or unverified",
+      "license": {
+        "repository_license": "MIT root LICENSE",
+        "data_license_claim": "CC-BY-4.0 host README and ESPN producer LICENSE.md",
+        "scope_conflict": true
+      },
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/sportsdataverse/sportsdataverse-data/main/LICENSE",
+          "snapshot": "docs/assets/github_data_research/repository_evidence.json",
+          "text_sha256": "9c3898cce6957255c63911737a6441daf7ed70c445381b8a7f32b75a28123ea6",
+          "verified_license": "MIT",
+          "observed_at": "2026-10-22T01:52:28.569350+00:00"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sportsdataverse/sportsdataverse-data/main/README.md",
+          "snapshot": "docs/assets/github_data_research/repository_evidence.json",
+          "text_sha256": "ab5be8c4c7a303883f6e8eea134b7737ff06eab884b8b6303e18d618ca4d9df9",
+          "verified_license": "CC-BY-4.0 data claim",
+          "observed_at": "2026-10-22T01:52:28.506497+00:00"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/sportsdataverse/hoopR-nba-data/main/LICENSE.md",
+          "snapshot": "docs/assets/github_data_research/supplemental_evidence.json",
+          "text_sha256": "6ad49a8be39eb9f8cca31f3ee127972bfb935a63d834e75bcccb9d29ed2443c2",
+          "verified_license": "CC-BY-4.0 data/code/documentation",
+          "observed_at": "2026-10-22T01:53:55.844107+00:00"
+        },
+        {
+          "url": "https://disneytermsofuse.com/english/",
+          "section": "2B(viii), 2B(x)",
+          "checked_at": "2026-10-22T02:21:57Z",
+          "finding": "ESPN covered; automated extraction, dataset building and business uses require express permission",
+          "full_text_retained": false
+        }
+      ],
+      "approval": null,
+      "purpose_decisions": {
+        "research_asset_copy": "blocked_no_verified_source_specific_permission",
+        "automated_collection": "blocked_no_verified_source_specific_permission",
+        "training": "blocked_no_verified_source_specific_permission",
+        "serving": "blocked_no_verified_source_specific_permission",
+        "redistribution": "blocked_no_verified_source_specific_permission"
+      }
+    },
+    {
+      "provider_id": "sportsdataverse_nba_stats",
+      "repository_url": "https://github.com/sportsdataverse/hoopR-nba-stats-data",
+      "status": "Restricted",
+      "license": {
+        "repository_license": "Root stub; LICENSE.md explicitly CC-BY-4.0",
+        "data_license_claim": "CC-BY-4.0 data/code/documentation",
+        "scope_conflict": false
+      },
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/sportsdataverse/hoopR-nba-stats-data/main/LICENSE.md",
+          "snapshot": "docs/assets/github_data_research/supplemental_evidence.json",
+          "text_sha256": "c235233e43b46d6227f312b573a84685075572a018e52e490ab647014c861194",
+          "verified_license": "CC-BY-4.0 data/code/documentation",
+          "observed_at": "2026-10-22T01:53:55.873959+00:00"
+        },
+        {
+          "url": "https://www.nba.com/termsofuse",
+          "section": "9",
+          "checked_at": "2026-10-22T02:21:57Z",
+          "finding": "Consent required for comprehensive updated statistical databases; product and gambling restrictions",
+          "full_text_retained": false
+        }
+      ],
+      "approval": null,
+      "purpose_decisions": {
+        "research_asset_copy": "blocked_no_verified_source_specific_permission",
+        "automated_collection": "blocked_no_verified_source_specific_permission",
+        "training": "blocked_no_verified_source_specific_permission",
+        "serving": "blocked_no_verified_source_specific_permission",
+        "redistribution": "blocked_no_verified_source_specific_permission"
+      }
+    },
+    {
+      "provider_id": "shufinskiy_nba",
+      "repository_url": "https://github.com/shufinskiy/nba_data",
+      "status": "Unclear or unverified",
+      "license": {
+        "repository_license": "Apache-2.0",
+        "data_license_claim": "Repository license; upstream data rights not established",
+        "scope_conflict": false
+      },
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/shufinskiy/nba_data/main/LICENSE",
+          "snapshot": "docs/assets/github_data_research/repository_evidence.json",
+          "text_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+          "verified_license": "Apache-2.0",
+          "observed_at": "2026-10-22T01:52:30.347269+00:00"
+        },
+        {
+          "url": "https://www.nba.com/termsofuse",
+          "section": "9",
+          "checked_at": "2026-10-22T02:21:57Z",
+          "finding": "See shared NBA terms evidence in sportsdataverse_nba_stats; derivative applicability unresolved",
+          "full_text_retained": false
+        }
+      ],
+      "approval": null,
+      "purpose_decisions": {
+        "research_asset_copy": "blocked_no_verified_source_specific_permission",
+        "automated_collection": "blocked_no_verified_source_specific_permission",
+        "training": "blocked_no_verified_source_specific_permission",
+        "serving": "blocked_no_verified_source_specific_permission",
+        "redistribution": "blocked_no_verified_source_specific_permission"
+      }
+    }
+  ],
+  "authoritative_terms": [
+    {
+      "url": "https://disneytermsofuse.com/english/",
+      "sections": [
+        "2 ownership",
+        "2A consumer license and AI use",
+        "2B(viii) business use",
+        "2B(x) automated extraction and datasets"
+      ],
+      "checked_on": "2026-10-22",
+      "finding": "Applies to ESPN; no proposed-use authorization found; downstream rights chain remains unresolved"
+    },
+    {
+      "url": "https://www.nba.com/termsofuse",
+      "sections": [
+        "9(ii)-(vii)"
+      ],
+      "checked_on": "2026-10-22",
+      "finding": "See NBA_SOURCE_RIGHTS_RESOLUTION.md; no source-specific exception verified"
+    },
+    {
+      "url": "https://creativecommons.org/licenses/by/4.0/legalcode.en",
+      "sections": [
+        "1(g)",
+        "2(a)",
+        "2(b)",
+        "3",
+        "5"
+      ],
+      "checked_on": "2026-10-22",
+      "finding": "Licensor can grant only rights it controls; conditions and disclaimers do not establish upstream authorization"
+    }
+  ],
+  "pilot_authorized": false,
+  "collection_enabled": false,
+  "production_changed": false,
+  "contacts_sent": 0,
+  "unresolved": [
+    "Host-versus-producer license scope",
+    "ESPN/NBA downstream rights for specific assets and intended uses",
+    "No authoritative exception or rights-holder approval",
+    "ESPN player-minute schema not established by inspected docs/shims"
+  ],
+  "metadata_restrictions_observed": [
+    "No release asset or sidecar requested",
+    "No token API used",
+    "No redirects to assets followed",
+    "Football-Data notes documentation returned 429 in browser; no retry",
+    "API-Football documentation produced no usable schema text; credentialed coverage remains unverified"
+  ]
+}

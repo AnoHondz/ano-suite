@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% import "components/decision.html" as ui with context %}
+
+{% block title %}ScorPred | Watchlist{% endblock %}
+{% block topbar_title %}Watchlist{% endblock %}
+
+{% block content %}
+
+{# ── Header ──────────────────────────────────────────────────────────────────── #}
+<div class="sp-dash-header">
+  <div class="sp-dash-header__left">
+    <h1>Watchlist</h1>
+    <p>Track your favorite teams and matches.</p>
+  </div>
+  <a class="btn btn-primary btn-sm" href="/soccer">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:14px;height:14px;display:block"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Add Team
+  </a>
+</div>
+
+{# ── Tabs ─────────────────────────────────────────────────────────────────────── #}
+<div class="sp-page-tabs">
+  <a href="#" class="sp-page-tab active" id="tab-teams-btn" onclick="showWatchTab('teams',this);return false;">Teams</a>
+  <a href="#" class="sp-page-tab" id="tab-matches-btn" onclick="showWatchTab('matches',this);return false;">Matches</a>
+</div>
+
+{# ── Teams Tab ────────────────────────────────────────────────────────────────── #}
+<div id="watch-teams">
+{% if watched_teams %}
+    <div class="sp-watch-teams">
+      {% for team in watched_teams %}
+        <div class="sp-watch-team-card">
+          <div class="sp-watch-team-card__insight"></div>
+          <div class="sp-watch-team-card__head">
+            {% if team.logo %}
+              <img src="{{ team.logo }}" alt="{{ team.name }}" class="sp-watch-team-card__logo" onerror="this.style.display='none'">
+            {% else %}
+              <span class="sp-watch-team-card__logo-ph">{{ team.name[:2]|upper }}</span>
+            {% endif %}
+            <div class="sp-watch-team-card__info">
+              <div class="sp-watch-team-card__name">{{ team.name }}</div>
+              <div class="sp-watch-team-card__league">{{ team.league or 'League' }}</div>
+            </div>
+            <form method="post" action="/watchlist/team/remove">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+              <input type="hidden" name="team" value="{{ team.name }}" />
+              <button class="sp-watch-team-card__star" aria-label="Remove {{ team.name }} from watchlist" type="submit">
+                <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:16px;height:16px;display:block"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              </button>
+            </form>
+          </div>
+          <div class="sp-watch-team-card__next">
+            Next: {{ team.next_match or 'No upcoming match' }}
+          </div>
+          <div class="sp-watch-team-card__form">
+            {% for result in (team.recent_form or [])[:5] %}
+              <span class="sp-form-badge sp-form-badge--{{ result|lower }}">{{ result|upper }}</span>
+            {% endfor %}
+          </div>
+          <div class="sp-watch-team-card__stat">Form: {{ team.form_pct or '—' }}%</div>
+        </div>
+      {% endfor %}
+    </div>
+{% else %}
+    {{ ui.empty_state('No watched teams', 'Add teams from Soccer or NBA pages to track them here.') }}
+  {% endif %}
+
+  {# Watchlist Insights #}
+  <div class="sp-info-card" style="margin-top:.5rem">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
+      <div>
+        <strong>Watchlist Insights</strong>
+        <p style="color:var(--text-2);font-size:.82rem;margin-top:.2rem">Insights become available after you add teams or matches to your watchlist.</p>
+      </div>
+      <a href="/insights" class="btn btn-secondary btn-sm">View Insights</a>
+    </div>
+  </div>
+</div>
+
+{# ── Matches Tab ──────────────────────────────────────────────────────────────── #}
+<div id="watch-matches" style="display:none">
+  {% if watchlist_matches %}
+    <div class="sp-bets-table">
+      <div class="sp-bets-table__head">
+        <span>Date</span><span>Match</span><span>League</span>
+      </div>
+      {% for row in watchlist_matches %}
+        <div class="sp-bets-row" style="grid-template-columns:180px 1fr 180px">
+          <span class="sp-bets-row__date">{{ row.date }}</span>
+          <span>{{ row.matchup }}</span>
+          <span>{{ row.league }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    {{ ui.empty_state('No matches in watchlist', 'Add teams from Soccer/NBA and upcoming games will show here.') }}
+  {% endif %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function showWatchTab(id, el) {
+  document.getElementById('watch-teams').style.display = id === 'teams' ? '' : 'none';
+  document.getElementById('watch-matches').style.display = id === 'matches' ? '' : 'none';
+  document.querySelectorAll('.sp-page-tab').forEach(function(a) { a.classList.remove('active'); });
+  if (el) el.classList.add('active');
+}
+</script>
+{% endblock %}

@@ -1,0 +1,17 @@
+{
+  "version": "nba-early-season-v1",
+  "generated_at": "2026-10-22T19:35:21.668914+00:00",
+  "calibration": {
+    "count": 285,
+    "end": "2024-11-05T03:15:00+00:00",
+    "margin_bias": -1.8575116959064333,
+    "margin_sigma": 13.160394405284382,
+    "radius": [
+      14.335000000000008,
+      13.689166666666665
+    ]
+  },
+  "method_sha256": "5f5348e68a2095856a11a71b6a713873c5800adc9612ca552cf134f39f3f2ac7",
+  "production_eligible": false,
+  "protocol_sha256": "cb9915198e1a9df69b8cbdedcaa66e12f2938d576f969f0da24400ad45a6185c"
+}

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% import "components/decision.html" as ui with context %}
+
+{% block title %}ScorPred | Match Analysis{% endblock %}
+{% block topbar_title %}Match Analysis{% endblock %}
+
+{% block content %}
+{% set card = scorpred.decision_card if scorpred else none %}
+{% if card %}{% set _ = card.update({'hide_cta': True}) %}{% endif %}
+
+{# ── Match Header ─────────────────────────────────────────────────────────────── #}
+<div class="sp-dash-header">
+  <div class="sp-dash-header__left">
+    <span class="sp-kicker" style="color:var(--c-active);margin-bottom:.3rem;display:block">
+      {{ selected_fixture.league_name or 'Soccer' }}
+    </span>
+    <h1>{{ team_a.name }} vs {{ team_b.name }}</h1>
+    <p>Recommended side first, then the evidence behind the action.</p>
+  </div>
+  <div style="display:flex;gap:.6rem">
+    <a class="btn btn-secondary btn-sm" href="/prediction">Full Analysis</a>
+    <a class="btn btn-secondary btn-sm" href="/insights">Insights</a>
+  </div>
+</div>
+
+{% if card %}
+  <div class="sp-analysis-layout">
+    <div>
+      {{ ui.decision_card(card, 'featured') }}
+
+      <section class="sp-section">
+        <div class="sp-info-card">
+          <h2 style="margin-bottom:.75rem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-strong)" stroke-width="2" stroke-linecap="round" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:.4rem"><polyline points="20 6 9 17 4 12"/></svg>
+            Why this side can win
+          </h2>
+          <ul class="sp-why-list">
+            {% for point in card.why_win or [] %}
+              <li>{{ point }}</li>
+            {% else %}
+              <li style="color:var(--text-3)">Analysis points not available.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+
+      <section class="sp-section">
+        <div class="sp-info-card">
+          <h2 style="margin-bottom:.75rem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-caution)" stroke-width="2" stroke-linecap="round" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:.4rem"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Why this side could lose
+          </h2>
+          <ul class="sp-why-list">
+            {% for point in card.why_lose or [] %}
+              <li>{{ point }}</li>
+            {% else %}
+              <li style="color:var(--text-3)">Risk factors not available.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+
+      {% if card.key_swing_factor %}
+      <section class="sp-section">
+        <div class="sp-info-card" style="border-color:rgba(var(--c-active-rgb),.2)">
+          <h2 style="margin-bottom:.5rem">Key swing factor</h2>
+          <p>{{ card.key_swing_factor }}</p>
+        </div>
+      </section>
+      {% endif %}
+
+      <section class="sp-section">
+        <div class="sp-info-card">
+          <h2 style="margin-bottom:1rem">Visual Support</h2>
+          {{ ui.confidence_bar(card) }}
+          {{ ui.probability_bar(card) }}
+          {% if card.comparison_metrics %}
+            <div style="margin-top:.75rem">{{ ui.comparison_bars(card.comparison_metrics) }}</div>
+          {% endif %}
+          <div style="margin-top:.75rem">{{ ui.form_strip(card.form_strip or form_a) }}</div>
+        </div>
+      </section>
+    </div>
+
+    <aside class="sp-info-card" style="align-self:start;position:sticky;top:calc(var(--topbar-h) + 1rem)">
+      <h2 style="margin-bottom:.85rem">Data Confidence</h2>
+      {{ ui.data_badge(card.data_confidence) }}
+      <p class="sp-muted" style="margin-top:.75rem;font-size:.84rem">{{ (scorpred.data_completeness or {}).summary or card.support_text or '' }}</p>
+
+      <div style="margin-top:.85rem">
+        <small class="sp-kicker">Sample Data</small>
+        <ul class="sp-why-list" style="margin-top:.35rem">
+          <li>{{ team_a.name }} form: {{ form_a|length }} matches</li>
+          <li>{{ team_b.name }} form: {{ form_b|length }} matches</li>
+          <li>Head-to-head: {{ h2h|length if h2h else 0 }} matches</li>
+        </ul>
+      </div>
+
+      <div style="margin-top:.85rem">{{ ui.form_strip(card.form_strip or form_a) }}</div>
+
+      <div style="margin-top:1.25rem;display:flex;flex-direction:column;gap:.5rem">
+        <a class="btn btn-primary btn-sm btn-full" href="/prediction">Full Analysis</a>
+        <a class="btn btn-secondary btn-sm btn-full" href="/insights">Insights</a>
+      </div>
+    </aside>
+  </div>
+{% else %}
+  {{ ui.empty_state('Match analysis is unavailable', 'Select another fixture or refresh the slate.') }}
+{% endif %}
+{% endblock %}

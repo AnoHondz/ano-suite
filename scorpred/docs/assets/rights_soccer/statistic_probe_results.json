@@ -1,0 +1,151 @@
+{
+  "method": "AST-isolated local pure function bodies with synthetic arguments/dependency stubs; no module import or network",
+  "production_changed": false,
+  "source_code_evidence": [
+    {
+      "file": "api_client.py",
+      "sha256": "b6d748cde72e20d20929905151f21f3f9e8cd868d2332e7d6f4d757f1d33f16b",
+      "functions": [
+        {
+          "name": "_normalize_espn_player_response",
+          "line": 957,
+          "end_line": 999
+        },
+        {
+          "name": "_build_game_row",
+          "line": 1925,
+          "end_line": 1972
+        },
+        {
+          "name": "get_opponent_defensive_stats",
+          "line": 2184,
+          "end_line": 2241
+        }
+      ]
+    },
+    {
+      "file": "predictor.py",
+      "sha256": "c40d9498bffc7a8e1af699b9d5321e905c07ba9b18c595e9825ce8d77a7b1d71",
+      "functions": [
+        {
+          "name": "extract_form",
+          "line": 84,
+          "end_line": 165
+        },
+        {
+          "name": "predict",
+          "line": 459,
+          "end_line": 607
+        }
+      ]
+    },
+    {
+      "file": "fetch_historical_data.py",
+      "sha256": "713a28503d93145346e47ef9251f6afddd21c30d9bbdfa22a9988eb79e7a08db",
+      "functions": [
+        {
+          "name": "_safe_xg",
+          "line": 75,
+          "end_line": 79
+        },
+        {
+          "name": "_safe_xg_away",
+          "line": 82,
+          "end_line": 84
+        }
+      ]
+    },
+    {
+      "file": "football_data_client.py",
+      "sha256": "51e5ee6f983291d66aff3823a0e072424b57521dd5d4e785e5d8857af585f7f7",
+      "functions": [
+        {
+          "name": "_normalize_fd_match",
+          "line": 355,
+          "end_line": 411
+        }
+      ]
+    },
+    {
+      "file": "train_model.py",
+      "sha256": "fe91d90a70b6470d2465822363bae80a02b737a2dcd664d002dda6050cd6a083",
+      "functions": [
+        {
+          "name": "build_clean_features",
+          "line": 251,
+          "end_line": 515
+        }
+      ]
+    },
+    {
+      "file": "app.py",
+      "sha256": "8a6bc791cc087d8bbebb8ca9892e06ec9e7ef95588f2e2d59ec8c186e38a37f9",
+      "functions": [
+        {
+          "name": "_parse_stat_value",
+          "line": 819,
+          "end_line": 832
+        }
+      ]
+    }
+  ],
+  "probes": [
+    {
+      "issue_id": "SOC-STAT-005",
+      "input": {
+        "score.home": 1.0
+      },
+      "observed": "1.0",
+      "required": null,
+      "diagnostic": "Goal-score type is insufficient evidence of xG"
+    },
+    {
+      "issue_id": "SOC-STAT-001",
+      "input": {
+        "goals.total": null,
+        "goals.assists": null
+      },
+      "observed": {
+        "goals": 0.0,
+        "assists": 0.0,
+        "goal_or_assist": 0.0
+      },
+      "required": {
+        "goals": null,
+        "assists": null,
+        "goal_or_assist": null
+      }
+    },
+    {
+      "issue_id": "SOC-STAT-009",
+      "input": {
+        "goals": {
+          "total": null,
+          "assists": null
+        },
+        "tackles": {
+          "blocks": 2
+        },
+        "duels": {
+          "won": 8
+        },
+        "passes": {
+          "total": 25,
+          "key": 3
+        }
+      },
+      "observed": {
+        "clearances": 2.0,
+        "aerial_duels_won": 8.0,
+        "passes_completed": 25.0,
+        "chances_created": 3.0
+      },
+      "required": {
+        "clearances": null,
+        "aerial_duels_won": null,
+        "passes_completed": null,
+        "chances_created": null
+      }
+    }
+  ]
+}

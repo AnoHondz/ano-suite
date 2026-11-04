@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% import "components/decision.html" as ui with context %}
+
+{% block title %}ScorPred | System Intelligence{% endblock %}
+{% block topbar_title %}System Intelligence{% endblock %}
+
+{% block content %}
+{% set model = intelligence.model_metrics if intelligence else {} %}
+{% set calibration = intelligence.calibration if intelligence else {} %}
+{% set health = intelligence.system_health if intelligence else {} %}
+{% set dq = intelligence.decision_quality if intelligence else {} %}
+{% set safeguards = intelligence.safeguards if intelligence else {} %}
+
+<div class="sp-dash-header">
+  <div class="sp-dash-header__left">
+    <h1>System Intelligence</h1>
+    <p>Transparent model trust, calibration, and runtime health.</p>
+  </div>
+</div>
+
+<div class="sp-kpi-row" style="grid-template-columns:repeat(3,1fr)">
+  <div class="sp-kpi-card sp-kpi-card--accuracy">
+    <span class="sp-kpi-card__label">Trust Score</span>
+    <span class="sp-kpi-card__value">{{ model.trust_score if model.trust_score is not none else 'N/A' }}</span>
+    <span class="sp-kpi-card__meta">Model trust index</span>
+  </div>
+  <div class="sp-kpi-card sp-kpi-card--roi">
+    <span class="sp-kpi-card__label">Calibration Score</span>
+    <span class="sp-kpi-card__value">{{ model.calibration_score if model.calibration_score is not none else 'N/A' }}</span>
+    <span class="sp-kpi-card__meta">100 - mean abs error</span>
+  </div>
+  <div class="sp-kpi-card sp-kpi-card--bet">
+    <span class="sp-kpi-card__label">Win Rate</span>
+    <span class="sp-kpi-card__value">{{ model.win_rate if model.win_rate is not none else 'N/A' }}</span>
+    <span class="sp-kpi-card__meta">Completed predictions</span>
+  </div>
+</div>
+
+<section class="sp-section" style="margin-top:1rem">
+  <div class="sp-section__header"><div><h2>Calibration</h2><p>Predicted confidence vs actual hit rate by bucket.</p></div></div>
+  {% if calibration.buckets %}
+  <div class="sp-bets-table">
+    <div class="sp-bets-table__head" style="grid-template-columns:120px 100px 140px 140px 140px 120px">
+      <span>Bucket</span><span>Samples</span><span>Predicted</span><span>Actual</span><span>Error</span><span>Signal</span>
+    </div>
+    {% for row in calibration.buckets %}
+      {% set err = row.error if row.error is not none else 0 %}
+      <div class="sp-bets-row" style="grid-template-columns:120px 100px 140px 140px 140px 120px">
+        <span>{{ row.range }}</span>
+        <span>{{ row.sample_size or 0 }}</span>
+        <span>{{ row.predicted if row.predicted is not none else 'N/A' }}</span>
+        <span>{{ row.actual if row.actual is not none else 'N/A' }}</span>
+        <span>{{ row.error if row.error is not none else 'N/A' }}</span>
+        <span class="sp-badge {% if err <= 8 %}sp-badge--strong{% elif err <= 15 %}sp-badge--caution{% else %}sp-badge--danger{% endif %}">
+          {% if err <= 8 %}Calibrated{% elif err <= 15 %}Watch{% else %}Overconfident{% endif %}
+        </span>
+      </div>
+    {% endfor %}
+  </div>
+  {% else %}
+    {{ ui.empty_state('Calibration unavailable', 'No evaluated bucket data yet.') }}
+  {% endif %}
+</section>
+
+<div class="sp-kpi-row" style="grid-template-columns:repeat(2,1fr);margin-top:1rem">
+  <div class="sp-kpi-card">
+    <span class="sp-kpi-card__label">System Health</span>
+    <span class="sp-kpi-card__value">{{ health.api_status or 'unknown' }}</span>
+    <span class="sp-kpi-card__meta">Last refresh: {{ health.last_refresh_time or 'N/A' }}</span>
+    <span class="sp-kpi-card__meta">Freshness: {{ health.data_freshness if health.data_freshness is not none else 'N/A' }}s</span>
+    <span class="sp-kpi-card__meta">Errors: {{ health.error_count or 0 }}</span>
+    <span class="sp-kpi-card__meta">Degraded mode: {{ 'Yes' if health.degraded_mode else 'No' }}</span>
+  </div>
+  <div class="sp-kpi-card">
+    <span class="sp-kpi-card__label">Decision Distribution</span>
+    <span class="sp-kpi-card__meta">BET: {{ dq.bet_count or 0 }}</span>
+    <span class="sp-kpi-card__meta">CONSIDER: {{ dq.consider_count or 0 }}</span>
+    <span class="sp-kpi-card__meta">SKIP: {{ dq.skip_count or 0 }}</span>
+    <span class="sp-kpi-card__meta">High-confidence accuracy: {{ dq.high_confidence_accuracy if dq.high_confidence_accuracy is not none else 'N/A' }}</span>
+  </div>
+</div>
+
+<section class="sp-section" style="margin-top:1rem">
+  <div class="sp-section__header"><div><h2>Safeguards</h2><p>Operational fallback and downgrade signals.</p></div></div>
+  <div class="sp-bets-table">
+    <div class="sp-bets-row" style="grid-template-columns:1fr 120px"><span>Fallback data used</span><span>{{ 'Yes' if safeguards.fallback_data_used else 'No' }}</span></div>
+    <div class="sp-bets-row" style="grid-template-columns:1fr 120px"><span>Stale data served</span><span>{{ 'Yes' if safeguards.stale_data_served else 'No' }}</span></div>
+    <div class="sp-bets-row" style="grid-template-columns:1fr 120px"><span>Trust downgraded decisions</span><span>{{ 'Yes' if safeguards.trust_downgraded else 'No' }}</span></div>
+  </div>
+</section>
+{% endblock %}

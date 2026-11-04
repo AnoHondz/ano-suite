@@ -1,0 +1,32 @@
+{
+  "revision": "stage1-holdout-boundary-v1",
+  "base_study_sha256": "fd4526c5da021c30c28538dcdb67faadc18f581d7ac451a2d56f1f6589534cb7",
+  "base_feature_code_sha256": "785fd83db69be4b7ad978d74797b9b5ac481b0d648831720504bc87dae5ea72b",
+  "source_changes": {
+    "scripts/nfl_collector.py": {
+      "before": "51260bc32bb776d03b33b9fca81c928ad8e584056da0f4a3dec576290bee2f95",
+      "after": "6490d4f082b9af7acf8920403e5452f740a68d865a2d0558bef93848279ec51f"
+    },
+    "services/nfl_frozen_models.py": {
+      "before": "f40a3ebfaa8c1bd8f7e4eaff012466814e5b7910bdf2b9c137d63fa269823caa",
+      "after": "d73656a82b3384d8f85e9a679764b27249f46be61a0a218bd3ad53ce244a9b99"
+    },
+    "services/nfl_winner_features.py": {
+      "before": "a4a75eb00304724ccbd09856f8e1c5c163ad052ad1d87010880dde31c0600f55",
+      "after": "75150c151feaf0909ec5eafe12ff7b1d86e9045c9cdbffa8893ac1cfa6906789"
+    },
+    "services/nfl_winner_research.py": {
+      "before": "ead2088d4d065021b80caee048406b9ceea3e5b22232c5a9c07a3f9b5bd09409",
+      "after": "3b553785c102ea980974bf513e85742247d7920f3d680deb1f4237ac63d31802"
+    },
+    "services/nflverse_store.py": {
+      "before": "a5f6dd192861b86b9e2aeca17fae72b3afd27d8cd534011572288a022c046b46",
+      "after": "dafe27154e6010a8e75ab1389a5290a133289b8ac26436c72bdd1767590c6edc"
+    }
+  },
+  "new_safety_modules": {
+    "services/nfl_holdout.py": "5b17523482dcf4b694d5e0dc782cb5d46cd84fbc3292c7462709bd2cef40a79f",
+    "services/nfl_safety_revision.py": "7816406d898465e5d75a5d81f100c79ae79d5294cb7d237bc3ca252bf4ac5a27"
+  },
+  "scope": "Sealed read boundary, target denial, snapshot exclusion and exact source-only compatibility. No model coefficients, preprocessing, calibration or probabilities changed."
+}

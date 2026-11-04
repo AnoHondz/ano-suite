@@ -1,0 +1,188 @@
+{% macro logo_mark(src, name, initials) -%}
+  <span class="sp-logo-mark" aria-label="{{ name }}">
+    {% if src %}
+      <img src="{{ src }}" alt="{{ name }} logo" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false;">
+      <span hidden>{{ initials }}</span>
+    {% else %}
+      <span>{{ initials }}</span>
+    {% endif %}
+  </span>
+{%- endmacro %}
+
+{% macro data_badge(badge) -%}
+  {% set state = (badge.state if badge else 'limited') %}
+  {% set label = (badge.label if badge else 'Limited Data') %}
+  <span class="sp-data-badge sp-data-badge--{{ state }}">{{ label }}</span>
+{%- endmacro %}
+
+{% macro confidence_bar(card) -%}
+  <div class="sp-confidence" aria-label="Confidence {{ card.confidence_pct }}%">
+    <div class="sp-confidence__meta">
+      <span>Confidence</span>
+      <strong>{{ card.confidence_pct }}%</strong>
+    </div>
+    <div class="sp-confidence__track">
+      <span class="sp-confidence__fill sp-confidence__fill--{{ card.strength_class }}" data-width="{{ card.confidence_pct }}"></span>
+    </div>
+  </div>
+{%- endmacro %}
+
+{% macro probability_bar(card) -%}
+  {% if card.probability_rows %}
+    <div class="sp-probability-mini">
+      {% for row in card.probability_rows %}
+        <div class="sp-probability-mini__row {% if row.selected %}is-selected{% endif %}">
+          <span>{{ row.label }}</span>
+          <div class="sp-probability-mini__track">
+            <i style="width: {{ row.value }}%"></i>
+          </div>
+          <strong>{{ row.value|round|int }}%</strong>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{%- endmacro %}
+
+{% macro comparison_bars(metrics) -%}
+  {% if metrics %}
+    <div class="sp-comparison-bars">
+      {% for metric in metrics[:4] %}
+        <div class="sp-comparison-bars__row">
+          <div class="sp-comparison-bars__meta">
+            <span>{{ metric.label }}</span>
+            <strong>{{ metric.leader }}</strong>
+          </div>
+          <div class="sp-comparison-bars__track">
+            <i class="home" style="width: {{ metric.a_value }}%"></i>
+            <i class="away" style="width: {{ metric.b_value }}%"></i>
+          </div>
+          <div class="sp-comparison-bars__values">
+            <span>{{ metric.team_a }} {{ metric.a_value|round|int }}</span>
+            <span>{{ metric.team_b }} {{ metric.b_value|round|int }}</span>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{%- endmacro %}
+
+{% macro form_strip(items) -%}
+  {% if items %}
+    <div class="sp-form-strip sp-form-strip--compact">
+      {% for item in items[:5] %}
+        {% set label = item if item is string else (item.result or item.outcome or item.label or '') %}
+        <span class="sp-form-dot sp-form-dot--{{ label|lower|replace(' ', '-') }}">{{ label[:1]|upper }}</span>
+      {% endfor %}
+    </div>
+  {% endif %}
+{%- endmacro %}
+
+{% macro decision_card(card, variant='standard') -%}
+  <article class="sp-decision-card {% if variant == 'featured' %}sp-decision-card--featured{% endif %}">
+    <div class="sp-decision-card__matchup">
+      {{ logo_mark(card.team_a_logo, card.team_a, card.team_a_initials) }}
+      <span>{{ card.team_a }} vs {{ card.team_b }}</span>
+      {{ logo_mark(card.team_b_logo, card.team_b, card.team_b_initials) }}
+    </div>
+    <div class="sp-decision-card__top">
+      <div>
+        <div class="sp-action-label">{{ card.action }}</div>
+        <h3 class="sp-pick-side">{{ card.recommended_side }}</h3>
+      </div>
+      <span class="sp-data-badge">{{ card.data_quality }}</span>
+    </div>
+    <p><strong>Confidence:</strong> {{ card.confidence }}%</p>
+    {% if card.probabilities %}
+      <p>
+        <strong>Probabilities:</strong>
+        H {{ card.probabilities.a if card.probabilities.a is not none else 'Unavailable' }} /
+        D {{ card.probabilities.draw if card.probabilities.draw is not none else 'Unavailable' }} /
+        A {{ card.probabilities.b if card.probabilities.b is not none else 'Unavailable' }}
+      </p>
+    {% endif %}
+    <p class="sp-decision-card__reason">{{ card.reason }}</p>
+    <p><strong>Visual Read:</strong> {{ card.metric_breakdown if card.metric_breakdown else ("Signal map loading (form, pace, and matchup profile)." if card.sport == 'nba' else "Unavailable") }}</p>
+    <button
+      type="button"
+      data-bet-button="1"
+      onclick='addBet(this, {{ {
+        "match_id": card.match_id,
+        "matchup": card.matchup,
+        "recommended_side": card.recommended_side,
+        "action": card.action,
+        "confidence": card.confidence,
+        "probabilities": card.probabilities
+      }|tojson }})'
+    >Track Match</button>
+    {% if card.cta_url %}
+      <a href="{{ card.cta_url }}" class="btn btn-primary btn-sm">Analyze Match</a>
+    {% endif %}
+  </article>
+{%- endmacro %}
+
+{% macro plan_strip(summary, title='Today\'s Plan') -%}
+  <section class="sp-plan-strip">
+    <div>
+      <span class="sp-kicker">{{ title }}</span>
+      <p>Action counts for the current slate.</p>
+    </div>
+    <div class="sp-plan-strip__items">
+      <span class="sp-plan-pill sp-plan-pill--bet"><strong>{{ summary.bet or 0 }}</strong> BET</span>
+      <span class="sp-plan-pill sp-plan-pill--consider"><strong>{{ summary.consider or 0 }}</strong> CONSIDER</span>
+      <span class="sp-plan-pill sp-plan-pill--skip"><strong>{{ summary.skip or 0 }}</strong> SKIP</span>
+    </div>
+  </section>
+{%- endmacro %}
+
+{% macro top_opportunities(cards) -%}
+  <section class="sp-section sp-section--opportunities">
+    <div class="sp-section__header">
+      <div>
+        <h2>Top Opportunities</h2>
+        <p>The strongest ranked plays from the current slate.</p>
+      </div>
+    </div>
+    {% if cards %}
+      <div class="sp-opportunity-grid">
+        {% for card in cards %}
+          {{ decision_card(card, 'featured') }}
+        {% endfor %}
+      </div>
+    {% else %}
+      {{ empty_state('No playable slate available', 'ScorPred needs baseline matchup data before ranking opportunities.') }}
+    {% endif %}
+  </section>
+{%- endmacro %}
+
+{% macro result_row(row) -%}
+  <article class="sp-result-card">
+    <div class="sp-result-card__logos">
+      {{ logo_mark(row.team_a_logo, row.team_a, row.team_a_initials) }}
+      {{ logo_mark(row.team_b_logo, row.team_b, row.team_b_initials) }}
+    </div>
+    <div>
+      <strong>{{ row.matchup }}</strong>
+      <small>{{ row.date }} &middot; {{ row.competition }} &middot; {{ row.final_score }}</small>
+    </div>
+    <div>
+      <span class="sp-action-label sp-action-label--{{ row.action_class }}">{{ row.action }}</span>
+      <small>{{ row.recommended_side }} &middot; {{ row.confidence_pct }}%</small>
+    </div>
+    <span class="sp-status sp-status--{{ row.result }}">{{ row.result_label }}</span>
+  </article>
+{%- endmacro %}
+
+{% macro empty_state(title, body='') -%}
+  <div class="sp-empty-state">
+    <div class="sp-empty-state__mark"><img src="{{ url_for('static', filename='media/scorpred-player-logo.png') }}" alt="" loading="lazy"></div>
+    <h3>{{ title }}</h3>
+    {% if body %}<p>{{ body }}</p>{% endif %}
+  </div>
+{%- endmacro %}
+
+{% macro quick_link(href, title, body) -%}
+  <a href="{{ href }}" class="sp-quick-link">
+    <span>{{ title }}</span>
+    <small>{{ body }}</small>
+  </a>
+{%- endmacro %}

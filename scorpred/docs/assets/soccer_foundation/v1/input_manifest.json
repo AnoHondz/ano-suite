@@ -1,0 +1,22 @@
+{
+  "files": {
+    "docs/assets/rights_soccer/soccer_lineage.json": "18c44e8167be46cfa0289fd286f8ba86346f78add41e66627161b60979b9e645",
+    "docs/assets/rights_soccer/soccer_duplicates.json": "9ee9c212c022bd7ea6c42eda0ecc6054e59f09e7a99d57dfb6744a22f6c4f068",
+    "docs/assets/rights_soccer/soccer_input_manifest.json": "62ec99ca3e4aa6a4a82d61eb1fd2a67bd76c5c6621f325225f45ff8f646b0990",
+    "docs/assets/rights_soccer/git_lineage_evidence.json": "f39df9228b64e186e0adec7b4b215d359d320e3d4e917f19983cb6d9c0fbbbf9",
+    "docs/assets/rights_soccer/soccer_stat_contracts.json": "ef79f56f2b7ea8f68a3d72a0fb1efae551504274ff14ac90881736b5d0694a4d",
+    "data/processed/matches.csv": "dcbea937a969498ad391176690f6e27e7a0093a59986c4f01eb36be9a0d706df",
+    "data/historical_matches.csv": "b713fa97bc8e3c189dfb6c0196f334386256fbb81fa31d366b0c00384121e07b",
+    "data/processed/soccer_training_data_clean.csv": "51c389bdb4cafccfde03640548158bfa83b967f34ae8d6717eff882f6f550b4b",
+    "data/processed/matches_stage1.csv": "7c03dfef6e777714bc4b6cc677428ba2bf6385f601cbd6e1f5cc89f1ce8cb3bf",
+    "data/processed/matches_stage1.sources.json": "ec04177fa89d4d7fa8f747fc2e7d5e8fd2febd8552ec745bdc5c3113605115b0",
+    "data/raw/E0_2018.csv": "4cb7f75e1780ba7cb55664b750de3ef19d8d9733fea38b96722eb88f7487ac05",
+    "data/raw/E0_2019.csv": "100037618b94f94057400bb02bf6bac4ef74ddaa58cde4b38370839c39caee61",
+    "data/raw/E0_2020.csv": "5afe63f69401457b8354eaacee24f9a3e520b3c3af6329564a9783e20d789c62",
+    "data/raw/E0_2021.csv": "335afcbabeb2939fa10ab39ba3e8215072d0b577cb8d0705c1e44c56e934e703",
+    "data/raw/E0_2022.csv": "8442792d3b614c94ea3cf381bd2736805889cc1713169035368fff19c3d02380",
+    "data/raw/E0_2023.csv": "b2e057b0ed959f198b0f63d2391c01239f3608e6de5db68edab3f88e04d07ff3",
+    "data/raw/E0_2024.csv": "d0c8ce4a96d886cf60cf101f570f4a3893844226f91c7bd769eb568c49edbfa4",
+    "data/raw/E0_2025.csv": "4cb7f75e1780ba7cb55664b750de3ef19d8d9733fea38b96722eb88f7487ac05"
+  }
+}

@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}ScorPred | ML vs Rules{% endblock %}
+{% block topbar_title %}ML vs Rules Comparison{% endblock %}
+
+{% block content %}
+<div class="sp-soccer-header">
+  <div class="sp-soccer-header__left">
+    <h1>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:28px;height:28px;display:inline-block;vertical-align:middle;margin-right:.4rem"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
+      ML vs Rules Comparison
+    </h1>
+    <p>Side-by-side accuracy of the machine learning pipeline vs rule-based engine vs hybrid blend.</p>
+  </div>
+  <div style="display:flex;gap:.6rem;align-items:center">
+    <a class="btn btn-secondary btn-sm" href="/backtesting">Backtesting</a>
+    <a class="btn btn-secondary btn-sm" href="/explainability">Explainability</a>
+  </div>
+</div>
+
+{# ── Three-Way Accuracy Banner ────────────────────────────────────────────── #}
+<div class="sp-grid-3" style="margin-top:.5rem">
+  <div class="sp-kpi-card" style="border:1px solid rgba(96,165,250,0.3);text-align:center;padding:1.5rem">
+    <span class="sp-kpi-card__label" style="color:var(--c-active)">ML ENGINE</span>
+    <span class="sp-kpi-card__value" style="font-size:2.5rem;color:var(--c-active)">{{ ml_acc }}%</span>
+    <span class="sp-kpi-card__meta">Stacking ensemble (mean over folds)</span>
+    <div style="margin-top:.75rem;font-size:.8rem;color:var(--text-3)">Scikit-learn Pipeline: LR → RF → XGB → LGBM → Stack</div>
+  </div>
+  <div class="sp-kpi-card" style="border:1px solid rgba(245,158,11,0.3);text-align:center;padding:1.5rem">
+    <span class="sp-kpi-card__label" style="color:var(--c-caution)">RULE ENGINE</span>
+    <span class="sp-kpi-card__value" style="font-size:2.5rem;color:var(--c-caution)">{{ rule_acc }}%</span>
+    <span class="sp-kpi-card__meta">Form + home advantage + goals (mean)</span>
+    <div style="margin-top:.75rem;font-size:.8rem;color:var(--text-3)">Deterministic: form, H2H, venue, attacking/defensive rates</div>
+  </div>
+  <div class="sp-kpi-card" style="border:1px solid rgba(60,242,164,0.3);text-align:center;padding:1.5rem">
+    <span class="sp-kpi-card__label" style="color:var(--c-strong)">HYBRID BLEND</span>
+    <span class="sp-kpi-card__value" style="font-size:2.5rem;color:var(--c-strong)">{{ hybrid_acc }}%</span>
+    <span class="sp-kpi-card__meta">ML × 0.65 + Rules × 0.35</span>
+    <div style="margin-top:.75rem;font-size:.8rem;color:var(--text-3)">Final signal used in production predictions</div>
+  </div>
+</div>
+
+{# ── Side-by-side note ────────────────────────────────────────────────────── #}
+{% set winner = 'ML' if ml_acc > rule_acc else ('Rules' if rule_acc > ml_acc else 'Tie') %}
+{% if hybrid_acc >= ml_acc and hybrid_acc >= rule_acc %}
+<div class="sp-flash sp-flash--info" style="margin:.75rem 0">
+  <strong>Hybrid wins.</strong> The blended signal ({{ hybrid_acc }}%) outperforms both ML alone ({{ ml_acc }}%) and the rule engine alone ({{ rule_acc }}%) across the walk-forward evaluation window. The 65/35 weighting is calibrated from historical data.
+</div>
+{% elif winner == 'ML' %}
+<div class="sp-flash sp-flash--info" style="margin:.75rem 0">
+  <strong>ML leads by {{ "%.1f"|format(ml_acc - rule_acc) }} pp.</strong> The machine learning pipeline outperforms the deterministic rule engine in this evaluation window. The hybrid blend ({{ hybrid_acc }}%) combines both.
+</div>
+{% else %}
+<div class="sp-flash sp-flash--warn" style="margin:.75rem 0">
+  <strong>Rule engine competitive.</strong> The rule-based engine ({{ rule_acc }}%) performs on par or ahead of the ML pipeline ({{ ml_acc }}%) in this window. This can occur in data-sparse periods.
+</div>
+{% endif %}
+
+{# ── Charts ───────────────────────────────────────────────────────────────── #}
+<div class="sp-grid-2" style="margin-top:.5rem">
+  <div class="sp-perf-panel">
+    <div class="sp-perf-panel__head"><span class="sp-perf-panel__title">Accuracy Per Fold</span><span style="font-size:.75rem;color:var(--text-3)">ML vs Rules vs Hybrid</span></div>
+    <div class="sp-perf-panel__body"><div style="position:relative;height:240px"><canvas id="foldCompChart"></canvas></div></div>
+  </div>
+  <div class="sp-perf-panel">
+    <div class="sp-perf-panel__head"><span class="sp-perf-panel__title">Outcome Accuracy</span><span style="font-size:.75rem;color:var(--text-3)">Home Win / Draw / Away Win</span></div>
+    <div class="sp-perf-panel__body"><div style="position:relative;height:240px"><canvas id="outcomeChart"></canvas></div></div>
+  </div>
+</div>
+
+{# ── Model vs Rule Table ────────────────────────────────────────────────────── #}
+<div class="sp-section" style="margin-top:1.25rem">
+  <div class="sp-section__header"><div><h2>Individual Model Breakdown</h2><p>Each ML model vs rule baseline and hybrid target.</p></div></div>
+  <div class="sp-bets-table">
+    <div class="sp-bets-table__head" style="grid-template-columns:1fr 120px 120px 120px 120px">
+      <span>Model</span><span>Accuracy</span><span>Brier Score</span><span>vs Rule</span><span>vs Hybrid</span>
+    </div>
+    {% for row in model_compare_rows %}
+    <div class="sp-bets-row" style="grid-template-columns:1fr 120px 120px 120px 120px">
+      <span><strong>{{ row.label }}</strong></span>
+      <span style="color:var(--c-active)">{{ row.accuracy }}%</span>
+      <span style="color:var(--text-2)">{{ row.brier }}</span>
+      <span style="color:{{ 'var(--c-strong)' if row.vs_rule > 0 else 'var(--c-danger)' }}">{{ '+' if row.vs_rule > 0 else '' }}{{ row.vs_rule }}pp</span>
+      <span style="color:{{ 'var(--c-strong)' if row.vs_hybrid > 0 else 'var(--c-danger)' }}">{{ '+' if row.vs_hybrid > 0 else '' }}{{ row.vs_hybrid }}pp</span>
+    </div>
+    {% endfor %}
+    {# Rule engine row #}
+    <div class="sp-bets-row" style="grid-template-columns:1fr 120px 120px 120px 120px;background:rgba(245,158,11,0.04)">
+      <span><strong style="color:var(--c-caution)">Rule Engine</strong> <span style="font-size:.75rem;color:var(--text-3)">(deterministic baseline)</span></span>
+      <span style="color:var(--c-caution)">{{ rule_acc }}%</span>
+      <span style="color:var(--text-3)">—</span>
+      <span style="color:var(--text-3)">baseline</span>
+      <span style="color:{{ 'var(--c-strong)' if rule_acc > hybrid_acc else 'var(--c-danger)' }}">{{ '+' if rule_acc > hybrid_acc else '' }}{{ "%.1f"|format(rule_acc - hybrid_acc) }}pp</span>
+    </div>
+    {# Hybrid row #}
+    <div class="sp-bets-row" style="grid-template-columns:1fr 120px 120px 120px 120px;background:rgba(60,242,164,0.04)">
+      <span><strong style="color:var(--c-strong)">Hybrid Blend</strong> <span style="font-size:.75rem;color:var(--text-3)">(ML×0.65 + Rules×0.35)</span></span>
+      <span style="color:var(--c-strong)">{{ hybrid_acc }}%</span>
+      <span style="color:var(--text-3)">—</span>
+      <span style="color:{{ 'var(--c-strong)' if hybrid_acc > rule_acc else 'var(--c-danger)' }}">{{ '+' if hybrid_acc > rule_acc else '' }}{{ "%.1f"|format(hybrid_acc - rule_acc) }}pp</span>
+      <span style="color:var(--text-3)">target</span>
+    </div>
+  </div>
+</div>
+
+{# ── How it works ─────────────────────────────────────────────────────────── #}
+<div class="sp-section" style="margin-top:1.25rem">
+  <div class="sp-section__header"><div><h2>How the Hybrid Works</h2><p>Architecture of the two-layer prediction system.</p></div></div>
+  <div class="sp-grid-2">
+    <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:.75rem;padding:1.25rem">
+      <div style="color:var(--c-active);font-size:.7rem;font-weight:700;letter-spacing:.08em;margin-bottom:.75rem">ML PIPELINE</div>
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.5rem;font-size:.85rem;color:var(--text-2)">
+        <li>→ Historical CSV data (7 seasons)</li>
+        <li>→ Feature engineering (form, ppg, goal diff, h2h)</li>
+        <li>→ sklearn Pipeline: Imputer → Scaler → Classifier</li>
+        <li>→ Logistic Regression, Random Forest, XGBoost, LightGBM</li>
+        <li>→ Stacking ensemble (meta-learner on held-out fold)</li>
+        <li>→ Calibrated probabilities via CalibratedClassifierCV</li>
+        <li>→ Saved with joblib, loaded at inference time</li>
+      </ul>
+    </div>
+    <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:.75rem;padding:1.25rem">
+      <div style="color:var(--c-caution);font-size:.7rem;font-weight:700;letter-spacing:.08em;margin-bottom:.75rem">RULE ENGINE</div>
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.5rem;font-size:.85rem;color:var(--text-2)">
+        <li>→ Recent form (last 5 matches, PPG weighted)</li>
+        <li>→ Home/away advantage coefficient</li>
+        <li>→ Goals scored vs goals conceded rate</li>
+        <li>→ Goal difference trend (5-game vs 10-game)</li>
+        <li>→ Head-to-head historical record</li>
+        <li>→ Injury placeholder (risk signal)</li>
+        <li>→ Outputs a 0–1 confidence score per team</li>
+      </ul>
+    </div>
+  </div>
+  <div style="background:var(--bg-raised);border:1px solid rgba(60,242,164,0.2);border-radius:.75rem;padding:1.25rem;margin-top:1rem">
+    <div style="color:var(--c-strong);font-size:.7rem;font-weight:700;letter-spacing:.08em;margin-bottom:.75rem">HYBRID BLEND (PRODUCTION)</div>
+    <code style="font-size:.9rem;color:var(--text-1);display:block">final_score = (ml_score × 0.65) + (rule_score × 0.35)</code>
+    <p style="margin:.75rem 0 0;font-size:.85rem;color:var(--text-2)">
+      The blend weight (65/35) is derived from walk-forward calibration. ML carries more weight because it learns non-linear patterns across 7 seasons. The rule engine anchors the signal with interpretable logic that degrades gracefully when historical data is limited.
+    </p>
+  </div>
+</div>
+
+{% if generated_at %}
+<p style="font-size:.75rem;color:var(--text-3);margin-top:1rem;text-align:right">Based on walk-forward report · generated {{ generated_at[:19] }}</p>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+  var foldLabels = {{ fold_labels | tojson }};
+  var foldML = {{ fold_ml | tojson }};
+  var foldRule = {{ fold_rule | tojson }};
+  var foldHybrid = {{ fold_hybrid | tojson }};
+  var outcomeLabels = {{ outcome_labels | tojson }};
+  var outcomeAcc = {{ outcome_acc | tojson }};
+  var outcomeCounts = {{ outcome_counts | tojson }};
+
+  var gridColor = 'rgba(255,255,255,0.04)';
+  var tickColor = '#94a3b8';
+
+  var foldCtx = document.getElementById('foldCompChart');
+  if (foldCtx && foldLabels.length) {
+    new Chart(foldCtx, {
+      type: 'line',
+      data: {
+        labels: foldLabels,
+        datasets: [
+          { label: 'ML', data: foldML, borderColor: '#60a5fa', backgroundColor: 'rgba(96,165,250,0.07)', tension: 0.3, pointRadius: 4 },
+          { label: 'Rules', data: foldRule, borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.07)', tension: 0.3, pointRadius: 4 },
+          { label: 'Hybrid', data: foldHybrid, borderColor: '#3cf2a4', backgroundColor: 'rgba(60,242,164,0.07)', tension: 0.3, pointRadius: 4, borderWidth: 2.5 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: tickColor, font: { size: 11 } } } },
+        scales: {
+          x: { grid: { color: gridColor }, ticks: { color: tickColor } },
+          y: { min: 40, max: 60, grid: { color: gridColor }, ticks: { color: tickColor, callback: function(v){ return v+'%'; } } }
+        }
+      }
+    });
+  }
+
+  var outcomeCtx = document.getElementById('outcomeChart');
+  if (outcomeCtx && outcomeLabels.length) {
+    new Chart(outcomeCtx, {
+      type: 'bar',
+      data: {
+        labels: outcomeLabels,
+        datasets: [{
+          label: 'Accuracy %',
+          data: outcomeAcc,
+          backgroundColor: ['rgba(60,242,164,0.7)', 'rgba(245,158,11,0.7)', 'rgba(96,165,250,0.7)'],
+          borderRadius: 6, borderSkipped: false,
+          yAxisID: 'y'
+        }, {
+          label: 'Count',
+          data: outcomeCounts,
+          type: 'line',
+          borderColor: 'rgba(167,139,250,0.6)',
+          backgroundColor: 'transparent',
+          tension: 0.3,
+          pointRadius: 5,
+          yAxisID: 'y2'
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: tickColor, font: { size: 11 } } } },
+        scales: {
+          x: { grid: { color: gridColor }, ticks: { color: tickColor } },
+          y: { grid: { color: gridColor }, ticks: { color: tickColor, callback: function(v){ return v+'%'; } }, title: { display: true, text: 'Accuracy %', color: tickColor } },
+          y2: { position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#a78bfa' }, title: { display: true, text: 'Count', color: '#a78bfa' } }
+        }
+      }
+    });
+  }
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% import "components/decision.html" as ui with context %}
+
+{% block title %}ScorPred | Performance{% endblock %}
+{% block topbar_title %}Performance{% endblock %}
+
+{% block content %}
+<div class="sp-dash-header">
+  <div class="sp-dash-header__left">
+    <h1>Performance</h1>
+    <p>Track prediction accuracy and browse completed/scheduled match results.</p>
+  </div>
+</div>
+<div class="sp-page-tabs">
+  <a href="?window=today" class="sp-page-tab {% if window == 'today' %}active{% endif %}">Today ({{ window_counts.today or 0 }})</a>
+  <a href="?window=tomorrow" class="sp-page-tab {% if window == 'tomorrow' %}active{% endif %}">Tomorrow ({{ window_counts.tomorrow or 0 }})</a>
+  <a href="?window=yesterday" class="sp-page-tab {% if window == 'yesterday' %}active{% endif %}">Yesterday ({{ window_counts.yesterday or 0 }})</a>
+  <a href="?window=week" class="sp-page-tab {% if window == 'week' %}active{% endif %}">Last 7 Days ({{ window_counts.week or 0 }})</a>
+  <a href="?window=month" class="sp-page-tab {% if window == 'month' %}active{% endif %}">Last 30 Days ({{ window_counts.month or 0 }})</a>
+  <a href="?window=all" class="sp-page-tab {% if window == 'all' %}active{% endif %}">All Time ({{ window_counts.all or 0 }})</a>
+</div>
+
+<div class="sp-kpi-row" style="grid-template-columns:repeat(5,1fr)">
+  <div class="sp-kpi-card sp-kpi-card--roi"><span class="sp-kpi-card__label">ROI</span><span class="sp-kpi-card__value">{{ roi or 'N/A' }}</span><span class="sp-kpi-card__meta">Analysis mode</span></div>
+  <div class="sp-kpi-card sp-kpi-card--accuracy"><span class="sp-kpi-card__label">Win Rate</span><span class="sp-kpi-card__value">{{ win_rate or 'N/A' }}</span><span class="sp-kpi-card__meta">Settled predictions</span></div>
+  <div class="sp-kpi-card sp-kpi-card--bet"><span class="sp-kpi-card__label">Tracked Matches</span><span class="sp-kpi-card__value">{{ total_bets or 0 }}</span><span class="sp-kpi-card__meta">Open + completed</span></div>
+  <div class="sp-kpi-card"><span class="sp-kpi-card__label">Record</span><span class="sp-kpi-card__value" style="font-size:1.3rem">{{ record or '0W - 0L - 0P' }}</span><span class="sp-kpi-card__meta">Correct - Incorrect - Push</span></div>
+  <div class="sp-kpi-card"><span class="sp-kpi-card__label">Avg. Odds</span><span class="sp-kpi-card__value">N/A</span><span class="sp-kpi-card__meta">No betting fields stored</span></div>
+</div>
+<div class="sp-kpi-row" style="grid-template-columns:repeat(3,1fr);margin-top:.75rem">
+  <div class="sp-kpi-card"><span class="sp-kpi-card__label">Model Trust Score</span><span class="sp-kpi-card__value">{{ trust_score if trust_score is not none else 'N/A' }}</span><span class="sp-kpi-card__meta">{{ trust_label or 'Insufficient Data' }}</span></div>
+  <div class="sp-kpi-card"><span class="sp-kpi-card__label">Calibration Score</span><span class="sp-kpi-card__value">{{ format_percent_decimal(calibration_score, plus=False, empty='N/A') }}</span><span class="sp-kpi-card__meta">Evaluated: {{ evaluated_sample_size or 0 }}</span></div>
+  <div class="sp-kpi-card"><span class="sp-kpi-card__label">Calibration Error</span><span class="sp-kpi-card__value">{{ calibration_error if calibration_error is not none else 'N/A' }}</span><span class="sp-kpi-card__meta">Lower is better</span></div>
+</div>
+
+<div class="sp-perf-panel" style="margin:1rem 0 1.25rem">
+  <div class="sp-perf-panel__head"><span class="sp-perf-panel__title">Cumulative Accuracy Delta</span></div>
+  <div class="sp-perf-panel__body"><div style="position:relative;height:200px"><canvas id="profitChart"></canvas></div></div>
+</div>
+
+<section class="sp-section">
+  <div class="sp-section__header"><div><h2>Results Feed</h2><p>Combined view of tracked matches for the selected period.</p></div></div>
+  {% if results_rows %}
+    <div class="sp-bets-table">
+      <div class="sp-bets-table__head" style="grid-template-columns:130px 1fr 90px 150px 80px 110px 110px">
+        <span>Date</span><span>Match</span><span>Sport</span><span>Pick</span><span>Score</span><span>Status</span><span>Confidence</span>
+      </div>
+      {% for row in results_rows %}
+        <div class="sp-bets-row" style="grid-template-columns:130px 1fr 90px 150px 80px 110px 110px">
+          <span class="sp-bets-row__date">{{ row.date }}</span>
+          <span>{{ row.match }}</span>
+          <span>{{ row.sport }}</span>
+          <span>{{ row.pick }}</span>
+          <span>{{ row.score }}</span>
+          <span class="sp-bets-row__result--{{ row.status_class }}">{{ row.status }}</span>
+          <span>{{ row.confidence }}%</span>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    {{ ui.empty_state('No matches in this window', 'Try switching to another date range tab.') }}
+  {% endif %}
+</section>
+
+<section class="sp-section">
+  <div class="sp-section__header"><div><h2>Calibration</h2><p>Confidence buckets vs actual evaluated win rates.</p></div></div>
+  {% if calibration_rows %}
+    <div class="sp-bets-table">
+      <div class="sp-bets-table__head" style="grid-template-columns:140px 120px 160px 160px 120px">
+        <span>Bucket</span><span>Sample</span><span>Avg Confidence</span><span>Actual Win Rate</span><span>Error</span>
+      </div>
+      {% for row in calibration_rows %}
+      <div class="sp-bets-row" style="grid-template-columns:140px 120px 160px 160px 120px">
+        <span>{{ row.bucket }}</span>
+        <span>{{ row.sample_size }}</span>
+        <span>{{ row.avg_confidence }}%</span>
+        <span>{{ row.actual_win_rate }}%</span>
+        <span>{{ row.error }}%</span>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    {{ ui.empty_state('Calibration unavailable', 'Not enough evaluated matches yet.') }}
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+  var ctx = document.getElementById('profitChart');
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: {{ profit_trend_labels|default([])|tojson }},
+      datasets: [{
+        label: 'Cumulative Accuracy Delta',
+        data: {{ profit_trend_values|default([])|tojson }},
+        borderColor: 'rgba(60,242,164,.85)',
+        backgroundColor: 'rgba(60,242,164,.07)',
+        fill: true,
+        tension: .35,
+        pointRadius: 3
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#64748b' }, grid: { color: 'rgba(255,255,255,.04)' } },
+        y: { ticks: { color: '#64748b' }, grid: { color: 'rgba(255,255,255,.04)' } }
+      }
+    }
+  });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,425 @@
+{
+  "schema_version": 1,
+  "registry_version": "nba-b1-2026-10-22",
+  "mode": "metadata_only",
+  "reviewed_at": "2026-10-22T02:21:57Z",
+  "intended_use": "ScorPred historical research, possible later automated collection, model training and prediction display; no asset use authorized in B1",
+  "retained_evidence_sha256": {
+    "release_manifests.json": "ad3a6acbebec2007e6e74d61d9ed4aaf76dfb07a0deb98194291bf6f3f81148a",
+    "supplemental_evidence.json": "0e3fa720f4f7ed8db9d54fdf5db29a48b4b8a8fc381bd5c002ba754fe9ec5741"
+  },
+  "providers": [
+    {
+      "provider_id": "sportsdataverse_espn_nba",
+      "repository_url": "https://github.com/sportsdataverse/sportsdataverse-data",
+      "producer_url": "https://github.com/sportsdataverse/hoopR-nba-data",
+      "source_family": "espn_nba",
+      "enabled": false,
+      "collection_enabled": false,
+      "training_enabled": false,
+      "serving_enabled": false,
+      "integration_status": "registered_disabled_metadata_only",
+      "formats": [
+        "csv",
+        "parquet",
+        "rds"
+      ],
+      "datasets": [
+        {
+          "dataset_id": "schedules",
+          "release_tag": "espn_nba_schedules",
+          "file_stem": "nba_schedule",
+          "season_convention": "ending_year"
+        },
+        {
+          "dataset_id": "play_by_play",
+          "release_tag": "espn_nba_pbp",
+          "file_stem": "play_by_play",
+          "season_convention": "ending_year"
+        },
+        {
+          "dataset_id": "player_boxscores",
+          "release_tag": "espn_nba_player_boxscores",
+          "file_stem": "player_box",
+          "season_convention": "ending_year"
+        },
+        {
+          "dataset_id": "team_boxscores",
+          "release_tag": "espn_nba_team_boxscores",
+          "file_stem": "team_box",
+          "season_convention": "ending_year"
+        },
+        {
+          "dataset_id": "game_rosters",
+          "release_tag": "espn_nba_game_rosters",
+          "file_stem": "game_rosters",
+          "season_convention": "ending_year"
+        }
+      ],
+      "available_seasons": "Per-dataset retained release asset names; computed in candidate_manifests.json. No row completeness implied.",
+      "published_metadata": {
+        "snapshot_observed_at": "2026-10-22T01:53:55.341824+00:00",
+        "release_tags_created": "2023-03-29; not dataset freshness",
+        "repository_pushed_at": "2026-10-12T10:07:29Z",
+        "code_path_last_verified_update": "2026-06-03T02:51:35Z"
+      },
+      "last_verifiable_update": {
+        "at": "2026-10-21T11:30:57Z",
+        "scope": "nba_schedule_2027.parquet asset metadata; other datasets/formats have their own timestamps",
+        "evidence_url": "https://api.github.com/repos/sportsdataverse/sportsdataverse-data/releases/tags/espn_nba_schedules"
+      },
+      "license": {
+        "repository_license": "MIT root LICENSE",
+        "data_license_claim": "CC-BY-4.0 host README and ESPN producer LICENSE.md",
+        "scope_conflict": true
+      },
+      "permission": {
+        "status": "Unclear or unverified",
+        "intended_use": "Historical research ingestion and possible later ScorPred training/display/redistribution",
+        "approval": null,
+        "reason": "Host/producer license scope discrepancy and upstream rights chain unresolved. Public access is insufficient.",
+        "upstream_collection_status": "Restricted",
+        "evidence": [
+          {
+            "url": "https://raw.githubusercontent.com/sportsdataverse/sportsdataverse-data/main/LICENSE",
+            "snapshot": "docs/assets/github_data_research/repository_evidence.json",
+            "text_sha256": "9c3898cce6957255c63911737a6441daf7ed70c445381b8a7f32b75a28123ea6",
+            "verified_license": "MIT",
+            "observed_at": "2026-10-22T01:52:28.569350+00:00"
+          },
+          {
+            "url": "https://raw.githubusercontent.com/sportsdataverse/sportsdataverse-data/main/README.md",
+            "snapshot": "docs/assets/github_data_research/repository_evidence.json",
+            "text_sha256": "ab5be8c4c7a303883f6e8eea134b7737ff06eab884b8b6303e18d618ca4d9df9",
+            "verified_license": "CC-BY-4.0 data claim",
+            "observed_at": "2026-10-22T01:52:28.506497+00:00"
+          },
+          {
+            "url": "https://raw.githubusercontent.com/sportsdataverse/hoopR-nba-data/main/LICENSE.md",
+            "snapshot": "docs/assets/github_data_research/supplemental_evidence.json",
+            "text_sha256": "6ad49a8be39eb9f8cca31f3ee127972bfb935a63d834e75bcccb9d29ed2443c2",
+            "verified_license": "CC-BY-4.0 data/code/documentation",
+            "observed_at": "2026-10-22T01:53:55.844107+00:00"
+          },
+          {
+            "url": "https://disneytermsofuse.com/english/",
+            "section": "2B(viii), 2B(x)",
+            "checked_at": "2026-10-22T02:21:57Z",
+            "finding": "ESPN covered; automated extraction, dataset building and business uses require express permission",
+            "full_text_retained": false
+          }
+        ]
+      },
+      "historical_provenance_quality": "Same ESPN lineage as local history; mutable postgame archive, no original pregame receipt proof; Class B at best after a permitted reconstruction",
+      "identifiers": {
+        "game": "ESPN string ID",
+        "team": "ESPN string ID (local NBA 1-30)",
+        "player": "ESPN string ID",
+        "compatibility": "Same namespace suggested by producer; zero candidate game IDs inspected, no verified matches",
+        "crosswalk_verified": false
+      },
+      "known_limitations": [
+        "File names prove presence only, not season completeness",
+        "Team-box and game-roster release manifests absent from retained evidence",
+        "Current assets can contain revisions",
+        "Postgame minutes/starters are not target-game pregame inputs",
+        "No independent schedule truth",
+        "No authorized numeric upstream collection quota verified"
+      ]
+    },
+    {
+      "provider_id": "sportsdataverse_nba_stats",
+      "repository_url": "https://github.com/sportsdataverse/hoopR-nba-stats-data",
+      "data_host_url": "https://github.com/sportsdataverse/sportsdataverse-data",
+      "source_family": "nba_stats",
+      "enabled": false,
+      "collection_enabled": false,
+      "training_enabled": false,
+      "serving_enabled": false,
+      "integration_status": "registered_disabled_metadata_only",
+      "formats": [
+        "csv",
+        "parquet",
+        "rds"
+      ],
+      "datasets": [
+        {
+          "dataset_id": "player_boxscores",
+          "release_tag": "nba_stats_player_boxscores",
+          "file_stem": "player_boxscores",
+          "season_convention": "ending_year",
+          "documented_seasons": [
+            1997,
+            1998,
+            1999,
+            2000,
+            2001,
+            2002,
+            2003,
+            2004,
+            2005,
+            2006,
+            2007,
+            2008,
+            2009,
+            2010,
+            2011,
+            2012,
+            2013,
+            2014,
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022,
+            2023,
+            2024,
+            2025,
+            2026
+          ]
+        },
+        {
+          "dataset_id": "team_boxscores",
+          "release_tag": "nba_stats_team_boxscores",
+          "file_stem": "team_boxscores",
+          "season_convention": "ending_year",
+          "documented_seasons": [
+            1997,
+            1998,
+            1999,
+            2000,
+            2001,
+            2002,
+            2003,
+            2004,
+            2005,
+            2006,
+            2007,
+            2008,
+            2009,
+            2010,
+            2011,
+            2012,
+            2013,
+            2014,
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020,
+            2021,
+            2022,
+            2023,
+            2024,
+            2025,
+            2026
+          ]
+        },
+        {
+          "dataset_id": "play_by_play",
+          "release_tag": "nba_stats_pbp",
+          "file_stem": "play_by_play",
+          "season_convention": "ending_year"
+        },
+        {
+          "dataset_id": "possessions",
+          "release_tag": "nba_stats_possessions",
+          "file_stem": "possessions",
+          "season_convention": "ending_year"
+        },
+        {
+          "dataset_id": "game_lineups",
+          "release_tag": "nba_stats_game_lineups",
+          "file_stem": "game_lineups",
+          "season_convention": "ending_year"
+        },
+        {
+          "dataset_id": "player_game_logs",
+          "release_tag": "nba_stats_player_game_logs",
+          "file_stem": "player_game_logs",
+          "season_convention": "ending_year"
+        },
+        {
+          "dataset_id": "rosters",
+          "release_tag": "nba_stats_rosters",
+          "file_stem": "rosters",
+          "season_convention": "ending_year"
+        },
+        {
+          "dataset_id": "schedules",
+          "release_tag": "nba_stats_schedules",
+          "file_stem": "schedules",
+          "season_convention": "ending_year"
+        }
+      ],
+      "available_seasons": "Traditional player/team box documentation claims 1997-2026 ending years; independent release manifests absent. Other dataset ranges unknown.",
+      "published_metadata": {
+        "snapshot_observed_at": "2026-10-22T01:53:56.203777+00:00",
+        "documented_box_release_assets": 94,
+        "repository_pushed_at": "2026-10-21T14:18:50Z",
+        "code_path_last_verified_update": "2026-10-04T14:22:41Z",
+        "season_naming_change": "2026-08-13 ending-year convention; older examples may differ"
+      },
+      "last_verifiable_update": {
+        "at": "2026-10-01",
+        "scope": "Producer boxscore documentation claim only; not independently verified asset update",
+        "evidence_url": "https://github.com/sportsdataverse/hoopR-nba-stats-data/blob/main/docs/datasets/player_boxscores.md"
+      },
+      "license": {
+        "repository_license": "Root stub; LICENSE.md explicitly CC-BY-4.0",
+        "data_license_claim": "CC-BY-4.0 data/code/documentation",
+        "scope_conflict": false
+      },
+      "permission": {
+        "status": "Restricted",
+        "intended_use": "ScorPred comprehensive historical statistics and possible prediction product use",
+        "approval": null,
+        "reason": "Conservative ScorPred gate: documented NBA upstream restrictions and no purpose-specific exception. Producer license alone does not clear upstream rights.",
+        "upstream_collection_status": "Restricted",
+        "evidence": [
+          {
+            "url": "https://raw.githubusercontent.com/sportsdataverse/hoopR-nba-stats-data/main/LICENSE.md",
+            "snapshot": "docs/assets/github_data_research/supplemental_evidence.json",
+            "text_sha256": "c235233e43b46d6227f312b573a84685075572a018e52e490ab647014c861194",
+            "verified_license": "CC-BY-4.0 data/code/documentation",
+            "observed_at": "2026-10-22T01:53:55.873959+00:00"
+          },
+          {
+            "url": "https://www.nba.com/termsofuse",
+            "section": "9",
+            "checked_at": "2026-10-22T02:21:57Z",
+            "finding": "Consent required for comprehensive updated statistical databases; product and gambling restrictions",
+            "full_text_retained": false
+          }
+        ]
+      },
+      "historical_provenance_quality": "Documented postgame NBA Stats processing; no actual release contents or original pregame receipts inspected; Class B at best",
+      "identifiers": {
+        "game": "NBA 10-character string; preserve leading zeros",
+        "team": "NBA 161061xxxx string",
+        "player": "NBA person_id string",
+        "compatibility": "Different from ESPN; date/team/competition evidence and explicit crosswalk required; no name-only joins",
+        "crosswalk_verified": false
+      },
+      "known_limitations": [
+        "All independent NBA Stats release manifests absent",
+        "Recent code/push is not dataset freshness",
+        "Hub dormant notice conflicts with recent producer activity",
+        "Producer built/known totals have different competition scope from ScorPred; do not subtract them from 6048",
+        "Final season totals and actual starters cannot establish historical pregame knowledge"
+      ]
+    },
+    {
+      "provider_id": "shufinskiy_nba",
+      "repository_url": "https://github.com/shufinskiy/nba_data",
+      "source_family": "nba_stats_data_nba_pbpstats",
+      "enabled": false,
+      "collection_enabled": false,
+      "training_enabled": false,
+      "serving_enabled": false,
+      "integration_status": "registered_disabled_metadata_only",
+      "formats": [
+        "csv.tar.xz",
+        "txt file index"
+      ],
+      "datasets": [
+        {
+          "dataset_id": "cdnnba",
+          "file_stem": "cdnnba",
+          "season_convention": "start_year"
+        },
+        {
+          "dataset_id": "datanba",
+          "file_stem": "datanba",
+          "season_convention": "start_year"
+        },
+        {
+          "dataset_id": "matchups",
+          "file_stem": "matchups",
+          "season_convention": "start_year"
+        },
+        {
+          "dataset_id": "nbastats",
+          "file_stem": "nbastats",
+          "season_convention": "start_year"
+        },
+        {
+          "dataset_id": "nbastatsv3",
+          "file_stem": "nbastatsv3",
+          "season_convention": "start_year"
+        },
+        {
+          "dataset_id": "pbpstats",
+          "file_stem": "pbpstats",
+          "season_convention": "start_year"
+        },
+        {
+          "dataset_id": "shotdetail",
+          "file_stem": "shotdetail",
+          "season_convention": "start_year"
+        }
+      ],
+      "available_seasons": "Per-type file-index years converted from starting to ending years; regular/playoff files kept distinct; WNBA excluded",
+      "published_metadata": {
+        "snapshot_observed_at": "2026-10-22T01:53:56.108283+00:00",
+        "readme_horizon": "1996/97-2024/25",
+        "readme_update_claim": "2025-02-26",
+        "index_horizon": "Some 2025-start keys, potentially 2025/26; not proof of completeness",
+        "repository_pushed_at": "2026-07-17T13:43:36Z",
+        "code_path_last_verified_update": null
+      },
+      "last_verifiable_update": {
+        "at": null,
+        "scope": "No independent dataset content update established; repository push and index observation are separate"
+      },
+      "license": {
+        "repository_license": "Apache-2.0",
+        "data_license_claim": "Repository license; upstream data rights not established",
+        "scope_conflict": false
+      },
+      "permission": {
+        "status": "Unclear or unverified",
+        "intended_use": "Historical archive research ingestion and possible ScorPred training/display/redistribution",
+        "approval": null,
+        "reason": "Apache repository grant verified; NBA/data.nba/pbpstats rights chain and intended-use permission unverified",
+        "upstream_collection_status": "Restricted",
+        "evidence": [
+          {
+            "url": "https://raw.githubusercontent.com/shufinskiy/nba_data/main/LICENSE",
+            "snapshot": "docs/assets/github_data_research/repository_evidence.json",
+            "text_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+            "verified_license": "Apache-2.0",
+            "observed_at": "2026-10-22T01:52:30.347269+00:00"
+          },
+          {
+            "url": "https://www.nba.com/termsofuse",
+            "section": "9",
+            "checked_at": "2026-10-22T02:21:57Z",
+            "finding": "See shared NBA terms evidence in sportsdataverse_nba_stats; derivative applicability unresolved",
+            "full_text_retained": false
+          }
+        ]
+      },
+      "historical_provenance_quality": "Multiple postgame upstreams and mutable archive index; per-game revision/publication history not established",
+      "identifiers": {
+        "game": "Provider-specific NBA variants; actual game IDs not inspected",
+        "team": "Provider-specific; not automatically ESPN",
+        "player": "Provider-specific; no verified ESPN crosswalk",
+        "compatibility": "Needs source-specific ID schema and explicit crosswalk; start year converted to ending year using README examples",
+        "crosswalk_verified": false
+      },
+      "known_limitations": [
+        "File index only; URLs retained as inert metadata and never followed",
+        "Per-type coverage differs and README horizon lags index",
+        "WNBA keys must not inflate NBA coverage",
+        "Regular/playoff files and data variants can overlap the same games",
+        "No pregame injury/announcement receipts",
+        "Archive update dates/digests unavailable"
+      ]
+    }
+  ]
+}

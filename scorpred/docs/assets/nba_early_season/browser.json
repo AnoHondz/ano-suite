@@ -1,0 +1,8 @@
+{
+  "mocked": false,
+  "errors": [],
+  "previewRequests": [],
+  "text": "Early-season research \u00c2\u00b7 189 games tested\n\nResearch only \u00c2\u00b7 production predictions unchanged\n\nThe study starts with previous-season scoring and conceding, then adds current observations over six games. It produced estimates for 71 tested games that failed the former two-game availability requirement.\n\nChronological historical results \u00c2\u00b7 not prospective accuracy\nMethod\tGames\tLog loss \u00e2\u2020\u201c\tBrier \u00e2\u2020\u201c\tWinner accuracy\nGradual season blend\t189\t0.643\t0.226\t62.4%\nHome baseline\t189\t0.693\t0.250\t52.9%\nPrevious season only\t189\t0.662\t0.235\t58.2%\n\nPromising retrospective signal, not sufficient proof: only 2 evaluated seasons and 6 weekly blocks, without prospective calibration evidence.\n\nThe combined result includes games with three to five current observations. It does not prove improvement for every smaller-sample group or justify simply removing either minimum.\n\nOriginal historical pregame receipt times are unverified. No roster or injury adjustment. Prospective validation is still required. Version: nba-early-season-v1.\n\nExperimental previews are disabled by default. These historical results do not enable a production probability.",
+  "mobileNoOverflow": true,
+  "ok": true
+}

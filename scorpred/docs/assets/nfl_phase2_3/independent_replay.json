@@ -1,0 +1,28 @@
+{
+  "verified_forecasts": 2,
+  "verified_games": 1,
+  "maximum_probability_error": 0.0,
+  "study_sha256": "fd4526c5da021c30c28538dcdb67faadc18f581d7ac451a2d56f1f6589534cb7",
+  "holdout_outcomes_read": false,
+  "production_active": false,
+  "verified_at": "2026-10-20T16:48:51.021168+00:00",
+  "negative_checks": [
+    {
+      "corruption": "study.json",
+      "rejected_as": "Study checksum mismatch"
+    },
+    {
+      "corruption": "nfl-frozen-logistic-v1.json",
+      "rejected_as": "Model checksum mismatch"
+    },
+    {
+      "corruption": "inputs_2026_07_NE_CHI.json",
+      "rejected_as": "Input checksum mismatch"
+    },
+    {
+      "corruption": "forecasts.json",
+      "rejected_as": "Independent probability mismatch"
+    }
+  ],
+  "verifier_sha256": "17ccdf6f7d8704bc708cb387679bbfbacea3bcb8613894e4a597fed6f7538ed9"
+}

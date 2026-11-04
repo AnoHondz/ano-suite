@@ -1,0 +1,186 @@
+//@version=5
+// Ano · ICT 2022 model + AMD (power of three). Analysis only: it draws setups and raises alerts; it places no orders.
+// Same rules as Ano's ano/ict.py: in a kill zone price takes liquidity (PDH/PDL, the accumulation range, or a swing),
+// structure shifts with a displacement candle within N bars, and the move leaves a fair value gap. Entry is the
+// gap's midpoint (consequent encroachment), the stop is beyond the swept extreme, the target is the previous day's
+// opposite extreme when it is at least the minimum reward:risk away, otherwise that minimum.
+indicator("Ano · ICT 2022 model + AMD", shorttitle="ICT 2022", overlay=true, max_boxes_count=300, max_lines_count=300, max_labels_count=200)
+
+tz        = input.string("America/New_York", "Time zone")
+accSess   = input.session("0400-0930", "Accumulation range (pre-market; 2000-0000 = Asia for futures)")
+amSess    = input.session("0930-1100", "NY AM kill zone")
+pmSess    = input.session("1330-1500", "NY PM kill zone")
+sbAm      = input.session("1000-1100", "AM Silver Bullet")
+sbPm      = input.session("1400-1500", "PM Silver Bullet")
+swingLen  = input.int(3, "Swing length (bars each side)", minval=1)
+mssWindow = input.int(30, "Bars allowed for the structure shift", minval=3)
+dispMult  = input.float(1.5, "Displacement: candle body at least average ×", step=0.1)
+minRR     = input.float(2.0, "Minimum reward:risk", step=0.5)
+showKZ    = input.bool(true, "Shade kill zones")
+showFVG   = input.bool(false, "Show every fair value gap")
+
+inSess(s) => not na(time(timeframe.period, s, tz))
+inAcc = inSess(accSess)
+inAM  = inSess(amSess)
+inKZ  = inAM or inSess(pmSess)
+inSB  = inSess(sbAm) or inSess(sbPm)
+bgcolor(showKZ and inKZ ? color.new(color.purple, 92) : na, title="Kill zone")
+bgcolor(showKZ and inSB ? color.new(color.blue, 94) : na, title="Silver Bullet")
+
+// Previous day high / low (non-repainting: yesterday's values only)
+pdh = request.security(syminfo.tickerid, "D", high[1], lookahead=barmerge.lookahead_on)
+pdl = request.security(syminfo.tickerid, "D", low[1], lookahead=barmerge.lookahead_on)
+plot(pdh, "PDH", color.new(color.orange, 30), 1, plot.style_stepline)
+plot(pdl, "PDL", color.new(color.orange, 30), 1, plot.style_stepline)
+
+// Accumulation range (the A of AMD)
+var float accHigh = na
+var float accLow = na
+if inAcc and not inAcc[1]
+    accHigh := high
+    accLow := low
+else if inAcc
+    accHigh := math.max(accHigh, high)
+    accLow := math.min(accLow, low)
+plot(inAcc ? na : accHigh, "Accumulation high", color.new(color.purple, 20), 1, plot.style_linebr)
+plot(inAcc ? na : accLow, "Accumulation low", color.new(color.purple, 20), 1, plot.style_linebr)
+
+// Confirmed swing points (liquidity)
+ph = ta.pivothigh(high, swingLen, swingLen)
+pl = ta.pivotlow(low, swingLen, swingLen)
+var float swingHigh = na
+var float swingLow = na
+if not na(ph)
+    swingHigh := ph
+if not na(pl)
+    swingLow := pl
+
+body    = math.abs(close - open)
+avgBody = ta.sma(body, 20)[1]
+newDay  = ta.change(time("D")) != 0
+
+// Manipulation (Judas swing): the first raid beyond the accumulation range in the NY AM kill zone
+var string judas = ""
+var string distribution = ""
+if newDay
+    judas := ""
+    distribution := ""
+if judas == "" and inAM and not inAcc and not na(accHigh)
+    if high > accHigh
+        judas := "up"
+    else if low < accLow
+        judas := "down"
+
+crossedUp(level) => not na(level) and high > level and high[1] <= level
+crossedDown(level) => not na(level) and low < level and low[1] >= level
+
+// ---------- Bearish: buy-side liquidity taken, shift down, gap
+takeBuy = inKZ and not inAcc and (crossedUp(pdh) or crossedUp(accHigh) or crossedUp(swingHigh))
+buyName = crossedUp(pdh) ? "PDH" : crossedUp(accHigh) ? "Accumulation high" : "Swing high"
+var bool   sArmed = false
+var float  sExtreme = na
+var float  sShift = na
+var int    sBar = na
+var float  sBody = 0.0
+var string sLiq = ""
+var int    sMss = na
+var float  sStop = na
+if takeBuy and not na(swingLow)
+    sArmed := true
+    sExtreme := high
+    sShift := swingLow
+    sBar := bar_index
+    sBody := 0.0
+    sLiq := buyName
+shortShift = false
+if sArmed
+    sExtreme := math.max(sExtreme, high)
+    if close < open
+        sBody := math.max(sBody, body)
+    if bar_index - sBar > mssWindow
+        sArmed := false
+    else if close < sShift and sBody >= avgBody * dispMult
+        shortShift := true
+        sArmed := false
+        sMss := bar_index
+        sStop := sExtreme + syminfo.mintick
+shortSignal = not na(sMss) and bar_index - sMss <= 1 and high < low[2]
+if shortSignal
+    sEntry = (high + low[2]) / 2
+    sRisk = sStop - sEntry
+    sTarget = not na(pdl) and pdl <= sEntry - minRR * sRisk ? pdl : sEntry - minRR * sRisk
+    box.new(bar_index - 2, low[2], bar_index + 20, high, border_color=color.new(color.aqua, 50), bgcolor=color.new(color.aqua, 85))
+    line.new(bar_index, sEntry, bar_index + 30, sEntry, color=color.white)
+    line.new(bar_index, sStop, bar_index + 30, sStop, color=color.red)
+    line.new(bar_index, sTarget, bar_index + 30, sTarget, color=color.green)
+    label.new(bar_index, sStop, "ICT 2022 short\n" + sLiq + " taken" + (judas == "up" ? " · AMD" : "") + (inSB ? " · Silver Bullet" : ""), style=label.style_label_down, color=color.new(color.red, 20), textcolor=color.white, size=size.small)
+    if judas == "up"
+        distribution := "down"
+    sMss := na
+if not na(sMss) and bar_index - sMss > 1
+    sMss := na
+
+// ---------- Bullish: sell-side liquidity taken, shift up, gap
+takeSell = inKZ and not inAcc and (crossedDown(pdl) or crossedDown(accLow) or crossedDown(swingLow))
+sellName = crossedDown(pdl) ? "PDL" : crossedDown(accLow) ? "Accumulation low" : "Swing low"
+var bool   lArmed = false
+var float  lExtreme = na
+var float  lShift = na
+var int    lBar = na
+var float  lBody = 0.0
+var string lLiq = ""
+var int    lMss = na
+var float  lStop = na
+if takeSell and not na(swingHigh)
+    lArmed := true
+    lExtreme := low
+    lShift := swingHigh
+    lBar := bar_index
+    lBody := 0.0
+    lLiq := sellName
+longShift = false
+if lArmed
+    lExtreme := math.min(lExtreme, low)
+    if close > open
+        lBody := math.max(lBody, body)
+    if bar_index - lBar > mssWindow
+        lArmed := false
+    else if close > lShift and lBody >= avgBody * dispMult
+        longShift := true
+        lArmed := false
+        lMss := bar_index
+        lStop := lExtreme - syminfo.mintick
+longSignal = not na(lMss) and bar_index - lMss <= 1 and low > high[2]
+if longSignal
+    lEntry = (low + high[2]) / 2
+    lRisk = lEntry - lStop
+    lTarget = not na(pdh) and pdh >= lEntry + minRR * lRisk ? pdh : lEntry + minRR * lRisk
+    box.new(bar_index - 2, low, bar_index + 20, high[2], border_color=color.new(color.aqua, 50), bgcolor=color.new(color.aqua, 85))
+    line.new(bar_index, lEntry, bar_index + 30, lEntry, color=color.white)
+    line.new(bar_index, lStop, bar_index + 30, lStop, color=color.red)
+    line.new(bar_index, lTarget, bar_index + 30, lTarget, color=color.green)
+    label.new(bar_index, lStop, "ICT 2022 long\n" + lLiq + " taken" + (judas == "down" ? " · AMD" : "") + (inSB ? " · Silver Bullet" : ""), style=label.style_label_up, color=color.new(color.green, 20), textcolor=color.white, size=size.small)
+    if judas == "down"
+        distribution := "up"
+    lMss := na
+if not na(lMss) and bar_index - lMss > 1
+    lMss := na
+
+plotshape(shortShift, "Bearish shift", shape.triangledown, location.abovebar, color.new(color.red, 30), size=size.tiny)
+plotshape(longShift, "Bullish shift", shape.triangleup, location.belowbar, color.new(color.green, 30), size=size.tiny)
+
+// Every fair value gap (optional)
+if showFVG and high < low[2]
+    box.new(bar_index - 2, low[2], bar_index + 10, high, border_color=color.new(color.red, 100), bgcolor=color.new(color.red, 88))
+if showFVG and low > high[2]
+    box.new(bar_index - 2, low, bar_index + 10, high[2], border_color=color.new(color.green, 100), bgcolor=color.new(color.green, 88))
+
+// AMD panel
+var table amd = table.new(position.top_right, 1, 3, bgcolor=color.new(color.black, 30))
+if barstate.islast
+    table.cell(amd, 0, 0, "Accumulation " + (na(accHigh) ? "—" : str.tostring(accLow, format.mintick) + " – " + str.tostring(accHigh, format.mintick)), text_color=color.white, text_size=size.small)
+    table.cell(amd, 0, 1, "Manipulation " + (judas == "" ? "not yet" : judas), text_color=color.white, text_size=size.small)
+    table.cell(amd, 0, 2, "Distribution " + (distribution == "" ? "not yet" : distribution), text_color=color.white, text_size=size.small)
+
+alertcondition(shortSignal, "ICT 2022 short", "ICT 2022 short setup on {{ticker}} near {{close}}")
+alertcondition(longSignal, "ICT 2022 long", "ICT 2022 long setup on {{ticker}} near {{close}}")

@@ -1,0 +1,30 @@
+{
+  "version": "nba-early-season-v1",
+  "frozen_before_evaluation": true,
+  "previous_minimum_observations": 20,
+  "transition_games": 6,
+  "early_sample_definition": "Either team has fewer than six prior eligible same-season regular games",
+  "development_season": 2023,
+  "evaluation_seasons": [
+    2024,
+    2025
+  ],
+  "excluded_seasons_from_evaluation": [
+    2026,
+    2027
+  ],
+  "calibration": "Expanding earlier early-season games only; minimum 50; no regression fitting",
+  "score_formula": "Existing _calibrate_nba_projections with explicitly blended scoring/conceding stats, no form double-count, injuries/standings/odds omitted, home advantage only when not neutral",
+  "baselines": [
+    "previous_season_only",
+    "home_prior"
+  ],
+  "availability_lag_hours": 24,
+  "bootstrap": "Paired 7-day calendar blocks, 2000 resamples, seed 20261022",
+  "probability": "Normal margin residual CDF; bias, spread and absolute-error intervals calibrated on earlier seasons only",
+  "no_hyperparameter_selection": true,
+  "production_promotion": "Forbidden in this experiment; research disabled by default; prospective collection required",
+  "nba_holdout_note": "Ending 2026 excluded from this experiment, but already used by earlier project scoring research; not globally untouched",
+  "prospective_holdout": "All games after protocol timestamp; no outcomes used until a later authorized evaluation",
+  "frozen_at": "2026-10-22T19:28:47.284672+00:00"
+}

@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% import "components/decision.html" as ui with context %}
+
+{% block title %}ScorPred | Insights{% endblock %}
+{% block topbar_title %}Insights{% endblock %}
+
+{% block topbar_actions %}
+  <div class="sp-page-tabs" style="border:none;margin:0">
+    <a class="sp-page-tab {% if sport_filter == 'all' %}active{% endif %}" href="{{ url_for('insights', sport='all') }}">All <span class="sp-badge sp-badge--muted" style="margin-left:.3rem">{{ sport_counts.all or 0 }}</span></a>
+    <a class="sp-page-tab {% if sport_filter == 'soccer' %}active{% endif %}" href="{{ url_for('insights', sport='soccer') }}">Soccer <span class="sp-badge sp-badge--muted" style="margin-left:.3rem">{{ sport_counts.soccer or 0 }}</span></a>
+    <a class="sp-page-tab {% if sport_filter == 'nba' %}active{% endif %}" href="{{ url_for('insights', sport='nba') }}">NBA <span class="sp-badge sp-badge--muted" style="margin-left:.3rem">{{ sport_counts.nba or 0 }}</span></a>
+  </div>
+{% endblock %}
+
+{% block content %}
+
+{# ── Header ──────────────────────────────────────────────────────────────────── #}
+<div class="sp-dash-header">
+  <div class="sp-dash-header__left">
+    <h1>Insights Command Center</h1>
+    <p>Top opportunities, ranking signals, volatility watch, and trust trail for the current slate.</p>
+  </div>
+  <div style="display:flex;gap:.6rem">
+    <a class="btn btn-primary btn-sm" href="/soccer">Soccer</a>
+    <a class="btn btn-secondary btn-sm" href="/nba/">NBA</a>
+  </div>
+</div>
+
+{# ── KPI Metrics ──────────────────────────────────────────────────────────────── #}
+<div class="sp-kpi-row">
+  <div class="sp-kpi-card sp-kpi-card--bet">
+    <span class="sp-kpi-card__label">BET</span>
+    <span class="sp-kpi-card__value">{{ action_mix.bet or 0 }}</span>
+    <span class="sp-kpi-card__meta">High confidence plays</span>
+    <span class="sp-kpi-card__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    </span>
+  </div>
+  <div class="sp-kpi-card sp-kpi-card--consider">
+    <span class="sp-kpi-card__label">CONSIDER</span>
+    <span class="sp-kpi-card__value">{{ action_mix.consider or 0 }}</span>
+    <span class="sp-kpi-card__meta">Medium confidence</span>
+    <span class="sp-kpi-card__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </span>
+  </div>
+  <div class="sp-kpi-card sp-kpi-card--skip">
+    <span class="sp-kpi-card__label">SKIP</span>
+    <span class="sp-kpi-card__value">{{ action_mix.skip or 0 }}</span>
+    <span class="sp-kpi-card__meta">Low confidence</span>
+    <span class="sp-kpi-card__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+    </span>
+  </div>
+  {% for label, value in confidence_groups.items() %}
+    <div class="sp-kpi-card sp-kpi-card--accuracy">
+      <span class="sp-kpi-card__label">{{ label }}</span>
+      <span class="sp-kpi-card__value">{{ value }}</span>
+      <span class="sp-kpi-card__meta">Confidence range</span>
+      <span class="sp-kpi-card__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l3-4 3 2 4-6"/><path d="M17 7h3v3"/></svg>
+      </span>
+    </div>
+  {% endfor %}
+  <div class="sp-kpi-card sp-kpi-card--roi">
+    <span class="sp-kpi-card__label">Data Trust</span>
+    <span class="sp-kpi-card__value">{{ data_mix.get('Strong Data', 0) + data_mix.get('Partial Data', 0) }}</span>
+    <span class="sp-kpi-card__meta">Strong or partial data</span>
+    <span class="sp-kpi-card__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    </span>
+  </div>
+</div>
+
+{# ── Top Opportunities ────────────────────────────────────────────────────────── #}
+<section class="sp-section sp-section--opportunities">
+  <div class="sp-section__header">
+    <div>
+      <h2>Top Opportunities</h2>
+      <p>Ranked by action, confidence, data trust, and matchup signals.</p>
+    </div>
+  </div>
+  {% if insight_cards %}
+    <div class="sp-opportunity-grid sp-opportunity-grid--insights">
+      {% for card in insight_cards %}
+        <div class="sp-insight-card-wrap">
+          {{ ui.decision_card(card, 'featured') }}
+          <div class="sp-insight-signal-row">
+            {% for signal in card.insight_signals %}
+              <span><small>{{ signal.label }}</small>{{ signal.value }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    {{ ui.empty_state('Insights are refreshing', 'Open Soccer or NBA while ScorPred refreshes the slate.') }}
+  {% endif %}
+</section>
+
+{# ── Volatility Watch ─────────────────────────────────────────────────────────── #}
+<section class="sp-section">
+  <div class="sp-section__header">
+    <div>
+      <h2>Volatility Watch</h2>
+      <p>Playable matchups that deserve extra context before acting.</p>
+    </div>
+  </div>
+  {% if context_watch %}
+    <div class="sp-watch-grid">
+      {% for item in context_watch %}
+        <article class="sp-watch-card">
+          <div>
+            <small>{{ item.action }} / {{ item.data_label }}</small>
+            <strong>{{ item.side }}</strong>
+            <span>{{ item.matchup }}</span>
+          </div>
+          <div class="sp-watch-card__meter" aria-label="Confidence {{ item.confidence_pct }}%">
+            <i style="width: {{ item.confidence_pct }}%"></i>
+          </div>
+          <p>{{ item.note }}</p>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    {{ ui.empty_state('No major volatility flags', 'The current filtered slate is reading cleaner than usual.') }}
+  {% endif %}
+</section>
+
+{# ── Trust Trail ──────────────────────────────────────────────────────────────── #}
+{% if trust_rows %}
+<section class="sp-section">
+  <div class="sp-section__header">
+    <div>
+      <h2>Trust Trail</h2>
+      <p>Recent graded reads. Only appears when settled data is available.</p>
+    </div>
+    {% if trust_summary %}
+      <span class="sp-badge sp-badge--strong">{{ trust_summary.win_rate }}% recent win rate</span>
+    {% endif %}
+  </div>
+  <div class="sp-result-list">
+    {% for row in trust_rows %}
+      {{ ui.result_row(row) }}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{# ── Next Best Actions ────────────────────────────────────────────────────────── #}
+<section class="sp-section">
+  <div class="sp-section__header">
+    <div>
+      <h2>Next Best Actions</h2>
+      <p>Jump into the right workspace.</p>
+    </div>
+  </div>
+  <div class="sp-quick-grid">
+    {{ ui.quick_link('/soccer', 'Soccer Workspace', 'League context, top football reads, and full slate') }}
+    {{ ui.quick_link('/nba/', 'NBA Workspace', 'Live scoreboard matchups with working analysis links') }}
+    {{ ui.quick_link(match_analysis_href, 'Match Analysis', 'Open the currently selected matchup breakdown') }}
+    {{ ui.quick_link('/my-bets', 'Tracked Matches', 'Track and manage all your tracked matches in one place') }}
+  </div>
+</section>
+{% endblock %}

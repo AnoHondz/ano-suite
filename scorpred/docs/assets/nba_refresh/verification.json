@@ -1,0 +1,34 @@
+{
+  "verified_at_eastern": "2026-10-22T20:05:01.426718-04:00",
+  "backend": {
+    "passed": 914,
+    "duration_seconds": 205.88,
+    "command": ".venv/Scripts/python.exe -m pytest tests -q --tb=short"
+  },
+  "frontend": {
+    "passed": 44,
+    "command": "npm run test:e2e -- --workers=2",
+    "browser": "Edge"
+  },
+  "lint_passed": true,
+  "production_build_passed": true,
+  "build_warning": "Existing large deferred 3D chunk",
+  "automatic_real_expiry_refresh": true,
+  "real_api_browser_errors": [],
+  "mobile_no_overflow": true,
+  "fixture": {
+    "id": "401909094",
+    "matchup": "Oklahoma City Thunder vs Denver Nuggets",
+    "kickoff": "2026-10-23T01:30Z"
+  },
+  "research_enabled": false,
+  "backend_pid": 14940,
+  "loaded_code_matches_workspace": true,
+  "protected_files_unchanged": 160,
+  "prediction_modules_unchanged": {
+    "services/nba_pregame_model.py": true,
+    "services/nba_game_projection.py": true
+  },
+  "no_training": true,
+  "no_deployment": true
+}

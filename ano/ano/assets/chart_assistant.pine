@@ -1,0 +1,86 @@
+//@version=6
+// Ano chart analysis. No broker connection, order submission, or profitability claim.
+// Calm by default: VWAP and yesterday's close/high/low only, drawn on the chart without price tags on the
+// axis or numbers in the header. Everything else is an input you can switch on.
+indicator("Ano Chart Assistant", shorttitle="Ano", overlay=true, max_boxes_count=40, max_labels_count=20)
+tz = "America/New_York"
+showLevels = input.bool(true, "Yesterday's close / high / low", group="Show")
+showVwap = input.bool(true, "VWAP (regular session)", group="Show")
+showRange = input.bool(false, "15-minute opening range", group="Show")
+showEma = input.bool(false, "EMA 20 / 50", group="Show")
+showSwings = input.bool(false, "Confirmed swing levels", group="Show")
+showZones = input.bool(false, "Fair value gaps (1-minute)", group="Show")
+showPanel = input.bool(true, "One-line status", group="Show")
+width = input.int(3, "Swing confirmation bars", minval=1, maxval=10, group="Settings")
+maxZones = input.int(5, "Most recent fair value gaps kept", minval=1, maxval=20, group="Settings")
+
+oneMinute = timeframe.isminutes and timeframe.multiplier == 1
+regular = not na(time(timeframe.period, "0930-1600", tz))
+opening = not na(time(timeframe.period, "0930-0945", tz))
+dateKey = year(time, tz) * 10000 + month(time, tz) * 100 + dayofmonth(time, tz)
+newDay = bar_index == 0 or dateKey != dateKey[1]
+newRegular = regular and (newDay or not regular[1])
+pdHigh = request.security(syminfo.tickerid, "D", high[1], lookahead=barmerge.lookahead_on)
+pdLow = request.security(syminfo.tickerid, "D", low[1], lookahead=barmerge.lookahead_on)
+pdClose = request.security(syminfo.tickerid, "D", close[1], lookahead=barmerge.lookahead_on)
+ema20 = ta.ema(close, 20)
+ema50 = ta.ema(close, 50)
+var float pv = 0.0
+var float vol = 0.0
+var float orHigh = na
+var float orLow = na
+if newDay or newRegular
+    pv := 0
+    vol := 0
+    orHigh := na
+    orLow := na
+if regular
+    pv += hlc3 * nz(volume)
+    vol += nz(volume)
+if opening
+    orHigh := na(orHigh) ? high : math.max(orHigh, high)
+    orLow := na(orLow) ? low : math.min(orLow, low)
+rthVwap = vol > 0 ? pv / vol : na
+
+// display.pane: lines on the chart only, no price tags on the axis and no values in the header.
+quiet = display.pane
+plot(showVwap and regular ? rthVwap : na, "VWAP", color.new(color.fuchsia, 10), 2, plot.style_linebr, display=quiet)
+plot(showLevels ? pdClose : na, "Yesterday's close", color.new(color.yellow, 30), 1, plot.style_stepline, display=quiet)
+plot(showLevels ? pdHigh : na, "Yesterday's high", color.new(color.gray, 50), 1, plot.style_stepline, display=quiet)
+plot(showLevels ? pdLow : na, "Yesterday's low", color.new(color.gray, 50), 1, plot.style_stepline, display=quiet)
+plot(showRange and regular and not opening ? orHigh : na, "Opening range high", color.new(color.blue, 40), 1, plot.style_linebr, display=quiet)
+plot(showRange and regular and not opening ? orLow : na, "Opening range low", color.new(color.blue, 40), 1, plot.style_linebr, display=quiet)
+plot(showEma ? ema20 : na, "EMA 20", color.new(color.aqua, 40), 1, display=quiet)
+plot(showEma ? ema50 : na, "EMA 50", color.new(color.orange, 40), 1, display=quiet)
+
+ph = ta.pivothigh(high, width, width)
+pl = ta.pivotlow(low, width, width)
+var float sh = na
+var float sl = na
+if barstate.isconfirmed
+    if not na(ph)
+        sh := ph
+    if not na(pl)
+        sl := pl
+plot(showSwings ? sh : na, "Swing high", color.new(color.green, 65), 1, plot.style_stepline, display=quiet)
+plot(showSwings ? sl : na, "Swing low", color.new(color.red, 65), 1, plot.style_stepline, display=quiet)
+
+consecutive = time - time[2] == 120000
+bull = oneMinute and barstate.isconfirmed and consecutive and low > high[2]
+bear = oneMinute and barstate.isconfirmed and consecutive and high < low[2]
+var boxes = array.new_box()
+if showZones and (bull or bear)
+    zone = box.new(bar_index, bull ? low : low[2], bar_index + 15, bull ? high[2] : high, border_color=color.new(color.aqua, 75), bgcolor=color.new(color.aqua, 92))
+    array.push(boxes, zone)
+    if array.size(boxes) > maxZones
+        box.delete(array.shift(boxes))
+
+// One line: the symbol, its distance from yesterday's close, and where price sits against VWAP.
+var table info = table.new(position.top_right, 1, 1, bgcolor=color.new(color.black, 40))
+if showPanel and barstate.islast
+    gap = na(pdClose) ? na : (close - pdClose) / pdClose * 100
+    side = na(rthVwap) ? "VWAP after 9:30" : close >= rthVwap ? "above VWAP" : "below VWAP"
+    status = regular ? "" : " · market closed (opens 9:30 ET)"
+    table.cell(info, 0, 0, "Ano · " + syminfo.ticker + " · " + (na(gap) ? "" : str.tostring(gap, "+#.##;-#.##") + "% vs yesterday · ") + side + status, text_color=color.new(color.white, 15), text_size=size.small)
+alertcondition(bull, "Ano bullish FVG", "Closed bullish FVG on {{ticker}}; analysis only")
+alertcondition(bear, "Ano bearish FVG", "Closed bearish FVG on {{ticker}}; analysis only")

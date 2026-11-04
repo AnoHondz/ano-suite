@@ -1,0 +1,16 @@
+{
+  "owner": "scorpred_nba_b1_metadata",
+  "schema_version": 1,
+  "content_sha256": "dd3fa7e4af8a81be2cdbd965959cc16deb59c2ed87691af3c90139b997cde2fe",
+  "metadata_only": true,
+  "asset_downloads": 0,
+  "sports_imports": 0,
+  "artifact_fingerprints": {
+    "provider_registry.json": "0b252c3d9102f13b27b25711e615e1f464b1d731ccd02c48e7720bd13316d8bd",
+    "candidate_manifests.json": "7885d8b359641f951f0b4cf70cef02570fd512925ae1b015794e82a5fa5ec9be",
+    "reconciliation.json": "545dbcf7308063987dc2cad031ab4ba4e726dd0fc4a5c4db6b0bf2a839821791",
+    "permission_matrix.json": "0e91bcb7d6eabd24fea4035fef5ef098e4f095c2cdb9359182c4343033a6faac",
+    "local_game_index.json": "5d113e368e3b4f3bf2da81b5519ae269818221616a9876b9a120b5db7e15ad58",
+    "input_manifest.json": "561117f2b2e5a7704472b086641f3af3a8e5cf10f408918e824f2780fe882616"
+  }
+}

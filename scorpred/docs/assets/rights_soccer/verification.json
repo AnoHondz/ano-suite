@@ -1,0 +1,72 @@
+{
+  "verified_at": "2026-10-22T13:20:24.860098+00:00",
+  "production_changes": false,
+  "sports_assets_downloaded": 0,
+  "sports_records_imported": 0,
+  "source_records_deleted_or_merged": 0,
+  "models_retrained": 0,
+  "deployments": 0,
+  "nfl_outcome_store_access": false,
+  "tests": {
+    "backend_command": ".venv/Scripts/python.exe -m pytest tests -q --tb=short",
+    "backend_passed": 778,
+    "backend_seconds": 117.67,
+    "new_diagnostic_tests_passed": 24,
+    "regression_sports": [
+      "NFL",
+      "NBA",
+      "soccer"
+    ],
+    "lint": "passed E,W,F excluding E501 on both new scripts and new tests",
+    "frontend_build": "passed; existing Node 22.23.3 installation explicitly on PATH"
+  },
+  "metadata_inspection": {
+    "requests": 12,
+    "statuses": {
+      "200": 10,
+      "404": 2
+    },
+    "complete_paginated_release_lists": 3,
+    "asset_or_sidecar_requests": 0,
+    "remote_code_executed": false,
+    "documentation_failures": [
+      "Two ESPN schema Markdown paths returned 404",
+      "API-Football docs browser returned no usable schema text",
+      "Football-Data notes browser returned 429; not retried"
+    ]
+  },
+  "soccer_duplicates": {
+    "groups": 319,
+    "excess": 319,
+    "identical_observation_conflicting_season_labels": 319,
+    "score_stat_conflicts": 0,
+    "all_groups_link_once_to_stage1": true
+  },
+  "soccer_lineage": {
+    "source_rows": 7888,
+    "classifications": {
+      "unrecoverable_from_inspected_metadata": 6702,
+      "raw_csv_fixture_candidate_only": 291,
+      "unique_exact_fixture_metadata_candidate": 895
+    },
+    "verified_original_per_row_provider_lineage": 0,
+    "internal_derived_row_links": 7586,
+    "receipt_or_batch_timestamps_invented": 0
+  },
+  "soccer_stat_contracts": {
+    "planned_issues": 12,
+    "planned_acceptance_cases": 16,
+    "synthetic_defect_demonstrations": 3,
+    "production_repairs_executed": 0
+  },
+  "nba_pilot": {
+    "authorized": false,
+    "executed": false,
+    "registry_candidates_enabled": 0
+  },
+  "preservation": {
+    "protected_files_checked": 397,
+    "changed": []
+  },
+  "report_links_valid": true
+}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Pass Analysis | ScorPred{% endblock %}
+
+{% block content %}
+<section class="sp-hero">
+  <span class="sp-kicker">Pass Analysis</span>
+  <h1>Winning Calls & Recommendation Quality</h1>
+  <p style="color:var(--text-3)">Review successful predictions to spot repeatable strengths across sports, confidence tiers, and recommendation types.</p>
+</section>
+
+<div class="sp-panel">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:.5rem; margin-bottom:.75rem">
+    <div>
+      <strong>Winning Prediction Log</strong>
+      <span style="font-size:.78rem; color:var(--text-3); display:block">Rolling window: {{ evaluation.rolling_window or 10 }}{% if sport_filter %} &middot; Sport: {{ sport_filter|upper }}{% endif %}</span>
+    </div>
+    <div style="display:flex; gap:.4rem; flex-wrap:wrap">
+
+      <a href="{{ url_for('pass_analysis') }}" class="sp-badge sp-badge--{{ '' if not sport_filter else 'muted' }}" style="text-decoration:none">All</a>
+      <a href="{{ url_for('pass_analysis', sport='soccer') }}" class="sp-badge sp-badge--{{ 'strong' if sport_filter == 'soccer' else 'muted' }}" style="text-decoration:none">Soccer</a>
+      <a href="{{ url_for('pass_analysis', sport='nba') }}" class="sp-badge sp-badge--{{ 'caution' if sport_filter == 'nba' else 'muted' }}" style="text-decoration:none">NBA</a>
+    </div>
+  </div>
+
+  <div class="sp-table-wrap">
+    <table class="sp-table">
+      <thead>
+        <tr><th>Date</th><th>Sport</th><th>Matchup</th><th>Predicted</th><th>Actual</th><th>Confidence</th><th>Recommendation</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        {% if pass_rows %}
+          {% for row in pass_rows %}
+          <tr>
+            <td>{{ row.date }}</td>
+            <td>{{ row.sport }}</td>
+            <td>{{ row.matchup }}</td>
+            <td>{{ row.predicted_outcome }}</td>
+            <td>{{ row.actual_result }}</td>
+            <td><span class="sp-badge sp-badge--strong">{{ row.confidence }} &middot; {{ row.confidence_pct }}%</span></td>
+            <td>{{ row.recommendation }}</td>
+            <td style="color:var(--text-3); font-size:.82rem; max-width:220px">{{ row.notes or '—' }}</td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr><td colspan="8" style="color:var(--text-3)">No completed wins available yet.</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

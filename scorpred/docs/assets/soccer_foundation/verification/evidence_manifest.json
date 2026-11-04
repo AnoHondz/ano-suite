@@ -1,0 +1,31 @@
+{
+  "verified_at": "2026-10-22T13:39:51.844107+00:00",
+  "files": {
+    "docs/assets/soccer_foundation/v1/canonical_fixtures.json": "c077e3e23d509c863e6b9a3235b4a9af75698052a9902bde1d423daa8f8547fb",
+    "docs/assets/soccer_foundation/v1/corrected_statistics.json": "2b0c1a0c7447f2d5e36a23ac47cd48423f390815ed4e5ceb8a5e1230ce62c1e1",
+    "docs/assets/soccer_foundation/v1/duplicate_view.json": "07b8d61e9341ed0382e53323f7f2bf22f4f0ce7dbc0112c2e8c2535b568b6cef",
+    "docs/assets/soccer_foundation/v1/input_manifest.json": "e57d7198b3162118c1f714e53081447f42cfc738e324e3a51c55f9444c2bf1f8",
+    "docs/assets/soccer_foundation/v1/lineage_sidecar.json": "fd06984ae9e3c983382d4999344811683436283d01740121baf4240c3d490305",
+    "docs/assets/soccer_foundation/v1/manifest.json": "d3394d637bcde7dff4fa9d92258b57a87944a63caa82cee7bf7202528db446d9",
+    "docs/assets/soccer_foundation/v1/quality_report.json": "dbdca1371ea2a98f4f7f14c8b43c7f0f450971b75d473cd3ceedd2330b3d7d69",
+    "docs/assets/soccer_foundation/verification/activation_boundary.json": "d6d89dd442336e3b2c38b38c3f7e628d84d999bf4bdf648caca0d52747a12ee1",
+    "docs/assets/soccer_foundation/verification/backend_tests.txt": "6de2d2a308960046217b4b977f923e8be3e7bdbfa958370e379d2f5f696afa5c",
+    "docs/assets/soccer_foundation/verification/contract_definitions.json": "220728f52533e065bbc57ef8822d4d6743e54a02f6a08cc2fc1fb0bbefc8baa6",
+    "docs/assets/soccer_foundation/verification/frontend_build.txt": "8c7ae22dac140a180e156ddcee84d9d0336f62355ba255d1e0ab8b30e497fad0",
+    "docs/assets/soccer_foundation/verification/frontend_tests.txt": "39da697a5f0e2e057af287f1375446c43707757e6df39c48d162b0f4e4837b08",
+    "docs/assets/soccer_foundation/verification/preservation.json": "f7ae8b1d97eb7ed1472529acc92061bd2aa487efc2fa2ff301592cfce05d0e90",
+    "docs/assets/soccer_foundation/verification/production_predictions_after.json": "0580f56dc6fc6ffe0289bffb7aeabe01b138e938a9bdad149910ed9f23e7c8c0",
+    "docs/assets/soccer_foundation/verification/production_predictions_before.json": "0580f56dc6fc6ffe0289bffb7aeabe01b138e938a9bdad149910ed9f23e7c8c0",
+    "docs/assets/soccer_foundation/verification/statistic_exceptions.json": "835bd4a59cbbe4b26deb948e4efe4fb7d763201e5eb3eea97316584f70718004",
+    "docs/assets/soccer_foundation/verification/targeted_tests.txt": "9d1276a8da30084ff62e4273a368e8bb1d61f49c7c23cc2a424393c8c0713f68",
+    "docs/assets/soccer_foundation/verification/verification.json": "2c58ebcfb45fad6f64315de6de7144e4d61a5c8c9664bf1c6b42d03f2e1976c6",
+    "docs/SOCCER_LINEAGE_SIDECAR_IMPLEMENTATION.md": "66f26bc81e9b2d3914a6114047e13b41127dc1fd05160299263a98225b8f58b6",
+    "docs/SOCCER_STAT_CONTRACT_REPAIRS.md": "21446296536c0ade495c82b962125e50185f9e24ea2362e34261003f3b1cf0bd",
+    "scripts/build_soccer_research.py": "95628163750a1b041809638448f030d15bed288686b87f0fa308b425ad94f986",
+    "scripts/soccer_preservation_probe.py": "784ccdb43f93e18148f424ad9236b0e48c56581658e7daf6b01ae63aeea90f13",
+    "services/soccer_lineage.py": "40f021a044e4c8aa88d876b3871b8c8276b7487ea8b169cc4054c1593d998207",
+    "services/soccer_research_views.py": "6013475b09dca9c351f1165ee3b31aa635568c2b263150af9a1d5416f2aa8149",
+    "services/soccer_stat_contracts.py": "7ff7469341907d4da2a775b870fb0d0942efc1122d6ff1c28f16cd4bde90174e",
+    "tests/test_soccer_foundation.py": "3d7f1b1c1133114aafda85333d873ab68adc445f38cfa7ea3716d14b4452af41"
+  }
+}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Unable to load data{% endblock %}
+{% block content %}
+<section class="sp-hero" style="text-align:center">
+  <h1>Unable to load data</h1>
+  <p style="color:var(--c-danger); font-size:1rem; margin:.5rem 0">{{ message or msg or "An error occurred while loading data." }}</p>
+  <p style="color:var(--text-3); font-size:.85rem; max-width:480px; margin:.5rem auto">Live data is temporarily unavailable. ScorPred will keep using fallback analysis where possible, and the detailed error has been kept in the logs instead of shown here.</p>
+  <a href="/" class="sp-badge sp-badge--strong" style="text-decoration:none; display:inline-block; margin-top:.75rem; font-size:.9rem; padding:.4rem 1rem">Back to Home</a>
+</section>
+{% endblock %}

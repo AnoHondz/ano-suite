@@ -1,0 +1,67 @@
+/* A single prediction-first matchup surface. All values come from the API. */
+.prediction-field { background: linear-gradient(135deg, #0d202b, #0a141d 75%); border-color: #2e5261; }
+.prediction-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; padding: 18px 24px 0; color: #afc4d0; font-size: 11px; }
+.prediction-meta > span:first-child { color: var(--accent); font-weight: 600; }
+.prediction-matchup { display: grid; grid-template-columns: minmax(0, 1fr) 30px minmax(0, 1fr); align-items: center; gap: 14px; padding: 18px 24px 8px; margin: 0; }
+.prediction-team { display: flex; align-items: center; gap: 14px; min-width: 0; color: #f1f8fc; font-size: clamp(17px, 1.8vw, 26px); font-weight: 650; line-height: 1.25; letter-spacing: -.5px; }
+.prediction-team > span { min-width: 0; overflow-wrap: anywhere; }
+.prediction-team small { display: block; color: #92b5c4; font-size: 10px; font-weight: 500; letter-spacing: .04em; margin-bottom: 6px; }
+.prediction-team img { width: 52px; height: 52px; object-fit: contain; flex-shrink: 0; }
+.prediction-away { justify-content: flex-end; text-align: right; }
+.prediction-versus { color: #91a9b8; font-size: 12px; font-weight: 400; text-align: center; }
+.prediction-pitch { min-height: 250px; position: relative; display: grid; place-items: center; isolation: isolate; margin: 0 12px; overflow: hidden; }
+.prediction-surface { position: absolute; inset: 7px 0; display: grid; place-items: center; pointer-events: none; overflow: hidden; z-index: -2; }
+.prediction-surface svg { width: 96%; height: 100%; max-height: 300px; transform: perspective(850px) rotateX(19deg); stroke: #8ed3bf48; stroke-width: 1.6; opacity: .65; }
+.prediction-surface .field-turf { fill: #126149; stroke: #397a7180; }
+.surface-nba svg { stroke: #f3d3a64a; }
+.surface-nba .field-turf { fill: #644730; }
+.surface-nba .court-plank { stroke: #c59b6c20; }
+.surface-nfl .field-turf { fill: #104d3d; }
+.prediction-pitch::after { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: -1; background: radial-gradient(ellipse at center, #08151b2e 0, #08151b2e 45%, #0b1721b3 100%); }
+.field-result { width: min(88%, 480px); text-align: center; padding: 18px 24px; border: 1px solid #6aa89c42; border-radius: 16px; background: #08151ded; box-shadow: 0 14px 38px #0004; }
+.field-result-label { color: #abc6d2; font-size: 11px; margin-bottom: 7px; }
+.field-pick { color: #f2faf8; font-size: clamp(21px, 2.5vw, 30px); line-height: 1.2; font-weight: 650; letter-spacing: -.6px; overflow-wrap: anywhere; }
+.field-measure { display: flex; flex-direction: column; align-items: center; gap: 3px; margin-top: 8px; }
+.field-measure strong { color: #56e6c0; font: 500 clamp(30px, 3.4vw, 44px)/1.2 var(--font-mono); letter-spacing: -1.5px; }
+.field-measure > span { color: #b7c9d4; font-size: 12px; }
+.field-method-note { color: #b3c4cd; font-size: 11px; line-height: 1.6; margin-top: 10px; }
+.field-market { color: #d5dfd4; font-size: 11px; line-height: 1.6; margin-top: 10px; }
+.field-result-unavailable .field-pick { font-size: clamp(20px, 2vw, 26px); color: #d4dfe7; }
+.field-unavailable-reason { color: #b6c8d4; font-size: 12px; line-height: 1.65; margin-top: 10px; }
+.prediction-footer { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 10px 24px 16px; font-size: 10px; color: #a1bac9; }
+.prediction-footer .stage-action { margin-left: auto; min-height: 40px; }
+.match-support-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 22px; align-items: start; }
+.prediction-explanation { padding: 22px; }
+.prediction-reasons { padding-left: 17px; margin: 16px 0; color: #c4d2dc; font-size: 13px; line-height: 1.8; }
+.prediction-reasons li + li { margin-top: 9px; }
+.prediction-explanation .prop-about p { margin-top: 10px; }
+.analysis-expansion { padding: 0 22px; }
+.analysis-expansion > summary { min-height: 56px; font-size: 14px; font-weight: 500; color: var(--text); }
+.analysis-expansion[open] > :not(summary) { margin: 8px 0 22px; }
+.compact-comparison-card { padding: 6px 18px 12px; }
+.nba-context .compact-comparison { width: 100%; table-layout: fixed; font-size: 12px; }
+.nba-context .compact-comparison caption { text-align: left; margin: 12px 0; }
+.nba-context .compact-comparison th, .nba-context .compact-comparison td { white-space: normal; overflow-wrap: anywhere; padding: 12px; }
+.nba-context .compact-comparison th { text-align: left; font-weight: 500; }
+.nba-context .compact-comparison td { font-family: var(--font-mono); color: #d6e9e1; }
+.command-overview:not(:has(.matchup-stage)) { grid-template-columns: 1fr; }
+@media (max-width: 767px) {
+  .prediction-meta { padding: 14px 14px 0; font-size: 10px; }
+  .prediction-matchup { padding: 14px 14px 4px; gap: 7px; grid-template-columns: minmax(0, 1fr) 18px minmax(0, 1fr); }
+  .prediction-team { flex-direction: column; align-items: flex-start; gap: 8px; font-size: 17px; letter-spacing: -.25px; }
+  .prediction-away { flex-direction: column-reverse; align-items: flex-end; }
+  .prediction-team img { width: 38px; height: 38px; }
+  .prediction-team small { font-size: 9px; margin-bottom: 4px; }
+  .prediction-pitch { min-height: 225px; margin: 0; }
+  .prediction-surface svg { width: 122%; height: 200px; }
+  .field-result { padding: 16px; width: 87%; }
+  .field-pick { font-size: 23px; }
+  .field-measure strong { font-size: 35px; }
+  .prediction-footer { padding: 8px 14px 14px; gap: 8px 10px; }
+  .prediction-footer > span:last-of-type { max-width: 100%; }
+  .match-support-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .prediction-explanation { padding: 18px; }
+  .compact-comparison-card { padding: 4px 6px 8px; }
+  .nba-context .compact-comparison th, .nba-context .compact-comparison td { padding: 10px 7px; font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) { .prediction-surface svg { transform: none; } }

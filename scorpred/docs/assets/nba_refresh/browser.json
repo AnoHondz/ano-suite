@@ -1,0 +1,94 @@
+{
+  "mocked": false,
+  "errors": [],
+  "requests": [
+    {
+      "path": "/api/session",
+      "status": 200,
+      "ms": 10
+    },
+    {
+      "path": "/api/dashboard/nba",
+      "status": 200,
+      "ms": 1794
+    },
+    {
+      "path": "/api/matches/401909094",
+      "status": 200,
+      "ms": 95
+    },
+    {
+      "path": "/api/scoreline/nba",
+      "status": 200,
+      "ms": 1453
+    },
+    {
+      "path": "/api/nba/matches/401909094/context",
+      "status": 200,
+      "ms": 2083
+    },
+    {
+      "path": "/api/nba/research/early-season",
+      "status": 200,
+      "ms": 18
+    },
+    {
+      "path": "/api/matches/401909094",
+      "status": 200,
+      "ms": 1291
+    },
+    {
+      "path": "/api/scoreline/nba",
+      "status": 200,
+      "ms": 409
+    },
+    {
+      "path": "/api/nba/matches/401909094/context",
+      "status": 200,
+      "ms": 440
+    },
+    {
+      "path": "/api/nba/research/early-season",
+      "status": 200,
+      "ms": 9
+    }
+  ],
+  "fixture": {
+    "id": "401909094",
+    "matchup": "Oklahoma City Thunder vs Denver Nuggets",
+    "kickoff": "2026-10-23T01:30Z"
+  },
+  "comparisons": [
+    "Observed record64\u00e2\u20ac\u201c18Games in sample82Points / game119.0Conceded / game107.9",
+    "Observed record54\u00e2\u20ac\u201c28Games in sample82Points / game122.1Conceded / game116.9"
+  ],
+  "before": {
+    "source": {
+      "expires_at": "2026-10-23T00:04:14.777778+00:00",
+      "max_stale_at": "2026-10-23T00:08:14.777778+00:00",
+      "observed_at": "2026-10-22T23:31:56.633157+00:00",
+      "receipt_basis": "legacy_file_mtime",
+      "source": "ESPN",
+      "state": "fresh"
+    },
+    "reason": "Projected Oklahoma City Thunder 118\u00e2\u20ac\u201c114 Denver Nuggets. Fair line Oklahoma City Thunder -3.5, Oklahoma City Thunder -164. DraftKings implies 74% vs model 62% (-12.0%). Too far from the market this early; the price likely knows something the ratings do not. Oklahoma City Thunder lost Isaiah Joe; Oklahoma City Thunder lineup +4.0 pts vs their rated games; Denver Nuggets adds DeMar DeRozan (18.4 ppg), Marvin Bagley III (10.4 ppg) not yet in their results; Denver Nuggets lost Jonas Valanciunas, Peyton Watson, Tim Hardaway Jr.; Denver Nuggets lineup +5.5 pts vs their rated games; Key matchup Shai Gilgeous-Alexander 31.2/4.3/6.5 vs Nikola Jokic 27.7/12.9/10.7 (pts/reb/ast); Oklahoma City Thunder 3-1 vs Denver Nuggets this season and last (avg -0.2).",
+    "winProbability": 62.1,
+    "modelSource": "nba-pregame-margin-v2"
+  },
+  "after": {
+    "source": {
+      "expires_at": "2026-10-23T00:05:15.558768+00:00",
+      "max_stale_at": "2026-10-23T00:09:15.558768+00:00",
+      "observed_at": "2026-10-22T23:31:56.633157+00:00",
+      "receipt_basis": "legacy_file_mtime",
+      "source": "ESPN",
+      "state": "fresh"
+    },
+    "reason": "Projected Oklahoma City Thunder 118\u00e2\u20ac\u201c114 Denver Nuggets. Fair line Oklahoma City Thunder -3.5, Oklahoma City Thunder -164. DraftKings implies 74% vs model 62% (-12.0%). Too far from the market this early; the price likely knows something the ratings do not. Oklahoma City Thunder lost Isaiah Joe; Oklahoma City Thunder lineup +4.0 pts vs their rated games; Denver Nuggets adds DeMar DeRozan (18.4 ppg), Marvin Bagley III (10.4 ppg) not yet in their results; Denver Nuggets lost Jonas Valanciunas, Peyton Watson, Tim Hardaway Jr.; Denver Nuggets lineup +5.5 pts vs their rated games; Key matchup Shai Gilgeous-Alexander 31.2/4.3/6.5 vs Nikola Jokic 27.7/12.9/10.7 (pts/reb/ast); Oklahoma City Thunder 3-1 vs Denver Nuggets this season and last (avg -0.2).",
+    "winProbability": 62.1,
+    "modelSource": "nba-pregame-margin-v2"
+  },
+  "mobileNoOverflow": true,
+  "automaticRefresh": true,
+  "ok": true
+}

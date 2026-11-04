@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% import "components/decision.html" as ui with context %}
+
+{% block title %}ScorPred | Decision Intelligence{% endblock %}
+{% block topbar_title %}Home{% endblock %}
+
+{% block content %}
+<section class="sp-page-hero">
+  <span class="sp-page-hero__eyebrow">Decision Intelligence</span>
+  <h1>Strength-tier picks for matchday.</h1>
+  <p>ScorPred helps you compare every match with side recommendations, confidence, data trust, and slate insight.</p>
+</section>
+
+<section class="sp-section">
+  <div class="sp-card-grid">
+    {{ ui.quick_link('/soccer', 'Soccer', 'Today plan and full slate') }}
+    {{ ui.quick_link(url_for('nba.index'), 'NBA', 'Tonight plan and top opportunities') }}
+    {{ ui.quick_link('/prediction', 'Match Analysis', 'Focused matchup breakdown') }}
+    {{ ui.quick_link('/insights', 'Insights', 'Opportunity radar and trust signals') }}
+  </div>
+</section>
+{% endblock %}

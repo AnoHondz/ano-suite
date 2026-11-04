@@ -1,0 +1,12 @@
+{
+  "view_version": "soccer-research-v1",
+  "production_enabled": false,
+  "training_enabled": false,
+  "nba_registry_enabled": false,
+  "required_before_production": [
+    "Separate approval of corrected input semantics",
+    "Source/field/period compatibility validation against existing model expectations",
+    "Versioned production integration and explicit release decision; no deployment performed here"
+  ],
+  "instruction_source": "User task section 4: If an issue cannot be repaired without changing production semantics, implement the corrected behavior behind a disabled versioned path and report the required approval."
+}

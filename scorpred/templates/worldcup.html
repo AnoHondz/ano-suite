@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% block title %}World Cup 2026 Predictor{% endblock %}
+
+{% block content %}
+<section class="sp-hero" style="text-align:center">
+  <h1>World Cup <span style="color:var(--c-strong)">2026</span> Predictor</h1>
+  <p style="color:var(--text-3)">USA &middot; Canada &middot; Mexico &middot; 48 nations &middot; June–July 2026</p>
+</section>
+
+<div class="sp-panel">
+  <span class="sp-kicker">Match Predictor</span>
+  <p style="font-size:.78rem; color:var(--text-3); margin:.2rem 0 .75rem">Predictions use FIFA ranking-calibrated attack/defense strengths fed into a Poisson model — aligned with the same multi-league ScorPred engine.</p>
+
+  <form method="POST" action="/worldcup" id="wcForm">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <div style="display:flex; gap:1rem; align-items:end; flex-wrap:wrap; margin-bottom:.75rem">
+      <div style="flex:1; min-width:160px">
+        <label style="font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; color:var(--text-3); display:block; margin-bottom:.25rem">Team A</label>
+        <select name="team_a" id="wcTeamA" style="width:100%; padding:.4rem .6rem; border-radius:var(--radius); border:1px solid var(--border); background:var(--bg-2); color:var(--text-1); font-size:.88rem" required>
+          <option value="">— Select nation —</option>
+          {% for t in teams %}
+          <option value="{{ t }}" {% if t == team_a %}selected{% endif %}>{{ t }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <span style="font-weight:700; color:var(--text-3); padding-bottom:.4rem">VS</span>
+      <div style="flex:1; min-width:160px">
+        <label style="font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; color:var(--text-3); display:block; margin-bottom:.25rem">Team B</label>
+        <select name="team_b" id="wcTeamB" style="width:100%; padding:.4rem .6rem; border-radius:var(--radius); border:1px solid var(--border); background:var(--bg-2); color:var(--text-1); font-size:.88rem" required>
+          <option value="">— Select nation —</option>
+          {% for t in teams %}
+          <option value="{{ t }}" {% if t == team_b %}selected{% endif %}>{{ t }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    {% if wc_error %}
+    <div class="sp-notice sp-notice--error">{{ wc_error }}</div>
+    {% endif %}
+
+    <button type="submit" style="background:var(--c-strong); color:var(--bg-1); border:none; border-radius:var(--radius); padding:.55rem 1.5rem; font-weight:600; cursor:pointer; font-size:.9rem; width:100%">Predict Match &rarr;</button>
+  </form>
+</div>
+
+{# ── Prediction Result ── #}
+{% if result %}
+<div class="sp-panel sp-panel--highlight" style="margin-top:1rem">
+  <span class="sp-kicker">Match Winner (1X2)</span>
+  <p style="font-size:.75rem; color:var(--text-3); margin:.15rem 0 .75rem">&lambda;{{ result.team_a }} = {{ result.lam_a }} goals/game &middot; &lambda;{{ result.team_b }} = {{ result.lam_b }} goals/game &middot; Neutral venue</p>
+
+  <div style="display:flex; justify-content:space-around; text-align:center; margin-bottom:.75rem">
+    <div><strong style="font-size:1.8rem; color:var(--c-strong)">{{ result.a_pct }}</strong><br><span style="font-size:.78rem; color:var(--text-3)">{{ result.team_a }}</span></div>
+    <div><strong style="font-size:1.8rem; color:var(--c-caution)">{{ result.draw_pct }}</strong><br><span style="font-size:.78rem; color:var(--text-3)">Draw</span></div>
+    <div><strong style="font-size:1.8rem; color:var(--c-active)">{{ result.b_pct }}</strong><br><span style="font-size:.78rem; color:var(--text-3)">{{ result.team_b }}</span></div>
+  </div>
+
+  <div class="sp-prob-stack" style="margin-bottom:.75rem">
+    <div class="sp-prob-stack__bar" style="flex:{{ result.a_pct }}; background:var(--c-strong); border-radius:4px 0 0 4px">&nbsp;</div>
+    <div class="sp-prob-stack__bar" style="flex:{{ result.draw_pct }}; background:var(--c-caution)">&nbsp;</div>
+    <div class="sp-prob-stack__bar" style="flex:{{ result.b_pct }}; background:var(--c-active); border-radius:0 4px 4px 0">&nbsp;</div>
+  </div>
+
+  {% set wc_data_label = 'Strong Data' if result.confidence == 'High' else ('Partial Data' if result.confidence == 'Medium' else 'Limited Data') %}
+  <div style="text-align:center; margin-bottom:.75rem">
+    ScorPred side: <strong style="color:var(--c-strong)">{{ result.winner }}</strong>
+    <span class="sp-badge sp-badge--{{ 'strong' if result.confidence == 'High' else ('caution' if result.confidence == 'Medium' else 'muted') }}">{{ wc_data_label }}</span>
+  </div>
+
+  <div class="sp-split">
+    {# ── Correct Scores ── #}
+    <div>
+      <span class="sp-kicker">Top Correct Scores</span>
+      {% for s in result.top_scores %}
+      <div style="display:flex; align-items:center; gap:.5rem; padding:.25rem 0; border-bottom:1px solid var(--border); font-size:.85rem">
+        <span style="font-size:.72rem; color:var(--text-3); min-width:1.4rem">#{{ loop.index }}</span>
+        <strong>{{ s.score }}</strong>
+        <div style="flex:1; height:4px; background:var(--bg-3); border-radius:2px; overflow:hidden">
+          <div style="width:{{ [s.prob * 5, 100] | min }}%; height:100%; background:var(--c-strong)"></div>
+        </div>
+        <span style="font-size:.82rem; color:var(--text-2)">{{ s.prob }}%</span>
+      </div>
+      {% endfor %}
+    </div>
+
+    {# ── Total Goals ── #}
+    <div>
+      <span class="sp-kicker">Total Goals</span>
+      <p style="font-size:.78rem; color:var(--text-3); margin:.2rem 0 .5rem">Expected total: {{ result.avg_total }} goals</p>
+      <div style="display:flex; gap:1rem; text-align:center">
+        <div style="flex:1"><strong style="font-size:1.4rem; color:var(--c-strong)">{{ result.over25 }}%</strong><br><span style="font-size:.75rem; color:var(--text-3)">Over 2.5</span></div>
+        <div style="flex:1"><strong style="font-size:1.4rem; color:var(--text-2)">{{ result.under25 }}%</strong><br><span style="font-size:.75rem; color:var(--text-3)">Under 2.5</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{# ── Upcoming WC Fixtures ── #}
+{% if wc_fixtures %}
+<span class="sp-kicker" style="margin-top:1.5rem">Upcoming FIFA World Cup 2026 Fixtures</span>
+<p style="font-size:.78rem; color:var(--text-3); margin-bottom:.5rem">Live data via ESPN &middot; {{ wc_fixtures | length }} fixtures found</p>
+<div class="sp-grid sp-grid--cards">
+  {% for f in wc_fixtures %}
+  <div class="sp-panel sp-panel--tight">
+    <div style="font-size:.75rem; color:var(--text-3); display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:.4rem">
+      <span>{{ f.fixture.date[:10] }}</span>
+      {% if f.fixture.date | length > 10 %}<span>{{ f.fixture.date[11:16] }} UTC</span>{% endif %}
+      {% if f.fixture.venue and f.fixture.venue.name %}<span>{{ f.fixture.venue.name }}</span>{% endif %}
+      {% if f.league and f.league.round %}<span>{{ f.league.round }}</span>{% endif %}
+    </div>
+    <div style="display:flex; align-items:center; justify-content:center; gap:.6rem; margin-bottom:.5rem">
+      <div style="display:flex; align-items:center; gap:.3rem">
+        {% if f.teams.home.logo %}<img src="{{ f.teams.home.logo }}" alt="" style="width:22px;height:22px;object-fit:contain" />{% endif %}
+        <strong style="font-size:.85rem">{{ f.teams.home.name }}</strong>
+      </div>
+      <span style="color:var(--text-3); font-size:.78rem">vs</span>
+      <div style="display:flex; align-items:center; gap:.3rem">
+        <strong style="font-size:.85rem">{{ f.teams.away.name }}</strong>
+        {% if f.teams.away.logo %}<img src="{{ f.teams.away.logo }}" alt="" style="width:22px;height:22px;object-fit:contain" />{% endif %}
+      </div>
+    </div>
+    <form method="POST" action="/worldcup" style="text-align:center">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <input type="hidden" name="team_a" value="{{ f.teams.home.name }}" />
+      <input type="hidden" name="team_b" value="{{ f.teams.away.name }}" />
+      <button type="submit" style="background:var(--c-strong); color:var(--bg-1); border:none; border-radius:var(--radius); padding:.35rem .9rem; font-weight:600; cursor:pointer; font-size:.82rem">Predict &rarr;</button>
+    </form>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="sp-panel" style="text-align:center; padding:1.5rem; margin-top:1rem">
+  <p style="color:var(--text-3)">WC 2026 fixtures not yet available from ESPN &middot; Tournament starts June 2026</p>
+  <p style="font-size:.82rem; color:var(--text-3); margin-top:.3rem">Use the predictor above to simulate any match-up.</p>
+</div>
+{% endif %}
+
+{# ── Team Strength Reference ── #}
+<div class="sp-panel" style="margin-top:1rem">
+  <span class="sp-kicker">Team Strength Reference</span>
+  <p style="font-size:.78rem; color:var(--text-3); margin:.2rem 0 .75rem">Attack = avg goals scored/game &middot; Defense = avg goals conceded/game (lower = better)</p>
+  {% set tiers = [
+    ("Elite", ["Argentina","France","Brazil","Spain","England"]),
+    ("Strong", ["Germany","Portugal","Netherlands","Belgium","Croatia","Italy","Morocco"]),
+    ("Competitive", ["Colombia","Uruguay","Japan","Denmark","Switzerland","USA","South Korea","Senegal"]),
+  ] %}
+  {% for tier_name, tier_teams in tiers %}
+  <div style="margin-bottom:.5rem">
+    <strong style="font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; color:var(--c-caution)">{{ tier_name }}</strong>
+    <div style="display:flex; gap:.3rem; flex-wrap:wrap; margin-top:.25rem">
+      {% for t in tier_teams %}
+      <button type="button" class="sp-badge sp-badge--muted" onclick="prefillTeam('{{ t }}')" style="cursor:pointer; border:none">{{ t }}</button>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function prefillTeam(name) {
+    const a = document.getElementById('wcTeamA');
+    const b = document.getElementById('wcTeamB');
+    if (!a.value) { a.value = name; }
+    else if (!b.value && b.value !== name) { b.value = name; }
+    else { a.value = name; }
+  }
+</script>
+{% endblock %}

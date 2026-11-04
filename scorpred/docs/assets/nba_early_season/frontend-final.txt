@@ -1,0 +1,63 @@
+
+> frontend@0.0.0 test:e2e
+> playwright test --workers=2
+
+npm.cmd : [WebServer] (node:9364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+At line:2 char:152
++ ... L='msedge'; & "$taskNode\npm.cmd" run test:e2e -- --workers=2 *> ..\. ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([WebServer] (no... env being set.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 42 tests using 2 workers
+
+(node:16304) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:13420) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 e2e\immersive-nba.spec.ts:27:1 › historical comparison is useful without inventing a current record or probability (4.0s)
+  ok  2 e2e\graphite-sage.spec.ts:32:1 › historical metrics and calibration are the saved Phase 2.1 results, separate from slate decisions (4.6s)
+  ok  4 e2e\graphite-sage.spec.ts:61:1 › NFL disabled research never requests a game forecast and scenario outcomes retain their identities (2.7s)
+  ok  3 e2e\immersive-nba.spec.ts:40:1 › NBA overview shows only the slate; comparisons open from the game card (3.4s)
+  ok  6 e2e\immersive-nba.spec.ts:54:1 › priced NBA plays lead the page with win probability and the sportsbook line (1.9s)
+  ok  5 e2e\graphite-sage.spec.ts:78:1 › home date controls preserve the requested date for all sports and keep SKIP fixtures (2.7s)
+  ok  7 e2e\immersive-nba.spec.ts:71:1 › early-season evaluation is labeled research and never requests a disabled preview (2.4s)
+  ok  8 e2e\graphite-sage.spec.ts:93:1 › an individual provider failure leaves the other sports readable without inventing complete slate counts (2.4s)
+  ok  9 e2e\immersive-nba.spec.ts:90:1 › archived NBA selection opens the existing analysis route (2.6s)
+  ok 11 e2e\immersive-nba.spec.ts:98:1 › lite scene remains interactive without loading a WebGL renderer (2.3s)
+  ok 12 e2e\immersive-nba.spec.ts:109:1 › reduced motion keeps a static lightweight venue and all data controls (2.1s)
+  ok 10 e2e\graphite-sage.spec.ts:102:44 › all dashboard layouts and NFL analysis fit 320px without page errors (7.9s)
+  ok 13 e2e\lifecycle.spec.ts:41:1 › Eastern date tabs, kickoff labels and analysis links agree in another browser timezone (2.7s)
+  ok 15 e2e\lifecycle.spec.ts:55:3 › soccer withdraws an already loaded prediction at kickoff without a reload (2.4s)
+  ok 16 e2e\lifecycle.spec.ts:55:3 › nba withdraws an already loaded prediction at kickoff without a reload (2.6s)
+  ok 14 e2e\graphite-sage.spec.ts:102:44 › all dashboard layouts and NFL analysis fit 390px without page errors (8.4s)
+  ok 17 e2e\lifecycle.spec.ts:55:3 › nfl withdraws an already loaded prediction at kickoff without a reload (2.4s)
+  ok 19 e2e\lifecycle.spec.ts:74:1 › source expiry removes a loaded score forecast and its recommendation (2.3s)
+  ok 20 e2e\lifecycle.spec.ts:85:1 › home separates NFL scenario shares and recalculates counts at kickoff (2.9s)
+  ok 18 e2e\graphite-sage.spec.ts:102:44 › all dashboard layouts and NFL analysis fit 768px without page errors (8.3s)
+  ok 21 e2e\lifecycle.spec.ts:105:1 › a score response expires even if its parent card is still fresh (2.7s)
+  ok 23 e2e\navigation.spec.ts:22:1 › navigation, filters, refresh, match links, and browser back preserve the URL (5.5s)
+  ok 22 e2e\graphite-sage.spec.ts:102:44 › all dashboard layouts and NFL analysis fit 1440px without page errors (9.2s)
+  ok 24 e2e\navigation.spec.ts:38:1 › NFL has reloadable navigation and event-bound scoring analysis (4.9s)
+  ok 25 e2e\pregame-research.spec.ts:26:1 › disabled research preserves flags and requests no forecasts or outcomes (2.2s)
+  ok 26 e2e\navigation.spec.ts:64:1 › timeout clears loading and exposes a retry action (2.6s)
+  ok 27 e2e\pregame-research.spec.ts:39:1 › authorized status shows provenance and lock without production controls (2.3s)
+  ok 28 e2e\navigation.spec.ts:75:1 › provider failures are explicit and retry can recover (3.0s)
+  ok 29 e2e\readiness.spec.ts:24:1 › five primary destinations, deduplicated requests, cache reuse, and explicit refresh (3.9s)
+  ok 30 e2e\navigation.spec.ts:90:1 › desktop hides mobile tabs and mobile fits the viewport (3.4s)
+  ok 31 e2e\readiness.spec.ts:43:1 › client cache expires after fifteen seconds across navigation (3.1s)
+  ok 33 e2e\readiness.spec.ts:56:1 › later schedule dates remain reachable and selected after reload (3.2s)
+  ok 32 e2e\navigation.spec.ts:100:1 › matchday redesign displays data coverage and fits narrow screens (6.1s)
+  ok 34 e2e\readiness.spec.ts:65:1 › unsupported scoring is an availability notice and does not invent a forecast (2.5s)
+  ok 35 e2e\navigation.spec.ts:122:1 › free NFL coverage shows snapshot limits and expires on an open page (2.8s)
+  ok 36 e2e\readiness.spec.ts:75:1 › provider warnings stay visible and failures preserve navigation and date controls (2.5s)
+  ok 38 e2e\readiness.spec.ts:88:1 › invalid match identifiers show an actionable error without loading scoring (2.6s)
+  ok 37 e2e\scoring.spec.ts:26:1 › soccer separates expected goals from exact scores and shows research and uncertainty (4.0s)
+  ok 39 e2e\scoring.spec.ts:45:1 › malformed scoring response displays an error and retry recovers without a page crash (2.0s)
+  ok 40 e2e\scoring.spec.ts:59:1 › NBA labels projected margin correctly and does not advertise tied final scores (1.8s)
+  ok 41 e2e\scoring.spec.ts:72:1 › NBA shows quarters, starting matchups and projected box lines (1.7s)
+  ok 42 e2e\scoring.spec.ts:100:1 › NFL shows the trained projection separately from descriptive scenario shares (1.8s)
+
+  42 passed (1.4m)

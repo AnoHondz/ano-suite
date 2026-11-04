@@ -1,0 +1,90 @@
+{
+  "captured_at": "2026-10-20T11:11:59.369Z",
+  "source": "Actual running application and APIs; no mocked data",
+  "responses": [
+    {
+      "path": "/api/dashboard/soccer",
+      "status": 200
+    },
+    {
+      "path": "/api/session",
+      "status": 200
+    },
+    {
+      "path": "/api/dashboard/nfl",
+      "status": 200
+    },
+    {
+      "path": "/api/dashboard/nba",
+      "status": 200
+    },
+    {
+      "path": "/api/session",
+      "status": 200
+    },
+    {
+      "path": "/api/dashboard/nfl",
+      "status": 200
+    },
+    {
+      "path": "/api/session",
+      "status": 200
+    },
+    {
+      "path": "/api/dashboard/nba",
+      "status": 200
+    },
+    {
+      "path": "/api/leagues",
+      "status": 200
+    },
+    {
+      "path": "/api/session",
+      "status": 200
+    },
+    {
+      "path": "/api/dashboard/soccer",
+      "status": 200
+    },
+    {
+      "path": "/api/session",
+      "status": 200
+    },
+    {
+      "path": "/api/matches/401873010",
+      "status": 200
+    },
+    {
+      "path": "/api/nfl/research/winner/models",
+      "status": 404
+    },
+    {
+      "path": "/api/nfl/matches/401873010/analysis",
+      "status": 200
+    },
+    {
+      "path": "/api/session",
+      "status": 200
+    },
+    {
+      "path": "/api/dashboard/insights",
+      "status": 200
+    }
+  ],
+  "page_errors": [],
+  "screenshots": [
+    "home-desktop.png",
+    "home-mobile.png",
+    "nfl-desktop.png",
+    "nfl-mobile.png",
+    "nba-desktop.png",
+    "nba-mobile.png",
+    "soccer-desktop.png",
+    "soccer-mobile.png",
+    "nfl-analysis-desktop.png",
+    "nfl-analysis-mobile.png",
+    "insights-slate-desktop.png",
+    "insights-history-desktop.png",
+    "insights-history-mobile.png"
+  ]
+}

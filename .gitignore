@@ -1,0 +1,12 @@
+# Local-only: the words sync.ps1 scrubs from the public copy
+.private-words.txt
+# Never commit secrets, data or environments (sync.ps1 also never copies these)
+.env
+.env.*
+!.env.example
+*.sqlite3
+*.db
+*.log
+__pycache__/
+.venv/
+node_modules/

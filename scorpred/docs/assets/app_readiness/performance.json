@@ -1,0 +1,1130 @@
+{
+  "captured_at": "2026-10-22T18:10:26.646063+00:00",
+  "conditions": "Observed loopback requests and real Edge journeys; retained provider caches; no controlled claim about cold-provider improvement.",
+  "api_before": [
+    {
+      "path": "/live",
+      "status": 200,
+      "ms": 12.5,
+      "size": 16,
+      "slate_count": 0,
+      "error": null,
+      "notice": null
+    },
+    {
+      "path": "/api/health",
+      "status": 200,
+      "ms": 13.6,
+      "size": 621,
+      "slate_count": 0,
+      "error": null,
+      "notice": null
+    },
+    {
+      "path": "/api/dashboard/nfl",
+      "status": 200,
+      "ms": 124.5,
+      "size": 5665,
+      "slate_count": 1,
+      "error": null,
+      "notice": "Experimental recent-scoring scenarios. No validated NFL accuracy; injuries, weather and odds are not modeled. Dates use US Eastern time."
+    },
+    {
+      "path": "/api/dashboard/nba",
+      "status": 200,
+      "ms": 1933.9,
+      "size": 5384,
+      "slate_count": 2,
+      "error": null,
+      "notice": null
+    },
+    {
+      "path": "/api/dashboard/soccer",
+      "status": 200,
+      "ms": 10896.5,
+      "size": 1437,
+      "slate_count": 1,
+      "error": null,
+      "notice": null
+    },
+    {
+      "path": "/api/dashboard/insights?sport=all",
+      "status": 200,
+      "ms": 11066.2,
+      "size": 46229,
+      "slate_count": 27,
+      "error": null,
+      "notice": null
+    }
+  ],
+  "api_after": {
+    "observed_at": "2026-10-22T14:12:51.896932+00:00",
+    "rounds": [
+      [
+        {
+          "path": "/live",
+          "status": 200,
+          "ms": 72.4,
+          "bytes": 16,
+          "games": 0,
+          "error": null
+        },
+        {
+          "path": "/health",
+          "status": 200,
+          "ms": 161.2,
+          "bytes": 225,
+          "games": 0,
+          "error": null
+        },
+        {
+          "path": "/api/health",
+          "status": 200,
+          "ms": 68.9,
+          "bytes": 620,
+          "games": 0,
+          "error": null
+        },
+        {
+          "path": "/api/dashboard/nfl",
+          "status": 200,
+          "ms": 139.0,
+          "bytes": 5665,
+          "games": 1,
+          "error": null
+        },
+        {
+          "path": "/api/dashboard/nba",
+          "status": 200,
+          "ms": 2592.0,
+          "bytes": 5384,
+          "games": 2,
+          "error": null
+        },
+        {
+          "path": "/api/dashboard/soccer",
+          "status": 200,
+          "ms": 10910.2,
+          "bytes": 1437,
+          "games": 1,
+          "error": null
+        },
+        {
+          "path": "/api/dashboard/insights?sport=all",
+          "status": 200,
+          "ms": 11047.7,
+          "bytes": 15041,
+          "games": 4,
+          "error": null
+        }
+      ],
+      [
+        {
+          "path": "/live",
+          "status": 200,
+          "ms": 6.3,
+          "bytes": 16,
+          "games": 0,
+          "error": null
+        },
+        {
+          "path": "/health",
+          "status": 200,
+          "ms": 268.4,
+          "bytes": 225,
+          "games": 0,
+          "error": null
+        },
+        {
+          "path": "/api/health",
+          "status": 200,
+          "ms": 8.9,
+          "bytes": 620,
+          "games": 0,
+          "error": null
+        },
+        {
+          "path": "/api/dashboard/nfl",
+          "status": 200,
+          "ms": 317.8,
+          "bytes": 5665,
+          "games": 1,
+          "error": null
+        },
+        {
+          "path": "/api/dashboard/nba",
+          "status": 200,
+          "ms": 254.9,
+          "bytes": 5384,
+          "games": 2,
+          "error": null
+        },
+        {
+          "path": "/api/dashboard/soccer",
+          "status": 200,
+          "ms": 36.3,
+          "bytes": 1437,
+          "games": 1,
+          "error": null
+        },
+        {
+          "path": "/api/dashboard/insights?sport=all",
+          "status": 200,
+          "ms": 330.2,
+          "bytes": 15041,
+          "games": 4,
+          "error": null
+        }
+      ],
+      [
+        {
+          "path": "/live",
+          "status": 200,
+          "ms": 7.7,
+          "bytes": 16,
+          "games": 0,
+          "error": null
+        },
+        {
+          "path": "/health",
+          "status": 200,
+          "ms": 217.8,
+          "bytes": 225,
+          "games": 0,
+          "error": null
+        },
+        {
+          "path": "/api/health",
+          "status": 200,
+          "ms": 9.2,
+          "bytes": 620,
+          "games": 0,
+          "error": null
+        },
+        {
+          "path": "/api/dashboard/nfl",
+          "status": 200,
+          "ms": 262.8,
+          "bytes": 5665,
+          "games": 1,
+          "error": null
+        },
+        {
+          "path": "/api/dashboard/nba",
+          "status": 200,
+          "ms": 147.1,
+          "bytes": 5384,
+          "games": 2,
+          "error": null
+        },
+        {
+          "path": "/api/dashboard/soccer",
+          "status": 200,
+          "ms": 31.1,
+          "bytes": 1437,
+          "games": 1,
+          "error": null
+        },
+        {
+          "path": "/api/dashboard/insights?sport=all",
+          "status": 200,
+          "ms": 272.2,
+          "bytes": 15041,
+          "games": 4,
+          "error": null
+        }
+      ]
+    ],
+    "summary": [
+      {
+        "path": "/live",
+        "median_ms": 7.7
+      },
+      {
+        "path": "/health",
+        "median_ms": 217.8
+      },
+      {
+        "path": "/api/health",
+        "median_ms": 9.2
+      },
+      {
+        "path": "/api/dashboard/nfl",
+        "median_ms": 262.8
+      },
+      {
+        "path": "/api/dashboard/nba",
+        "median_ms": 254.9
+      },
+      {
+        "path": "/api/dashboard/soccer",
+        "median_ms": 36.3
+      },
+      {
+        "path": "/api/dashboard/insights?sport=all",
+        "median_ms": 330.2
+      }
+    ],
+    "conditions": "Sequential rounds of concurrent loopback requests; existing provider caches retained."
+  },
+  "browser_before": {
+    "baseURL": "http://127.0.0.1:5173",
+    "observedAt": "2026-10-22T13:51:15.716Z",
+    "mocked": false,
+    "journeys": [
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        },
+        "steps": [
+          {
+            "name": "dashboard",
+            "ok": true,
+            "ms": 2583,
+            "url": "http://127.0.0.1:5173/",
+            "alerts": [],
+            "overflow": false,
+            "cards": 4
+          },
+          {
+            "name": "nfl",
+            "ok": true,
+            "ms": 171,
+            "url": "http://127.0.0.1:5173/nfl",
+            "alerts": [],
+            "overflow": false,
+            "cards": 1
+          },
+          {
+            "name": "nfl-analysis",
+            "ok": true,
+            "ms": 249,
+            "url": "http://127.0.0.1:5173/match-analysis?sport=nfl&match_id=401873010&date=2026-10-22",
+            "alerts": [],
+            "overflow": false,
+            "cards": 1
+          },
+          {
+            "name": "dashboard-return",
+            "ok": true,
+            "ms": 910,
+            "url": "http://127.0.0.1:5173/",
+            "alerts": [],
+            "overflow": false,
+            "cards": 4
+          },
+          {
+            "name": "nba",
+            "ok": true,
+            "ms": 274,
+            "url": "http://127.0.0.1:5173/nba",
+            "alerts": [],
+            "overflow": false,
+            "cards": 2
+          },
+          {
+            "name": "nba-analysis",
+            "ok": true,
+            "ms": 105,
+            "url": "http://127.0.0.1:5173/match-analysis?sport=nba&match_id=401909093&date=2026-10-22",
+            "alerts": [],
+            "overflow": false,
+            "cards": 1
+          },
+          {
+            "name": "soccer",
+            "ok": true,
+            "ms": 212,
+            "url": "http://127.0.0.1:5173/soccer",
+            "alerts": [],
+            "overflow": false,
+            "cards": 1
+          },
+          {
+            "name": "soccer-analysis",
+            "ok": true,
+            "ms": 94,
+            "url": "http://127.0.0.1:5173/match-analysis?sport=soccer&match_id=401879253&league_id=39&date=2026-10-23",
+            "alerts": [],
+            "overflow": false,
+            "cards": 1
+          },
+          {
+            "name": "insights",
+            "ok": true,
+            "ms": 914,
+            "url": "http://127.0.0.1:5173/insights",
+            "alerts": [],
+            "overflow": false,
+            "cards": 7
+          },
+          {
+            "name": "refresh",
+            "ok": true,
+            "ms": 566,
+            "url": "http://127.0.0.1:5173/insights",
+            "alerts": [],
+            "overflow": false,
+            "cards": 7
+          }
+        ],
+        "requests": [
+          {
+            "path": "/api/session",
+            "status": 200,
+            "ms": 30
+          },
+          {
+            "path": "/api/dashboard/soccer",
+            "status": 200,
+            "ms": 106
+          },
+          {
+            "path": "/api/dashboard/nfl",
+            "status": 200,
+            "ms": 300
+          },
+          {
+            "path": "/api/dashboard/nba",
+            "status": 200,
+            "ms": 2035
+          },
+          {
+            "path": "/api/dashboard/nfl?date=",
+            "status": 200,
+            "ms": 91
+          },
+          {
+            "path": "/api/matches/401873010?sport=nfl&match_id=401873010&date=2026-10-22",
+            "status": 200,
+            "ms": 93
+          },
+          {
+            "path": "/api/nfl/research/winner/models",
+            "status": 404,
+            "ms": 9
+          },
+          {
+            "path": "/api/nfl/matches/401873010/analysis?date=2026-10-22",
+            "status": 200,
+            "ms": 66
+          },
+          {
+            "path": "/api/dashboard/soccer",
+            "status": 200,
+            "ms": 67
+          },
+          {
+            "path": "/api/dashboard/nba",
+            "status": 200,
+            "ms": 315
+          },
+          {
+            "path": "/api/dashboard/nfl",
+            "status": 200,
+            "ms": 370
+          },
+          {
+            "path": "/api/dashboard/nba?date=",
+            "status": 200,
+            "ms": 177
+          },
+          {
+            "path": "/api/matches/401909093?sport=nba&match_id=401909093&date=2026-10-22",
+            "status": 200,
+            "ms": 15
+          },
+          {
+            "path": "/api/leagues",
+            "status": 200,
+            "ms": 28
+          },
+          {
+            "path": "/api/dashboard/soccer?league_id=39&date=",
+            "status": 200,
+            "ms": 35
+          },
+          {
+            "path": "/api/matches/401879253?sport=soccer&match_id=401879253&league_id=39&date=2026-10-23",
+            "status": 200,
+            "ms": 12
+          },
+          {
+            "path": "/api/dashboard/insights?sport=all",
+            "status": 200,
+            "ms": 466
+          },
+          {
+            "path": "/api/session",
+            "status": 200,
+            "ms": 22
+          },
+          {
+            "path": "/api/dashboard/insights?sport=all",
+            "status": 200,
+            "ms": 319
+          }
+        ],
+        "errors": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "steps": [
+          {
+            "name": "dashboard",
+            "ok": true,
+            "ms": 766,
+            "url": "http://127.0.0.1:5173/",
+            "alerts": [],
+            "overflow": false,
+            "cards": 4
+          },
+          {
+            "name": "nfl",
+            "ok": true,
+            "ms": 187,
+            "url": "http://127.0.0.1:5173/nfl",
+            "alerts": [],
+            "overflow": false,
+            "cards": 1
+          },
+          {
+            "name": "nfl-analysis",
+            "ok": true,
+            "ms": 352,
+            "url": "http://127.0.0.1:5173/match-analysis?sport=nfl&match_id=401873010&date=2026-10-22",
+            "alerts": [],
+            "overflow": false,
+            "cards": 1
+          },
+          {
+            "name": "dashboard-return",
+            "ok": true,
+            "ms": 906,
+            "url": "http://127.0.0.1:5173/",
+            "alerts": [],
+            "overflow": false,
+            "cards": 4
+          },
+          {
+            "name": "nba",
+            "ok": true,
+            "ms": 262,
+            "url": "http://127.0.0.1:5173/nba",
+            "alerts": [],
+            "overflow": false,
+            "cards": 2
+          },
+          {
+            "name": "nba-analysis",
+            "ok": true,
+            "ms": 74,
+            "url": "http://127.0.0.1:5173/match-analysis?sport=nba&match_id=401909093&date=2026-10-22",
+            "alerts": [],
+            "overflow": false,
+            "cards": 1
+          },
+          {
+            "name": "soccer",
+            "ok": true,
+            "ms": 191,
+            "url": "http://127.0.0.1:5173/soccer",
+            "alerts": [],
+            "overflow": false,
+            "cards": 1
+          },
+          {
+            "name": "soccer-analysis",
+            "ok": true,
+            "ms": 93,
+            "url": "http://127.0.0.1:5173/match-analysis?sport=soccer&match_id=401879253&league_id=39&date=2026-10-23",
+            "alerts": [],
+            "overflow": false,
+            "cards": 1
+          },
+          {
+            "name": "insights",
+            "ok": true,
+            "ms": 414,
+            "url": "http://127.0.0.1:5173/insights",
+            "alerts": [],
+            "overflow": false,
+            "cards": 7
+          },
+          {
+            "name": "refresh",
+            "ok": true,
+            "ms": 1049,
+            "url": "http://127.0.0.1:5173/insights",
+            "alerts": [],
+            "overflow": false,
+            "cards": 7
+          }
+        ],
+        "requests": [
+          {
+            "path": "/api/session",
+            "status": 200,
+            "ms": 46
+          },
+          {
+            "path": "/api/dashboard/soccer",
+            "status": 200,
+            "ms": 202
+          },
+          {
+            "path": "/api/dashboard/nba",
+            "status": 200,
+            "ms": 248
+          },
+          {
+            "path": "/api/dashboard/nfl",
+            "status": 200,
+            "ms": 314
+          },
+          {
+            "path": "/api/dashboard/nfl?date=",
+            "status": 200,
+            "ms": 82
+          },
+          {
+            "path": "/api/matches/401873010?sport=nfl&match_id=401873010&date=2026-10-22",
+            "status": 200,
+            "ms": 81
+          },
+          {
+            "path": "/api/nfl/research/winner/models",
+            "status": 404,
+            "ms": 9
+          },
+          {
+            "path": "/api/nfl/matches/401873010/analysis?date=2026-10-22",
+            "status": 200,
+            "ms": 93
+          },
+          {
+            "path": "/api/dashboard/soccer",
+            "status": 200,
+            "ms": 153
+          },
+          {
+            "path": "/api/dashboard/nba",
+            "status": 200,
+            "ms": 337
+          },
+          {
+            "path": "/api/dashboard/nfl",
+            "status": 200,
+            "ms": 378
+          },
+          {
+            "path": "/api/dashboard/nba?date=",
+            "status": 200,
+            "ms": 190
+          },
+          {
+            "path": "/api/matches/401909093?sport=nba&match_id=401909093&date=2026-10-22",
+            "status": 200,
+            "ms": 11
+          },
+          {
+            "path": "/api/scoreline/nba?team_a_name=Philadelphia+76ers&team_b_name=Cleveland+Cavaliers&team_a_id=20&team_b_id=5&before=2026-10-22T23%3A00Z&event_id=401909093",
+            "status": 422,
+            "ms": 129
+          },
+          {
+            "path": "/api/leagues",
+            "status": 200,
+            "ms": 26
+          },
+          {
+            "path": "/api/dashboard/soccer?league_id=39&date=",
+            "status": 200,
+            "ms": 37
+          },
+          {
+            "path": "/api/matches/401879253?sport=soccer&match_id=401879253&league_id=39&date=2026-10-23",
+            "status": 200,
+            "ms": 11
+          },
+          {
+            "path": "/api/scoreline/soccer?team_a_name=Ipswich+Town&team_b_name=Nottingham+Forest&team_a_id=373&team_b_id=393&league_id=39&before=2026-10-23T19%3A00%3A00%2B00%3A00&event_id=401879253",
+            "status": 200,
+            "ms": 8
+          },
+          {
+            "path": "/api/dashboard/insights?sport=all",
+            "status": 200,
+            "ms": 327
+          },
+          {
+            "path": "/api/session",
+            "status": 200,
+            "ms": 20
+          },
+          {
+            "path": "/api/dashboard/insights?sport=all",
+            "status": 200,
+            "ms": 452
+          }
+        ],
+        "errors": []
+      }
+    ],
+    "ok": true
+  },
+  "browser_after": {
+    "baseURL": "http://127.0.0.1:5173",
+    "observedAt": "2026-10-22T14:10:00.905Z",
+    "mocked": false,
+    "journeys": [
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        },
+        "steps": [
+          {
+            "name": "dashboard",
+            "ok": true,
+            "ms": 10982,
+            "url": "http://127.0.0.1:5173/",
+            "alerts": [],
+            "overflow": false,
+            "cards": 4
+          },
+          {
+            "name": "nfl",
+            "ok": true,
+            "ms": 501,
+            "url": "http://127.0.0.1:5173/nfl",
+            "alerts": [],
+            "overflow": false,
+            "cards": 1
+          },
+          {
+            "name": "nfl-analysis",
+            "ok": true,
+            "ms": 996,
+            "url": "http://127.0.0.1:5173/match-analysis?sport=nfl&match_id=401873010&date=2026-10-22",
+            "alerts": [],
+            "overflow": false,
+            "cards": 1
+          },
+          {
+            "name": "dashboard-return",
+            "ok": true,
+            "ms": 170,
+            "url": "http://127.0.0.1:5173/",
+            "alerts": [],
+            "overflow": false,
+            "cards": 4
+          },
+          {
+            "name": "nba",
+            "ok": true,
+            "ms": 218,
+            "url": "http://127.0.0.1:5173/nba",
+            "alerts": [],
+            "overflow": false,
+            "cards": 2
+          },
+          {
+            "name": "nba-analysis",
+            "ok": true,
+            "ms": 953,
+            "url": "http://127.0.0.1:5173/match-analysis?sport=nba&match_id=401909093&date=2026-10-22",
+            "alerts": [],
+            "overflow": false,
+            "cards": 1
+          },
+          {
+            "name": "soccer",
+            "ok": true,
+            "ms": 992,
+            "url": "http://127.0.0.1:5173/soccer",
+            "alerts": [],
+            "overflow": false,
+            "cards": 1
+          },
+          {
+            "name": "soccer-analysis",
+            "ok": true,
+            "ms": 4137,
+            "url": "http://127.0.0.1:5173/match-analysis?sport=soccer&match_id=401879253&league_id=39&date=2026-10-23",
+            "alerts": [],
+            "overflow": false,
+            "cards": 1
+          },
+          {
+            "name": "insights",
+            "ok": true,
+            "ms": 605,
+            "url": "http://127.0.0.1:5173/insights",
+            "alerts": [],
+            "overflow": false,
+            "cards": 4
+          },
+          {
+            "name": "refresh-control",
+            "ok": true,
+            "ms": 318,
+            "url": "http://127.0.0.1:5173/insights",
+            "alerts": [],
+            "overflow": false,
+            "cards": 4
+          },
+          {
+            "name": "refresh",
+            "ok": true,
+            "ms": 705,
+            "url": "http://127.0.0.1:5173/insights",
+            "alerts": [],
+            "overflow": false,
+            "cards": 4
+          }
+        ],
+        "requests": [
+          {
+            "path": "/api/session",
+            "status": 200,
+            "ms": 212
+          },
+          {
+            "path": "/api/dashboard/soccer",
+            "status": 200,
+            "ms": 226
+          },
+          {
+            "path": "/api/session",
+            "status": 200,
+            "ms": 124
+          },
+          {
+            "path": "/api/dashboard/soccer",
+            "status": 200,
+            "ms": 133
+          },
+          {
+            "path": "/api/dashboard/nfl",
+            "status": 200,
+            "ms": 532
+          },
+          {
+            "path": "/api/dashboard/nba",
+            "status": 200,
+            "ms": 7629
+          },
+          {
+            "path": "/api/matches/401873010?sport=nfl&match_id=401873010&date=2026-10-22",
+            "status": 200,
+            "ms": 112
+          },
+          {
+            "path": "/api/nfl/research/winner/models",
+            "status": 404,
+            "ms": 11
+          },
+          {
+            "path": "/api/nfl/matches/401873010/analysis?date=2026-10-22",
+            "status": 200,
+            "ms": 127
+          },
+          {
+            "path": "/api/matches/401909093?sport=nba&match_id=401909093&date=2026-10-22",
+            "status": 200,
+            "ms": 10
+          },
+          {
+            "path": "/api/scoreline/nba?team_a_name=Philadelphia+76ers&team_b_name=Cleveland+Cavaliers&team_a_id=20&team_b_id=5&before=2026-10-22T23%3A00Z&event_id=401909093",
+            "status": 422,
+            "ms": 807
+          },
+          {
+            "path": "/api/leagues",
+            "status": 200,
+            "ms": 11
+          },
+          {
+            "path": "/api/dashboard/soccer?league_id=39&date=",
+            "status": 200,
+            "ms": 15
+          },
+          {
+            "path": "/api/matches/401879253?sport=soccer&match_id=401879253&league_id=39&date=2026-10-23",
+            "status": 200,
+            "ms": 10
+          },
+          {
+            "path": "/api/scoreline/soccer?team_a_name=Ipswich+Town&team_b_name=Nottingham+Forest&team_a_id=373&team_b_id=393&league_id=39&before=2026-10-23T19%3A00%3A00%2B00%3A00&event_id=401879253",
+            "status": 200,
+            "ms": 3919
+          },
+          {
+            "path": "/api/dashboard/insights?sport=all",
+            "status": 200,
+            "ms": 200
+          },
+          {
+            "path": "/api/session",
+            "status": 200,
+            "ms": 16
+          },
+          {
+            "path": "/api/dashboard/insights?sport=all",
+            "status": 200,
+            "ms": 169
+          },
+          {
+            "path": "/api/session",
+            "status": 200,
+            "ms": 4
+          },
+          {
+            "path": "/api/dashboard/insights?sport=all",
+            "status": 200,
+            "ms": 237
+          }
+        ],
+        "errors": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "steps": [
+          {
+            "name": "dashboard",
+            "ok": true,
+            "ms": 483,
+            "url": "http://127.0.0.1:5173/",
+            "alerts": [],
+            "overflow": false,
+            "cards": 4
+          },
+          {
+            "name": "nfl",
+            "ok": true,
+            "ms": 403,
+            "url": "http://127.0.0.1:5173/nfl",
+            "alerts": [],
+            "overflow": false,
+            "cards": 1
+          },
+          {
+            "name": "nfl-analysis",
+            "ok": true,
+            "ms": 888,
+            "url": "http://127.0.0.1:5173/match-analysis?sport=nfl&match_id=401873010&date=2026-10-22",
+            "alerts": [],
+            "overflow": false,
+            "cards": 1
+          },
+          {
+            "name": "dashboard-return",
+            "ok": true,
+            "ms": 71,
+            "url": "http://127.0.0.1:5173/",
+            "alerts": [],
+            "overflow": false,
+            "cards": 4
+          },
+          {
+            "name": "nba",
+            "ok": true,
+            "ms": 394,
+            "url": "http://127.0.0.1:5173/nba",
+            "alerts": [],
+            "overflow": false,
+            "cards": 2
+          },
+          {
+            "name": "nba-analysis",
+            "ok": true,
+            "ms": 274,
+            "url": "http://127.0.0.1:5173/match-analysis?sport=nba&match_id=401909093&date=2026-10-22",
+            "alerts": [],
+            "overflow": false,
+            "cards": 1
+          },
+          {
+            "name": "soccer",
+            "ok": true,
+            "ms": 874,
+            "url": "http://127.0.0.1:5173/soccer",
+            "alerts": [],
+            "overflow": false,
+            "cards": 1
+          },
+          {
+            "name": "soccer-analysis",
+            "ok": true,
+            "ms": 152,
+            "url": "http://127.0.0.1:5173/match-analysis?sport=soccer&match_id=401879253&league_id=39&date=2026-10-23",
+            "alerts": [],
+            "overflow": false,
+            "cards": 1
+          },
+          {
+            "name": "insights",
+            "ok": true,
+            "ms": 560,
+            "url": "http://127.0.0.1:5173/insights",
+            "alerts": [],
+            "overflow": false,
+            "cards": 4
+          },
+          {
+            "name": "refresh-control",
+            "ok": true,
+            "ms": 335,
+            "url": "http://127.0.0.1:5173/insights",
+            "alerts": [],
+            "overflow": false,
+            "cards": 4
+          },
+          {
+            "name": "refresh",
+            "ok": true,
+            "ms": 712,
+            "url": "http://127.0.0.1:5173/insights",
+            "alerts": [],
+            "overflow": false,
+            "cards": 4
+          }
+        ],
+        "requests": [
+          {
+            "path": "/api/session",
+            "status": 200,
+            "ms": 17
+          },
+          {
+            "path": "/api/dashboard/soccer",
+            "status": 200,
+            "ms": 32
+          },
+          {
+            "path": "/api/dashboard/nba",
+            "status": 200,
+            "ms": 140
+          },
+          {
+            "path": "/api/dashboard/nfl",
+            "status": 200,
+            "ms": 184
+          },
+          {
+            "path": "/api/matches/401873010?sport=nfl&match_id=401873010&date=2026-10-22",
+            "status": 200,
+            "ms": 54
+          },
+          {
+            "path": "/api/nfl/research/winner/models",
+            "status": 404,
+            "ms": 6
+          },
+          {
+            "path": "/api/nfl/matches/401873010/analysis?date=2026-10-22",
+            "status": 200,
+            "ms": 57
+          },
+          {
+            "path": "/api/matches/401909093?sport=nba&match_id=401909093&date=2026-10-22",
+            "status": 200,
+            "ms": 5
+          },
+          {
+            "path": "/api/scoreline/nba?team_a_name=Philadelphia+76ers&team_b_name=Cleveland+Cavaliers&team_a_id=20&team_b_id=5&before=2026-10-22T23%3A00Z&event_id=401909093",
+            "status": 422,
+            "ms": 112
+          },
+          {
+            "path": "/api/leagues",
+            "status": 200,
+            "ms": 12
+          },
+          {
+            "path": "/api/dashboard/soccer?league_id=39&date=",
+            "status": 200,
+            "ms": 13
+          },
+          {
+            "path": "/api/matches/401879253?sport=soccer&match_id=401879253&league_id=39&date=2026-10-23",
+            "status": 200,
+            "ms": 6
+          },
+          {
+            "path": "/api/scoreline/soccer?team_a_name=Ipswich+Town&team_b_name=Nottingham+Forest&team_a_id=373&team_b_id=393&league_id=39&before=2026-10-23T19%3A00%3A00%2B00%3A00&event_id=401879253",
+            "status": 200,
+            "ms": 5
+          },
+          {
+            "path": "/api/dashboard/insights?sport=all",
+            "status": 200,
+            "ms": 149
+          },
+          {
+            "path": "/api/session",
+            "status": 200,
+            "ms": 14
+          },
+          {
+            "path": "/api/dashboard/insights?sport=all",
+            "status": 200,
+            "ms": 176
+          },
+          {
+            "path": "/api/session",
+            "status": 200,
+            "ms": 4
+          },
+          {
+            "path": "/api/dashboard/insights?sport=all",
+            "status": 200,
+            "ms": 160
+          }
+        ],
+        "errors": []
+      }
+    ],
+    "ok": true
+  },
+  "bundle_after": {
+    "entry": "assets/index-YRvi28Vl.js",
+    "initial_js": [
+      {
+        "file": "assets/DashboardTheme-C8MbCeru.js",
+        "bytes": 7013,
+        "gzip_bytes": 2335
+      },
+      {
+        "file": "assets/DataStatus-DfQ7tvb8.js",
+        "bytes": 1078,
+        "gzip_bytes": 622
+      },
+      {
+        "file": "assets/RequestError-CGWpNZ5u.js",
+        "bytes": 22983,
+        "gzip_bytes": 8130
+      },
+      {
+        "file": "assets/index-YRvi28Vl.js",
+        "bytes": 191332,
+        "gzip_bytes": 60000
+      }
+    ],
+    "total_bytes": 222406,
+    "gzip_bytes": 71087
+  },
+  "bundle_before": {
+    "initial_js_kb": 291.07,
+    "evidence": "docs/assets/soccer_foundation/verification/frontend_build.txt"
+  },
+  "known_latency": "Final desktop all-sports settlement 10.982 seconds on cold sources; warm mobile 0.483 seconds. Navigation remains usable while independent sports load."
+}

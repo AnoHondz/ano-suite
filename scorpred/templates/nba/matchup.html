@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% import "components/decision.html" as ui with context %}
+
+{% block title %}ScorPred | NBA Matchup{% endblock %}
+{% block topbar_title %}NBA Matchup{% endblock %}
+
+{% block content %}
+{% set card = scorpred.decision_card if scorpred else none %}
+{% if card %}{% set _ = card.update({'hide_cta': True}) %}{% endif %}
+<section class="sp-page-hero">
+  <span class="sp-page-hero__eyebrow">NBA matchup</span>
+  <h1>{{ team_a.nickname or team_a.name }} vs {{ team_b.nickname or team_b.name }}</h1>
+  <p>Recommended side first, with form and availability context underneath.</p>
+</section>
+
+{% if card %}
+  <div class="sp-analysis-layout">
+    <div>
+      {{ ui.decision_card(card, 'featured') }}
+
+      <section class="sp-section">
+        <div class="sp-info-card">
+          <h2>Why this side can win</h2>
+          <ul class="sp-why-list">
+            {% for point in card.why_win or [] %}
+              <li>{{ point }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+      <section class="sp-section">
+        <div class="sp-info-card">
+          <h2>Why this side could lose</h2>
+          <ul class="sp-why-list">
+            {% for point in card.why_lose or [] %}
+              <li>{{ point }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+      <section class="sp-section">
+        <div class="sp-info-card">
+          <h2>Key swing factor</h2>
+          <p>{{ card.key_swing_factor }}</p>
+        </div>
+      </section>
+      <section class="sp-section">
+        <div class="sp-info-card">
+          <h2>Visual Support</h2>
+          {{ ui.confidence_bar(card) }}
+          {{ ui.probability_bar(card) }}
+          {{ ui.comparison_bars(card.comparison_metrics) }}
+          {{ ui.form_strip(card.form_strip) }}
+        </div>
+      </section>
+    </div>
+
+    <aside class="sp-info-card">
+      <h2>Data Confidence</h2>
+      {{ ui.data_badge(card.data_confidence) }}
+      <p class="sp-muted" style="margin-top:.75rem">{{ (scorpred.data_completeness or {}).summary or card.support_text }}</p>
+      <ul class="sp-why-list">
+        <li>{{ team_a.nickname or team_a.name }} recent form: {{ form_a|length }} games</li>
+        <li>{{ team_b.nickname or team_b.name }} recent form: {{ form_b|length }} games</li>
+        <li>Head-to-head sample: {{ h2h_rows|length }} games</li>
+      </ul>
+      <div class="sp-page-actions" style="margin-top:1rem">
+        <a class="btn btn-secondary btn-sm" href="{{ url_for('nba.index') }}">NBA Home</a>
+        <a class="btn btn-secondary btn-sm" href="/insights">Insights</a>
+      </div>
+    </aside>
+  </div>
+{% else %}
+  {{ ui.empty_state('NBA matchup data is unavailable', 'Select another game or try again after the slate refreshes.') }}
+{% endif %}
+{% endblock %}

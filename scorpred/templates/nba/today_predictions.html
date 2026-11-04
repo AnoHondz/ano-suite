@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% import "components/decision.html" as ui with context %}
+
+{% block title %}ScorPred | Today's NBA Plan{% endblock %}
+{% block topbar_title %}Today's NBA Plan{% endblock %}
+
+{% block content %}
+<section class="sp-page-hero">
+  <span class="sp-page-hero__eyebrow">NBA decision plan</span>
+  <h1>Today's NBA slate, ranked by playable edge.</h1>
+  <p>The strongest opportunities appear first, with every normal game receiving a side, action, confidence, and data trust.</p>
+</section>
+
+{{ ui.plan_strip(today_plan) }}
+{{ ui.top_opportunities(top_opportunities) }}
+
+<section class="sp-section">
+  <div class="sp-section__header">
+    <div>
+      <h2>Full Slate</h2>
+      <p>{{ total_games }} games checked, {{ total_predictions }} decision cards available.</p>
+    </div>
+    <a class="btn btn-secondary btn-sm" href="{{ url_for('nba.index') }}">NBA Home</a>
+  </div>
+
+  {% if full_slate %}
+    <div class="sp-card-grid">
+      {% for card in full_slate %}
+        {{ ui.decision_card(card) }}
+      {% endfor %}
+    </div>
+  {% else %}
+    {{ ui.empty_state('No NBA slate available', load_error or 'ScorPred needs baseline game data before ranking this slate.') }}
+  {% endif %}
+</section>
+
+{% if yesterday_results %}
+<section class="sp-section">
+  <div class="sp-section__header">
+    <div>
+      <h2>Recent Graded NBA Picks</h2>
+      <p>Latest accountability snapshot from tracked games.</p>
+    </div>
+    <a class="btn btn-secondary btn-sm" href="/insights">Insights</a>
+  </div>
+  <div class="sp-results-grid">
+    {% for p in yesterday_results[:6] %}
+      <article class="sp-result-card">
+        <small>{{ p.date }} &middot; NBA</small>
+        <strong>{{ p.team_a }} vs {{ p.team_b }}</strong>
+        <span>{{ p.final_score_display or 'Final pending' }}</span>
+        <span class="sp-status sp-status--{{ 'correct' if p.is_correct else 'incorrect' }}">{{ 'Correct' if p.is_correct else 'Incorrect' }}</span>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}

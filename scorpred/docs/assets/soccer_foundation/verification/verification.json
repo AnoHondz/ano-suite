@@ -1,0 +1,136 @@
+{
+  "verified_at": "2026-10-22T13:39:51.842113+00:00",
+  "sidecar_version": "soccer-lineage-v1",
+  "stat_contract_version": "soccer-stats-v1",
+  "view_version": "soccer-research-v1",
+  "fixtures_processed": 7888,
+  "audited_population_partition": {
+    "unique_metadata_candidates": 895,
+    "raw_csv_only_candidates": 291,
+    "unresolved": 6702,
+    "mutually_exclusive_exhaustive": true
+  },
+  "lineage_counts": {
+    "verified": 0,
+    "candidate": 1186,
+    "ambiguous": 0,
+    "unresolved": 6702
+  },
+  "verified_internal_source_locators": 7888,
+  "verified_original_pregame_receipts": 0,
+  "duplicates": {
+    "groups": 319,
+    "original_legacy_observations": 2918,
+    "canonical_research_fixtures": 2599,
+    "analytical_duplicate_excess": 0,
+    "source_records_deleted_or_merged": 0
+  },
+  "statistics": {
+    "documented_issues_addressed_in_disabled_version": 12,
+    "corrected_team_side_observations": 5198,
+    "source_shot_pairs_quarantined": 1,
+    "acceptance_cases": [
+      {
+        "case": "missing_goals",
+        "result": "passed"
+      },
+      {
+        "case": "real_zero_goals",
+        "result": "passed"
+      },
+      {
+        "case": "missing_shots_and_cards",
+        "result": "passed"
+      },
+      {
+        "case": "shots_on_target_exceeds_total",
+        "result": "passed"
+      },
+      {
+        "case": "corners_independent_of_goals",
+        "result": "passed"
+      },
+      {
+        "case": "corners_real_zero",
+        "result": "passed"
+      },
+      {
+        "case": "fouls_committed_vs_drawn",
+        "result": "passed"
+      },
+      {
+        "case": "second_yellow_direct_red",
+        "result": "passed"
+      },
+      {
+        "case": "score_float_is_not_xg",
+        "result": "passed"
+      },
+      {
+        "case": "explicit_zero_xg",
+        "result": "passed"
+      },
+      {
+        "case": "unknown_xg_definition",
+        "result": "passed"
+      },
+      {
+        "case": "negative_nonfinite_or_fractional_counts",
+        "result": "passed"
+      },
+      {
+        "case": "count_percent_unit_mismatch",
+        "result": "passed"
+      },
+      {
+        "case": "shootout_result",
+        "result": "passed"
+      },
+      {
+        "case": "legacy_aliases",
+        "result": "passed"
+      },
+      {
+        "case": "pregame_cutoff",
+        "result": "passed"
+      }
+    ]
+  },
+  "tests": {
+    "backend_passed": 811,
+    "backend_seconds": 123.22,
+    "targeted_passed": 33,
+    "frontend_e2e_passed": 25,
+    "frontend_e2e_seconds": 44.9,
+    "frontend_build": "passed",
+    "lint": "passed E,W,F excluding E501",
+    "regression_sports": [
+      "NFL",
+      "NBA",
+      "soccer"
+    ]
+  },
+  "preservation": {
+    "protected_original_files_checked": 416,
+    "files_changed": [],
+    "csv_files_with_identical_counts_and_all_ordered_row_fingerprints": 13,
+    "fixed_input_classifier_predictions_unchanged": 3,
+    "fixed_input_primary_rule_predictions_unchanged": 3,
+    "probe_scope": "Fixed inputs/clock and isolated empty tracking; actual existing artifact inference, not live provider variability",
+    "probe_comparison_correction": "JSON string/int label-key comparison corrected; serialized outputs were identical and an explicit probability-change regression still fails equality",
+    "frozen_nfl_artifacts": "unchanged, byte hashes only",
+    "nba_registry": "unchanged and disabled",
+    "bundle_replay": "byte-identical, no overwrite"
+  },
+  "constraints": {
+    "new_sports_downloads": 0,
+    "model_retraining": 0,
+    "production_source_changes": 0,
+    "production_prediction_changes": 0,
+    "deployments": 0,
+    "nfl_outcome_store_access": false,
+    "research_views_enabled_in_production": false,
+    "research_training_enabled": false
+  },
+  "next_phase": "Review candidate identity crosswalk evidence and obtain separate approval for a versioned production input-contract compatibility study; preserve current model and source rights gates"
+}

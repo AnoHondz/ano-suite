@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Sign Up | ScorPred{% endblock %}
+{% block body_class %}sp-auth-page{% endblock %}
+
+{% block content %}
+<section class="sp-auth-wrap">
+  <div class="sp-auth-card">
+    <div class="sp-auth-brand">
+      <span class="sp-auth-brand__icon"><img src="{{ url_for('static', filename='media/scorpred-player-logo.png') }}" alt=""></span>
+      <div>
+        <span class="sp-auth-brand__name">ScorPred</span>
+        <span class="sp-auth-brand__sub">Decision Intelligence</span>
+      </div>
+    </div>
+
+    <h1 class="sp-auth-title">Create your account</h1>
+    <p class="sp-auth-subtitle">Save picks, review performance, and unlock a personalized ScorPred workspace.</p>
+
+    <form method="POST" action="/signup" class="sp-auth-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <input type="hidden" name="next" value="{{ next_url or '' }}" />
+
+      <div class="sp-auth-field">
+        <label for="email" class="sp-label">Email</label>
+        <input type="email" name="email" id="email" class="sp-input sp-auth-input" placeholder="you@example.com" required autofocus />
+      </div>
+
+      <div class="sp-auth-field">
+        <label for="password" class="sp-label">Password</label>
+        <input type="password" name="password" id="password" class="sp-input sp-auth-input" placeholder="Create a secure password" minlength="8" required />
+        <p style="font-size:.75rem; color:var(--text-3); margin:.35rem 0 0">Use at least 8 characters. Your account is stored in the ScorPred auth database, not just in your browser session.</p>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-full sp-auth-submit">Create account</button>
+    </form>
+
+    <div class="sp-auth-links">
+      <a href="/login" class="sp-auth-secondary">Already have an account? Sign in</a>
+      <a href="/" class="sp-auth-guest">Explore in guest mode</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" fill="none">
+  <rect width="1200" height="760" rx="24" fill="#0B0D10"/>
+  <rect x="28" y="28" width="1144" height="704" rx="20" fill="#10151B" stroke="#22303A"/>
+  <rect x="64" y="64" width="250" height="28" rx="14" fill="#1B3C2C"/>
+  <rect x="64" y="118" width="540" height="54" rx="16" fill="#131A21"/>
+  <rect x="64" y="210" width="1072" height="220" rx="22" fill="#10161D" stroke="#22303A"/>
+  <rect x="64" y="466" width="1072" height="204" rx="22" fill="#10161D" stroke="#22303A"/>
+  <rect x="96" y="248" width="210" height="18" rx="9" fill="#8FF0A4" fill-opacity=".14"/>
+  <rect x="96" y="284" width="230" height="74" rx="16" fill="#172129"/>
+  <rect x="346" y="284" width="230" height="74" rx="16" fill="#172129"/>
+  <rect x="596" y="284" width="230" height="74" rx="16" fill="#172129"/>
+  <rect x="846" y="284" width="230" height="74" rx="16" fill="#172129"/>
+  <rect x="96" y="504" width="200" height="18" rx="9" fill="#8FF0A4" fill-opacity=".14"/>
+  <rect x="96" y="540" width="160" height="34" rx="17" fill="#173522"/>
+  <rect x="272" y="540" width="200" height="34" rx="17" fill="#173522"/>
+  <rect x="488" y="540" width="168" height="34" rx="17" fill="#173522"/>
+  <rect x="672" y="540" width="180" height="34" rx="17" fill="#173522"/>
+  <rect x="868" y="540" width="170" height="34" rx="17" fill="#173522"/>
+  <text x="64" y="620" fill="#8FF0A4" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">Placeholder Screenshot</text>
+  <text x="64" y="658" fill="#F4FFF8" font-family="Arial, Helvetica, sans-serif" font-size="46" font-weight="700">ML Model Comparison</text>
+  <text x="64" y="696" fill="#A7B8AD" font-family="Arial, Helvetica, sans-serif" font-size="24">Replace with the saved Logistic Regression vs Random Forest comparison card.</text>
+</svg>

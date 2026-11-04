@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ScorPred AI — Apple-style Mockups</title>
+  <style>
+    :root{
+      --bg:#161a1f;--panel:#1e232b;--panel-2:#232a33;--line:rgba(255,255,255,.09);
+      --text:#f3f6fa;--muted:#a8b0ba;--accent:#30D158;--warn:#f5c451;--danger:#ff7a7a;
+      --radius:22px;--radius-sm:14px;--shadow:0 10px 28px rgba(0,0,0,.22);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:
+        radial-gradient(1200px 420px at 10% -15%, rgba(255,255,255,.04), transparent 60%),
+        linear-gradient(180deg, #15191e, #14181d 45%, #12161b);
+      color:var(--text);
+      font-family:Inter, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+      padding:24px;
+    }
+    .title{max-width:1200px;margin:0 auto 18px auto}
+    .title h1{margin:0;font-size:2rem;letter-spacing:-.02em}
+    .title p{margin:.35rem 0 0;color:var(--muted)}
+    .grid{
+      max-width:1200px;margin:0 auto;
+      display:grid;grid-template-columns:repeat(2,minmax(420px,1fr));gap:18px;
+    }
+    .screen{
+      background:linear-gradient(180deg,var(--panel),var(--panel-2));
+      border:1px solid var(--line);
+      border-radius:30px;padding:22px;box-shadow:var(--shadow);min-height:360px;
+    }
+    .screen h2{margin:0;font-size:1.1rem;letter-spacing:-.01em}
+    .sub{color:var(--muted);font-size:.86rem}
+    .divider{height:1px;background:var(--line);margin:14px 0}
+    .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+    .kpi{background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:16px;padding:13px}
+    .kpi b{display:block;font-size:1.25rem;margin-top:.2rem;letter-spacing:-.01em}
+    .feature{
+      margin-top:13px;padding:14px;border-radius:18px;background:rgba(255,255,255,.02);
+      border:1px solid var(--line);
+    }
+    .teams{display:flex;align-items:center;justify-content:space-between}
+    .logo{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.08);font-weight:700}
+    .match{font-size:1.04rem;font-weight:600;letter-spacing:-.01em}
+    .big{font-size:2.1rem;font-weight:800;letter-spacing:-.03em;margin:.3rem 0}
+    .bars{display:grid;gap:8px}
+    .bar{height:6px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden}
+    .bar>i{display:block;height:100%;background:#8ea1b5}
+    .bar>i.a{background:var(--accent)}
+    .btn{
+      display:inline-block;margin-top:12px;padding:9px 14px;border-radius:12px;text-decoration:none;
+      color:#0f1a12;background:var(--accent);font-weight:600;font-size:.86rem;
+    }
+    .chart{margin-top:16px;border-radius:16px;border:1px solid var(--line);padding:10px;background:rgba(255,255,255,.015)}
+    .chart svg{width:100%;height:104px}
+    .list{margin-top:10px;border-top:1px solid var(--line)}
+    .row{
+      display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;
+      padding:12px 0;border-bottom:1px solid var(--line);font-size:.92rem;
+    }
+    .tag{font-size:.72rem;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.08);color:#e8edf5}
+    .tag.bet{background:rgba(48,209,88,.18);color:#d5ffe2}
+    .tag.cons{background:rgba(245,196,81,.16);color:#fff1c9}
+    .expand{margin-top:10px;padding:10px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.02)}
+    .center{text-align:center}
+    .risk{color:#d7dee8;line-height:1.5}
+    .perf{display:grid;grid-template-columns:1fr 150px;gap:10px}
+    .donut{border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.015);display:grid;place-items:center}
+    .notif{display:grid;gap:9px;margin-top:12px}
+    .n{border:1px solid var(--line);border-radius:16px;padding:10px 12px;background:rgba(255,255,255,.025);display:flex;gap:10px;align-items:center}
+    .dot{width:9px;height:9px;border-radius:50%}.g{background:var(--accent)}.y{background:var(--warn)}.r{background:var(--danger)}
+    .settings{display:grid;gap:10px;margin-top:10px}
+    .set{display:flex;justify-content:space-between;align-items:center;padding:11px 12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.02)}
+    .sw{width:38px;height:22px;border-radius:999px;background:rgba(255,255,255,.16);position:relative}.sw:after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+    .sw.on{background:rgba(48,209,88,.45)}.sw.on:after{left:19px;background:var(--accent)}
+  </style>
+</head>
+<body>
+  <header class="title">
+    <h1>ScorPred AI — Apple-style UI Mockups</h1>
+    <p>Soft dark mode, calm hierarchy, and reduced clutter. 5 key screens only.</p>
+  </header>
+
+  <section class="grid">
+    <article class="screen">
+      <h2>Dashboard</h2>
+      <div class="sub">Your edge, simplified.</div>
+      <div class="kpis">
+        <div class="kpi"><span class="sub">Win Rate</span><b>62%</b></div>
+        <div class="kpi"><span class="sub">ROI</span><b>+18.7%</b></div>
+        <div class="kpi"><span class="sub">Profit</span><b>$1,248</b></div>
+      </div>
+      <div class="feature">
+        <div class="teams">
+          <div class="logo">MC</div>
+          <div class="center">
+            <div class="match">Man City vs Arsenal</div>
+            <div class="big">74%</div>
+          </div>
+          <div class="logo">ARS</div>
+        </div>
+        <div class="bars">
+          <div class="bar"><i class="a" style="width:74%"></i></div>
+          <div class="bar"><i style="width:20%"></i></div>
+          <div class="bar"><i style="width:6%"></i></div>
+        </div>
+        <a class="btn" href="#">View Analysis</a>
+      </div>
+      <div class="chart">
+        <svg viewBox="0 0 320 100"><polyline points="0,72 40,65 80,58 120,60 160,44 200,49 240,35 280,30 320,22" fill="none" stroke="#b7c5d8" stroke-width="1.6"/><polyline points="0,74 40,67 80,60 120,62 160,46 200,51 240,37 280,32 320,24" fill="none" stroke="#30D158" stroke-width="1.8"/></svg>
+      </div>
+    </article>
+
+    <article class="screen">
+      <h2>Soccer</h2>
+      <div class="sub">Minimal list, expandable details</div>
+      <div class="list">
+        <div class="row"><span>Man City vs Arsenal</span><strong>74%</strong><span class="tag bet">BET</span></div>
+        <div class="expand">
+          <div class="sub">Expanded detail (Apple-style sheet)</div>
+          <div class="bars" style="margin-top:8px"><div class="bar"><i class="a" style="width:74%"></i></div></div>
+        </div>
+        <div class="row"><span>Napoli vs Milan</span><strong>63%</strong><span class="tag cons">CONSIDER</span></div>
+        <div class="row"><span>PSG vs Marseille</span><strong>58%</strong><span class="tag">SKIP</span></div>
+      </div>
+    </article>
+
+    <article class="screen">
+      <h2>Match Analysis (Star Screen)</h2>
+      <div class="divider"></div>
+      <div class="center">
+        <div class="match" style="font-size:1.45rem">Man City vs Arsenal</div>
+        <div class="big" style="margin-top:6px">74%</div>
+      </div>
+      <div class="divider"></div>
+      <div class="sub">Win Probability</div>
+      <div class="bars" style="margin-top:8px">
+        <div class="bar"><i class="a" style="width:74%"></i></div>
+        <div class="bar"><i style="width:18%"></i></div>
+        <div class="bar"><i style="width:8%"></i></div>
+      </div>
+      <div class="divider"></div>
+      <div class="sub">Why this side wins</div>
+      <p class="risk">City’s recent xG profile and possession regain quality remain stronger against top-6 opposition.</p>
+      <div class="sub">Risk factors</div>
+      <p class="risk">Late lineup uncertainty and elevated transition concessions in final 15 minutes.</p>
+    </article>
+
+    <article class="screen">
+      <h2>Performance</h2>
+      <div class="kpis" style="grid-template-columns:repeat(3,1fr)">
+        <div class="kpi"><span class="sub">ROI</span><b>+18.7%</b></div>
+        <div class="kpi"><span class="sub">Win Rate</span><b>62%</b></div>
+        <div class="kpi"><span class="sub">Record</span><b>31-19</b></div>
+      </div>
+      <div class="perf" style="margin-top:12px">
+        <div class="chart"><svg viewBox="0 0 320 100"><polyline points="0,78 35,73 70,65 105,68 140,55 175,58 210,47 245,36 280,30 320,25" fill="none" stroke="#c0cad7" stroke-width="1.5"/><polyline points="0,80 35,75 70,67 105,70 140,57 175,60 210,49 245,38 280,32 320,27" fill="none" stroke="#30D158" stroke-width="2"/></svg></div>
+        <div class="donut"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="40" stroke="rgba(255,255,255,.12)" stroke-width="16" fill="none"/><circle cx="60" cy="60" r="40" stroke="#30D158" stroke-width="16" fill="none" stroke-dasharray="160 252" transform="rotate(-90 60 60)"/><circle cx="60" cy="60" r="40" stroke="#9aa9bc" stroke-width="16" fill="none" stroke-dasharray="65 252" stroke-dashoffset="-160" transform="rotate(-90 60 60)"/></svg></div>
+      </div>
+    </article>
+
+    <article class="screen" style="grid-column:1 / -1;min-height:280px">
+      <h2>My Bets · Alerts · Settings (Condensed)</h2>
+      <div class="divider"></div>
+      <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:14px">
+        <div>
+          <div class="sub">My Bets (Notes-style rows)</div>
+          <div class="list">
+            <div class="row"><span>Man City vs Arsenal</span><span>City</span><span class="dot g"></span></div>
+            <div class="row"><span>Napoli vs Milan</span><span>Draw</span><span class="dot y"></span></div>
+            <div class="row"><span>Lakers vs Suns</span><span>Suns</span><span class="dot r"></span></div>
+          </div>
+        </div>
+        <div>
+          <div class="sub">Alerts (iOS notification style)</div>
+          <div class="notif">
+            <div class="n"><span class="dot g"></span><div><strong>High confidence</strong><div class="sub">City vs Arsenal · 2m ago</div></div></div>
+            <div class="n"><span class="dot y"></span><div><strong>Line moved</strong><div class="sub">Napoli vs Milan · 12m ago</div></div></div>
+            <div class="n"><span class="dot r"></span><div><strong>Loss settled</strong><div class="sub">Lakers vs Suns · 1h ago</div></div></div>
+          </div>
+        </div>
+        <div>
+          <div class="sub">Settings (native toggle feel)</div>
+          <div class="settings">
+            <div class="set"><span>Notifications</span><span class="sw on"></span></div>
+            <div class="set"><span>Dark Mode</span><span class="sw on"></span></div>
+            <div class="set"><span>Email Alerts</span><span class="sw"></span></div>
+            <div class="set"><span>Odds Format</span><span class="sub">Decimal</span></div>
+            <div class="set"><span>Default Stake</span><span class="sub">$100</span></div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+</body>
+</html>

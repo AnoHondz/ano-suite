@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% import "components/decision.html" as ui with context %}
+
+{% block title %}ScorPred | Fixtures{% endblock %}
+{% block topbar_title %}Soccer Fixtures{% endblock %}
+{% block topbar_actions %}
+  <form class="sp-filter-row" method="get" action="/fixtures">
+    <select class="sp-filter-control" name="league" onchange="this.form.submit()" aria-label="Competition">
+      {% for league in supported_leagues %}
+        <option value="{{ league.id }}" {% if current_league_id == league.id %}selected{% endif %}>{{ league.name }}</option>
+      {% endfor %}
+    </select>
+  </form>
+{% endblock %}
+
+{% block content %}
+<section class="sp-page-hero">
+  <span class="sp-page-hero__eyebrow">{{ current_league.name if current_league else 'Soccer' }}</span>
+  <h1>Full slate, one consistent action system.</h1>
+  <p>Each fixture shows the side, action, confidence, reason, and data confidence before you open analysis.</p>
+</section>
+
+{{ ui.plan_strip(today_plan) }}
+{{ ui.top_opportunities(top_opportunities) }}
+
+<section class="sp-section">
+  <div class="sp-section__header">
+    <div>
+      <h2>All Fixtures</h2>
+      <p>Scannable decisions for every available matchup.</p>
+    </div>
+    <a class="btn btn-secondary btn-sm" href="/soccer">Back to Soccer</a>
+  </div>
+
+  {% if full_slate %}
+    <div class="sp-card-grid">
+      {% for card in full_slate %}
+        {{ ui.decision_card(card) }}
+      {% endfor %}
+    </div>
+  {% else %}
+    {{ ui.empty_state('No fixtures available', load_error or 'The slate is empty or the data feed is temporarily unavailable.') }}
+  {% endif %}
+</section>
+{% endblock %}

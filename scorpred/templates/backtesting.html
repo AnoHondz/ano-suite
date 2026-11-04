@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block title %}ScorPred | Backtesting{% endblock %}
+{% block topbar_title %}Backtesting{% endblock %}
+
+{% block content %}
+<div class="sp-soccer-header">
+  <div class="sp-soccer-header__left">
+    <h1>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:28px;height:28px;display:inline-block;vertical-align:middle;margin-right:.4rem"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Walk-Forward Backtesting
+    </h1>
+    <p>Chronological model evaluation across {{ n_folds or 0 }} folds · {{ total_test_matches or 0 }} test matches.</p>
+  </div>
+  <div style="display:flex;gap:.6rem;align-items:center">
+    <a class="btn btn-secondary btn-sm" href="/compare">ML vs Rules</a>
+    <a class="btn btn-secondary btn-sm" href="/strategy-lab">Strategy Lab</a>
+  </div>
+</div>
+
+{% if not report %}
+<div class="sp-flash sp-flash--warn">
+  Backtest report not found. Run <code>python walk_forward_backtest.py</code> to generate it.
+</div>
+{% else %}
+
+{# ── KPI Row ──────────────────────────────────────────────────────────────── #}
+{% set combined = agg.combined or {} %}
+<div class="sp-kpi-row">
+  <div class="sp-kpi-card sp-kpi-card--accuracy">
+    <span class="sp-kpi-card__label">Combined Accuracy</span>
+    <span class="sp-kpi-card__value">{{ "%.1f"|format((combined.mean_combined_accuracy or 0) * 100) }}%</span>
+    <span class="sp-kpi-card__meta">Hybrid ML + rules</span>
+  </div>
+  <div class="sp-kpi-card sp-kpi-card--bet">
+    <span class="sp-kpi-card__label">Best Fold</span>
+    <span class="sp-kpi-card__value" style="color:var(--c-strong)">{{ "%.1f"|format((best_fold.combined_accuracy or 0) * 100) }}%</span>
+    <span class="sp-kpi-card__meta">Fold {{ best_fold.fold or '—' }}</span>
+  </div>
+  <div class="sp-kpi-card sp-kpi-card--skip">
+    <span class="sp-kpi-card__label">Worst Fold</span>
+    <span class="sp-kpi-card__value" style="color:var(--c-danger)">{{ "%.1f"|format((worst_fold.combined_accuracy or 0) * 100) }}%</span>
+    <span class="sp-kpi-card__meta">Fold {{ worst_fold.fold or '—' }}</span>
+  </div>
+  <div class="sp-kpi-card">
+    <span class="sp-kpi-card__label">Trend</span>
+    <span class="sp-kpi-card__value" style="font-size:1.1rem;text-transform:capitalize">{{ trend or 'Stable' }}</span>
+    <span class="sp-kpi-card__meta">{% if trend_delta is not none %}Δ {{ "%.1f"|format(trend_delta * 100) }}pp{% else %}Across folds{% endif %}</span>
+  </div>
+  <div class="sp-kpi-card">
+    <span class="sp-kpi-card__label">Policy Hit Rate</span>
+    <span class="sp-kpi-card__value">{{ "%.1f"|format(policy.mean_hit_rate_pct or 0) }}%</span>
+    <span class="sp-kpi-card__meta">{{ policy.total_placed or 0 }} placed / {{ total_test_matches }} evaluated</span>
+  </div>
+</div>
+
+{# ── Charts Row ───────────────────────────────────────────────────────────── #}
+<div class="sp-grid-2" style="margin-top:1rem">
+  <div class="sp-perf-panel">
+    <div class="sp-perf-panel__head"><span class="sp-perf-panel__title">Accuracy by Fold</span><span style="font-size:.75rem;color:var(--text-3)">Chronological, no look-ahead</span></div>
+    <div class="sp-perf-panel__body"><div style="position:relative;height:240px"><canvas id="foldChart"></canvas></div></div>
+  </div>
+  <div class="sp-perf-panel">
+    <div class="sp-perf-panel__head"><span class="sp-perf-panel__title">Accuracy by Confidence Tier</span><span style="font-size:.75rem;color:var(--text-3)">Higher confidence → higher accuracy</span></div>
+    <div class="sp-perf-panel__body"><div style="position:relative;height:240px"><canvas id="confChart"></canvas></div></div>
+  </div>
+</div>
+
+{# ── Model Comparison Table ────────────────────────────────────────────────── #}
+<div class="sp-section" style="margin-top:1.25rem">
+  <div class="sp-section__header"><div><h2>Model Comparison</h2><p>Mean accuracy across all {{ n_folds or 0 }} walk-forward folds.</p></div></div>
+  <div class="sp-bets-table">
+    <div class="sp-bets-table__head" style="grid-template-columns:1fr 130px 130px 100px 120px">
+      <span>Model</span><span>Mean Accuracy</span><span>Brier Score</span><span>Std Dev</span><span>Folds</span>
+    </div>
+    {% for row in model_rows %}
+    <div class="sp-bets-row" style="grid-template-columns:1fr 130px 130px 100px 120px">
+      <span><strong>{{ row.label }}</strong></span>
+      <span>
+        <div style="display:flex;align-items:center;gap:.5rem">
+          <span style="color:{{ 'var(--c-strong)' if row.accuracy >= 52 else 'var(--c-danger)' }}">{{ row.accuracy }}%</span>
+          <div style="flex:1;height:4px;background:var(--bg-elevated);border-radius:2px;max-width:80px">
+            <div style="height:4px;border-radius:2px;background:{{ 'var(--c-strong)' if row.accuracy >= 52 else 'var(--c-danger)' }};width:{{ [row.accuracy, 100]|min }}%"></div>
+          </div>
+        </div>
+      </span>
+      <span style="color:var(--text-2)">{{ row.brier }}</span>
+      <span style="color:var(--text-3)">±{{ row.std }}%</span>
+      <span style="color:var(--text-3)">{{ row.folds }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{# ── Fold Detail Table ─────────────────────────────────────────────────────── #}
+<div class="sp-section" style="margin-top:1.25rem">
+  <div class="sp-section__header"><div><h2>Fold Details</h2><p>Per-fold breakdown with date ranges and performance.</p></div></div>
+  <div class="sp-bets-table">
+    <div class="sp-bets-table__head" style="grid-template-columns:80px 1fr 120px 120px 120px 120px">
+      <span>Fold</span><span>Date Range</span><span>RF Acc.</span><span>LR Acc.</span><span>Combined</span><span>Policy</span>
+    </div>
+    {% for fold in folds %}
+    {% set meta = fold.fold_meta or {} %}
+    {% set bm = fold.base_models or {} %}
+    {% set fc = fold.combined or {} %}
+    {% set fp = fold.policy or {} %}
+    <div class="sp-bets-row" style="grid-template-columns:80px 1fr 120px 120px 120px 120px">
+      <span><strong>#{{ meta.fold_index or loop.index }}</strong></span>
+      <span style="font-size:.8rem;color:var(--text-3)">{{ meta.test_start or '' }} → {{ meta.test_end or '' }}</span>
+      <span style="color:var(--c-active)">{{ "%.1f"|format((bm.rf or {}).get('accuracy', 0) * 100) }}%</span>
+      <span style="color:var(--c-active)">{{ "%.1f"|format((bm.lr or {}).get('accuracy', 0) * 100) }}%</span>
+      <span style="color:{{ 'var(--c-strong)' if (fc.combined_accuracy or 0) >= 0.52 else 'var(--c-danger)' }}">{{ "%.1f"|format((fc.combined_accuracy or 0) * 100) }}%</span>
+      <span style="color:var(--text-2)">{{ "%.1f"|format(fp.hit_rate_pct or 0) }}%</span>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{# ── Policy Summary ────────────────────────────────────────────────────────── #}
+<div class="sp-section" style="margin-top:1.25rem">
+  <div class="sp-section__header"><div><h2>Policy Summary</h2><p>BET/LEAN/AVOID recommendation policy performance.</p></div></div>
+  <div class="sp-kpi-row">
+    <div class="sp-kpi-card sp-kpi-card--bet">
+      <span class="sp-kpi-card__label">Total Placed</span>
+      <span class="sp-kpi-card__value">{{ policy.total_placed or 0 }}</span>
+      <span class="sp-kpi-card__meta">BET + LEAN decisions</span>
+    </div>
+    <div class="sp-kpi-card sp-kpi-card--accuracy">
+      <span class="sp-kpi-card__label">Hit Rate</span>
+      <span class="sp-kpi-card__value">{{ "%.1f"|format(policy.mean_hit_rate_pct or 0) }}%</span>
+      <span class="sp-kpi-card__meta">±{{ "%.1f"|format(policy.std_hit_rate_pct or 0) }}% std dev</span>
+    </div>
+    <div class="sp-kpi-card sp-kpi-card--skip">
+      <span class="sp-kpi-card__label">Avoided</span>
+      <span class="sp-kpi-card__value">{{ policy.total_avoided or 0 }}</span>
+      <span class="sp-kpi-card__meta">SKIP decisions</span>
+    </div>
+    <div class="sp-kpi-card">
+      <span class="sp-kpi-card__label">Coverage</span>
+      <span class="sp-kpi-card__value">{{ "%.1f"|format(policy.aggregate_coverage_pct or 0) }}%</span>
+      <span class="sp-kpi-card__meta">Matches evaluated</span>
+    </div>
+  </div>
+</div>
+
+{% if generated_at %}
+<p style="font-size:.75rem;color:var(--text-3);margin-top:1rem;text-align:right">Report generated: {{ generated_at[:19] or '' }}</p>
+{% endif %}
+
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+  var foldLabels = {{ fold_labels | tojson }};
+  var foldRF = {{ fold_rf | tojson }};
+  var foldLR = {{ fold_lr | tojson }};
+  var foldCombined = {{ fold_combined | tojson }};
+  var confLabels = {{ conf_labels | tojson }};
+  var confAcc = {{ conf_acc | tojson }};
+  var confCounts = {{ conf_counts | tojson }};
+
+  var sharedOpts = {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { labels: { color: '#94a3b8', font: { size: 11 } } } },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#94a3b8' } },
+      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#94a3b8', callback: function(v){ return v + '%'; } } }
+    }
+  };
+
+  var foldCtx = document.getElementById('foldChart');
+  if (foldCtx && foldLabels.length) {
+    new Chart(foldCtx, {
+      type: 'line',
+      data: {
+        labels: foldLabels,
+        datasets: [
+          { label: 'Random Forest', data: foldRF, borderColor: '#60a5fa', backgroundColor: 'rgba(96,165,250,0.08)', tension: 0.3, pointRadius: 4 },
+          { label: 'Log. Regression', data: foldLR, borderColor: '#a78bfa', backgroundColor: 'rgba(167,139,250,0.08)', tension: 0.3, pointRadius: 4 },
+          { label: 'Hybrid', data: foldCombined, borderColor: '#3cf2a4', backgroundColor: 'rgba(60,242,164,0.08)', tension: 0.3, pointRadius: 4, borderWidth: 2 }
+        ]
+      },
+      options: Object.assign({}, sharedOpts, { scales: Object.assign({}, sharedOpts.scales, { y: Object.assign({}, sharedOpts.scales.y, { min: 40, max: 60 }) }) })
+    });
+  }
+
+  var confCtx = document.getElementById('confChart');
+  if (confCtx && confLabels.length) {
+    new Chart(confCtx, {
+      type: 'bar',
+      data: {
+        labels: confLabels,
+        datasets: [{
+          label: 'Accuracy %',
+          data: confAcc,
+          backgroundColor: confAcc.map(function(v){ return v >= 60 ? 'rgba(60,242,164,0.75)' : v >= 50 ? 'rgba(245,158,11,0.75)' : 'rgba(248,113,113,0.75)'; }),
+          borderRadius: 6, borderSkipped: false
+        }]
+      },
+      options: sharedOpts
+    });
+  }
+})();
+</script>
+{% endblock %}

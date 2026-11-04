@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% import "components/decision.html" as ui with context %}
+
+{% block title %}ScorPred | NBA Match Analysis{% endblock %}
+{% block topbar_title %}NBA Match Analysis{% endblock %}
+
+{% block content %}
+{% set card = scorpred.decision_card if scorpred else none %}
+{% if card %}{% set _ = card.update({'hide_cta': True}) %}{% endif %}
+
+<div class="sp-dash-header">
+  <div class="sp-dash-header__left">
+    <span class="sp-kicker" style="color:var(--c-active);margin-bottom:.3rem;display:block">NBA</span>
+    <h1>{{ (team_a.nickname or team_a.name) if team_a else 'Home' }} vs {{ (team_b.nickname or team_b.name) if team_b else 'Away' }}</h1>
+    <p>AI decision with confidence, edge signal, risk grade, and market alignment.</p>
+  </div>
+  <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+    <a class="btn btn-secondary btn-sm" href="{{ url_for('nba.index') }}">NBA Home</a>
+    <a class="btn btn-secondary btn-sm" href="/insights">Insights</a>
+  </div>
+</div>
+
+{% if error %}
+  <div class="sp-flash sp-flash--warn">{{ error }}</div>
+{% endif %}
+
+{% if card %}
+  <div class="sp-analysis-layout">
+    <div>
+      {{ ui.decision_card(card, 'featured') }}
+
+      {# ── Decision Metrics ──────────────────────────────────────────────────── #}
+      <section class="sp-section">
+        <div class="sp-info-card">
+          <h2 style="margin-bottom:1rem">Decision Metrics</h2>
+          <div class="sp-metrics-grid">
+            <div class="sp-metric-item">
+              <span class="sp-metric-label">Edge Score</span>
+              {% if card.edge_score is not none %}
+                <span class="sp-metric-value {{ 'sp-metric-value--positive' if card.edge_score > 0 else 'sp-metric-value--negative' }}">
+                  {{ '%+.1f'|format(card.edge_score * 100) }}%
+                </span>
+              {% else %}
+                <span class="sp-metric-value sp-text-muted">Market odds unavailable</span>
+              {% endif %}
+            </div>
+            <div class="sp-metric-item">
+              <span class="sp-metric-label">Expected Value</span>
+              {% if card.expected_value is not none %}
+                <span class="sp-metric-value {{ 'sp-metric-value--positive' if card.expected_value > 0 else 'sp-metric-value--negative' }}">
+                  {{ '%+.1f'|format(card.expected_value) }} pts
+                </span>
+              {% else %}
+                <span class="sp-metric-value sp-text-muted">EV unavailable</span>
+              {% endif %}
+            </div>
+            <div class="sp-metric-item">
+              <span class="sp-metric-label">Risk Level</span>
+              <span class="sp-risk-badge sp-risk-badge--{{ (card.risk_level or 'medium')|lower }}">{{ card.risk_level or 'N/A' }}</span>
+            </div>
+            <div class="sp-metric-item">
+              <span class="sp-metric-label">Decision Grade</span>
+              <span class="sp-grade-badge sp-grade-badge--{{ (card.decision_grade or 'c')|lower }}">{{ card.decision_grade or 'N/A' }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {# Why Win #}
+      <section class="sp-section">
+        <div class="sp-info-card">
+          <h2 style="margin-bottom:.75rem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-strong)" stroke-width="2" stroke-linecap="round" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:.4rem"><polyline points="20 6 9 17 4 12"/></svg>
+            Why this side can win
+          </h2>
+          <ul class="sp-why-list">
+            {% for point in card.why_win or [] %}
+              <li>{{ point }}</li>
+            {% else %}
+              <li style="color:var(--text-3)">Analysis points not available for this game.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+
+      {# Why Lose #}
+      <section class="sp-section">
+        <div class="sp-info-card">
+          <h2 style="margin-bottom:.75rem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-caution)" stroke-width="2" stroke-linecap="round" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:.4rem"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Why this side could lose
+          </h2>
+          <ul class="sp-why-list">
+            {% for point in card.why_lose or [] %}
+              <li>{{ point }}</li>
+            {% else %}
+              <li style="color:var(--text-3)">Risk factors not available for this game.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+
+      {# Key Swing Factor #}
+      {% if card.key_swing_factor %}
+      <section class="sp-section">
+        <div class="sp-info-card" style="border-color:rgba(var(--c-active-rgb),.2)">
+          <h2 style="margin-bottom:.5rem">Key swing factor</h2>
+          <p>{{ card.key_swing_factor }}</p>
+        </div>
+      </section>
+      {% endif %}
+
+      {# Visual Support #}
+      <section class="sp-section">
+        <div class="sp-info-card">
+          <h2 style="margin-bottom:1rem">Visual Support</h2>
+          {{ ui.confidence_bar(card) }}
+          {{ ui.probability_bar(card) }}
+          {% if card.comparison_metrics %}
+            {{ ui.comparison_bars(card.comparison_metrics) }}
+          {% endif %}
+          {% if card.form_strip %}
+            {{ ui.form_strip(card.form_strip) }}
+          {% endif %}
+        </div>
+      </section>
+
+      {# Related Markets #}
+      {% if market_analysis %}
+      <section class="sp-section">
+        <div class="sp-info-card">
+          <h2 style="margin-bottom:.75rem">Related Markets</h2>
+          <ul class="sp-why-list">
+            {% if market_analysis.winner_leg %}
+              <li>{{ market_analysis.winner_leg.leg_type }}: {{ market_analysis.winner_leg.recommendation }}</li>
+            {% endif %}
+            {% if market_analysis.spread_leg %}
+              <li>{{ market_analysis.spread_leg.leg_type }}: {{ market_analysis.spread_leg.recommendation }}</li>
+            {% endif %}
+            {% if market_analysis.totals_leg %}
+              <li>{{ market_analysis.totals_leg.leg_type }}: {{ market_analysis.totals_leg.recommendation }}</li>
+            {% endif %}
+          </ul>
+          {% if market_analysis.alignment %}
+            <p class="sp-muted" style="margin-top:.75rem">{{ market_analysis.alignment.summary }}</p>
+          {% endif %}
+        </div>
+      </section>
+      {% endif %}
+    </div>
+
+    {# ── Sidebar ───────────────────────────────────────────────────────────────── #}
+    <aside class="sp-info-card sp-analysis-sidebar" style="align-self:start">
+      <h2 style="margin-bottom:.85rem">Trust Check</h2>
+      {{ ui.data_badge(card.data_confidence) }}
+      <p class="sp-muted" style="margin-top:.75rem;font-size:.84rem">{{ (scorpred.data_completeness or {}).get('summary') or card.support_text or 'Data quality for this game.' }}</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.85rem">
+        <div style="text-align:center;padding:.5rem;background:var(--bg-card);border-radius:6px;border:1px solid var(--border)">
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3)">Grade</div>
+          <div class="sp-grade-badge sp-grade-badge--{{ (card.decision_grade or 'c')|lower }}" style="font-size:1.1rem;margin-top:.25rem">{{ card.decision_grade or '—' }}</div>
+        </div>
+        <div style="text-align:center;padding:.5rem;background:var(--bg-card);border-radius:6px;border:1px solid var(--border)">
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3)">Risk</div>
+          <div class="sp-risk-badge sp-risk-badge--{{ (card.risk_level or 'medium')|lower }}" style="margin-top:.25rem">{{ card.risk_level or '—' }}</div>
+        </div>
+      </div>
+
+      {% if form_a is defined or form_b is defined %}
+      <div style="margin-top:.85rem">
+        <small class="sp-kicker">Season Context</small>
+        <ul class="sp-why-list" style="margin-top:.35rem">
+          {% if team_a and form_a is defined %}
+            <li>{{ team_a.nickname or team_a.name }}: {{ form_a|length }} recent games</li>
+          {% endif %}
+          {% if team_b and form_b is defined %}
+            <li>{{ team_b.nickname or team_b.name }}: {{ form_b|length }} recent games</li>
+          {% endif %}
+          {% if season_context is defined %}
+            <li>Current-season stats: {{ 'available' if season_context.stats_current_available else 'limited' }}</li>
+          {% endif %}
+        </ul>
+      </div>
+      {% endif %}
+
+      <div style="margin-top:1.25rem;display:flex;flex-direction:column;gap:.5rem">
+        <a class="btn btn-secondary btn-sm btn-full" href="{{ url_for('nba.index') }}">NBA Home</a>
+        <a class="btn btn-secondary btn-sm btn-full" href="/insights">Open Insights</a>
+      </div>
+    </aside>
+  </div>
+{% else %}
+  {{ ui.empty_state('Prediction data could not be generated', 'Choose another game or try again when NBA data refreshes.') }}
+  <section class="sp-info-card"><h2>Limited Data</h2>
+    <p>Current-season stats: {{ 'available' if season_context.stats_current_available else 'limited' }}</p>
+    <p>A fresh scheduled game and sufficient current-season form are required for a pregame recommendation.</p>
+  </section>
+{% endif %}
+{% endblock %}

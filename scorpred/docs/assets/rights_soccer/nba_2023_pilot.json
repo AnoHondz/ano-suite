@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "plan_id": "nba-ending-2023-reconciliation-v1",
+  "status": "blocked_pending_source_specific_rights",
+  "execution_enabled": false,
+  "collection_enabled": false,
+  "training_enabled": false,
+  "serving_enabled": false,
+  "rights_approval": null,
+  "preferred_family": "sportsdataverse ESPN schedules/team_box/player_box; one upstream family",
+  "permission_requirements": [
+    "Identify exact release/asset versions and intended local reconciliation purpose",
+    "Resolve host MIT versus producer data CC-BY-4.0 scope and underlying ESPN rights chain",
+    "Authoritative permission must cover the proposed access, copying and analysis; no public-URL inference",
+    "Record attribution, adaptation, storage, retention, redistribution and publication conditions separately",
+    "No substitute source, proxy, authorization workaround or rate-limit evasion"
+  ],
+  "season": {
+    "ending_year": 2023,
+    "display": "2022-23",
+    "window_start_inclusive": "2022-07-01T00:00:00Z",
+    "window_end_exclusive": "2023-07-01T00:00:00Z",
+    "reference_first_tipoff": "2022-10-18T23:30:00Z",
+    "reference_last_tipoff": "2023-06-13T00:30:00Z",
+    "reference_games": 1314,
+    "reference_provider_types": {"2": 1230, "3": 84},
+    "eligibility": "Completed NBA team IDs 1-30, existing provider types 2/3; preserve and enumerate play-in/stage semantics",
+    "exclusions": ["preseason", "All-Star", "foreign/exhibition participants", "cancelled/incomplete", "other ending seasons"],
+    "independent_season_completeness_established": false
+  },
+  "identifiers": {
+    "espn": ["string event ID", "string competition ID", "home/away team IDs", "player IDs", "tipoff with timezone", "season/stage/status"],
+    "nba_stats_if_separately_permitted": ["10-character game ID preserving leading zeros", "NBA 161061xxxx team IDs", "person_id", "reviewed ESPN crosswalk"],
+    "no_name_only_or_numeric_id_equality_join": true
+  },
+  "canonical_team_box_requirements": ["points", "field_goals_made", "field_goals_attempted", "three_pointers_made", "three_pointers_attempted", "free_throws_made", "free_throws_attempted", "offensive_rebounds", "defensive_rebounds", "rebounds", "assists", "steals", "blocks", "turnovers", "fouls", "minutes", "overtime_count"],
+  "field_mapping_status": "NBA Stats schema documented; ESPN exact column/unit contract not verified from inspected docs/shims",
+  "player_minutes": {
+    "required_identity": ["game", "team", "player"],
+    "required_metadata": ["declared minute format/precision", "DNP/appearance status", "overtime count"],
+    "formats_allowed_after_definition_verification": ["M:SS", "nonnegative finite decimal minutes"],
+    "dnp_null_is_zero": false,
+    "zero_is_valid": true,
+    "maximum_player_minutes": "48 + 5 * overtime_count",
+    "expected_team_player_minute_sum": "240 + 25 * overtime_count",
+    "rounding_tolerance": "At most one second per participating player for second-resolution source values; rounded whole-minute data cannot pass exact-duration validation without a separate declared rule",
+    "missing_ids_or_minutes": "Enumerate and quarantine; never impute or use names to invent IDs"
+  },
+  "deduplication": {
+    "team_key": ["dataset_version", "provider_game_id", "provider_team_id"],
+    "player_key": ["dataset_version", "provider_game_id", "provider_team_id", "provider_player_id"],
+    "identical_rows": "One research canonical row plus all original locators; no raw deletion",
+    "conflicts": "Quarantine every conflicting identity/stat version; no newest-wins or averaging",
+    "format_variants": "Use one permitted format per dataset/version; CSV/Parquet/RDS are not separate games"
+  },
+  "provenance": ["rights decision/version", "release and asset ID", "metadata observation time", "asset URL and published digest", "actual later receipt time and raw SHA-256", "parser/schema/stat definition versions", "original row locator", "explicit provider effective/publication time or null", "Class B revision/publication-lag caveats"],
+  "metrics_are_targets_not_results": true,
+  "acceptance": {
+    "reference_denominator": 1314,
+    "match_rate_target": 0.99,
+    "minimum_matching_reference_games_for_99_percent": 1301,
+    "all_missing_extra_or_ambiguous_games_enumerated": true,
+    "silent_conflicts_allowed": 0,
+    "paired_team_box_denominator": 2628,
+    "paired_team_and_player_field_coverage_reported_by_stage": true,
+    "player_minute_denominator": "All explicit participant rows in matched games; report DNP, unknown IDs, unknown minutes and duration checks separately",
+    "score_consistency": "Both team points equal reconciled final scores; no held NFL access",
+    "count_checks": ["nonnegative finite integers", "made <= attempted", "points reconcile with documented scoring counts", "rebound definitions reviewed before enforcing identities"],
+    "new_usable_game_count": "Accepted canonical games absent from existing ESPN reference; never asset/file counts",
+    "historical_pregame_proof": "Not supplied by this pilot; no retrospective Class A claim"
+  },
+  "rollback": ["Original files, database rows, artifacts and production selectors remain untouched", "Stage only into a new isolated research version after rights approval", "On failure mark that version rejected/quarantined and leave it unselected", "Retain permitted evidence and issue records under applicable retention terms; no destructive rollback", "Verify original source/model/protocol hashes; stop on drift rather than modifying originals"]
+}

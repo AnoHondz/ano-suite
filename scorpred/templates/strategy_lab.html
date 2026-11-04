@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+
+{% block title %}ScorPred | Strategy Lab{% endblock %}
+{% block topbar_title %}Strategy Lab{% endblock %}
+
+{% block content %}
+<div class="sp-soccer-header">
+  <div class="sp-soccer-header__left">
+    <h1>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:28px;height:28px;display:inline-block;vertical-align:middle;margin-right:.4rem"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+      Strategy Lab
+    </h1>
+    <p>Model performance, live hit rates, and analytical deep-dives.</p>
+  </div>
+  <div style="display:flex;gap:.6rem;align-items:center">
+    <a class="btn btn-secondary btn-sm" href="/backtesting">Backtesting</a>
+    <a class="btn btn-secondary btn-sm" href="/compare">ML vs Rules</a>
+  </div>
+</div>
+
+{# ── Hero KPI Cards ───────────────────────────────────────────────────────── #}
+{% set hero_cards = hero_cards or [] %}
+{% if hero_cards %}
+<div class="sp-kpi-row" style="grid-template-columns:repeat({{ [hero_cards|length, 5]|min }},1fr)">
+  {% for card in hero_cards %}
+    <div class="sp-kpi-card sp-kpi-card--{{ card.tone or 'roi' }}">
+      <span class="sp-kpi-card__label">{{ card.label }}</span>
+      <span class="sp-kpi-card__value">{{ card.value }}</span>
+      <span class="sp-kpi-card__meta">{{ card.meta }}</span>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{# ── Accuracy Sources ─────────────────────────────────────────────────────── #}
+<div class="sp-kpi-row" style="margin-top:.75rem">
+  <div class="sp-kpi-card sp-kpi-card--accuracy">
+    <span class="sp-kpi-card__label">Live Hit Rate</span>
+    <span class="sp-kpi-card__value">
+      {% if live_hit_rate is not none %}{{ "%.1f"|format(live_hit_rate * 100) }}%{% else %}N/A{% endif %}
+    </span>
+    <span class="sp-kpi-card__meta">From {{ live_sample_size or 0 }} graded predictions</span>
+  </div>
+  <div class="sp-kpi-card sp-kpi-card--roi">
+    <span class="sp-kpi-card__label">Offline Accuracy</span>
+    <span class="sp-kpi-card__value">
+      {% if offline_accuracy is not none %}{{ "%.1f"|format(offline_accuracy * 100) }}%{% else %}N/A{% endif %}
+    </span>
+    <span class="sp-kpi-card__meta">Held-out evaluation set</span>
+  </div>
+  <div class="sp-kpi-card">
+    <span class="sp-kpi-card__label">Data Source</span>
+    <span class="sp-kpi-card__value" style="font-size:1rem">{{ data_source or 'Live' }}</span>
+    <span class="sp-kpi-card__meta">{{ last_updated or '' }}</span>
+  </div>
+</div>
+
+{# ── Strategy Recommendation ──────────────────────────────────────────────── #}
+{% set rec = strategy_recommendation or {} %}
+{% if rec %}
+<div class="sp-flash sp-flash--{{ rec.tone or 'info' }}" style="margin:1rem 0">
+  <strong>{{ rec.headline or 'Strategy Insight' }}</strong>
+  {% if rec.body %}<p style="margin:.4rem 0 0;opacity:.85">{{ rec.body }}</p>{% endif %}
+</div>
+{% endif %}
+
+{# ── Page Tabs ────────────────────────────────────────────────────────────── #}
+<div class="sp-page-tabs">
+  <a href="#overview" class="sp-page-tab active" onclick="showLabTab('overview',this)">Overview</a>
+  <a href="#by-sport" class="sp-page-tab" onclick="showLabTab('by-sport',this)">By Sport</a>
+  <a href="#by-confidence" class="sp-page-tab" onclick="showLabTab('by-confidence',this)">By Confidence</a>
+  <a href="#recent" class="sp-page-tab" onclick="showLabTab('recent',this)">Recent Results</a>
+  <a href="#ml-summary" class="sp-page-tab" onclick="showLabTab('ml-summary',this)">ML Summary</a>
+</div>
+
+{# ── Overview Tab ─────────────────────────────────────────────────────────── #}
+<div id="tab-overview">
+  {% set bs = backtest_summary or {} %}
+  <div class="sp-grid-2" style="margin-top:.75rem">
+    <div class="sp-perf-panel">
+      <div class="sp-perf-panel__head"><span class="sp-perf-panel__title">Hit Rate by Confidence Tier</span></div>
+      <div class="sp-perf-panel__body">
+        <div style="position:relative;height:220px"><canvas id="confTierChart"></canvas></div>
+      </div>
+    </div>
+    <div class="sp-perf-panel">
+      <div class="sp-perf-panel__head"><span class="sp-perf-panel__title">Prediction Coverage</span></div>
+      <div class="sp-perf-panel__body" style="padding:1rem">
+        {% set metrics = metrics or {} %}
+        <div style="display:flex;flex-direction:column;gap:.75rem">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:.25rem"><span style="color:var(--text-2);font-size:.8rem">Total Predictions</span><strong>{{ metrics.total_predictions or 0 }}</strong></div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:.25rem"><span style="color:var(--text-2);font-size:.8rem">Finalized</span><strong>{{ metrics.finalized_predictions or 0 }}</strong></div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:.25rem"><span style="color:var(--text-2);font-size:.8rem">Correct</span><strong style="color:var(--c-strong)">{{ metrics.wins or 0 }}</strong></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text-2);font-size:.8rem">Incorrect</span><strong style="color:var(--c-danger)">{{ metrics.losses or 0 }}</strong></div>
+          </div>
+          {% if bs.best_sport %}
+          <div style="background:var(--bg-elevated);border-radius:.5rem;padding:.75rem">
+            <div style="font-size:.75rem;color:var(--text-3);margin-bottom:.3rem">BEST SPORT</div>
+            <strong>{{ bs.best_sport.label }}</strong>
+            <span style="color:var(--c-strong);margin-left:.5rem">{{ bs.best_sport.accuracy_display }}</span>
+          </div>
+          {% endif %}
+          {% if bs.best_confidence %}
+          <div style="background:var(--bg-elevated);border-radius:.5rem;padding:.75rem">
+            <div style="font-size:.75rem;color:var(--text-3);margin-bottom:.3rem">BEST CONFIDENCE TIER</div>
+            <strong>{{ bs.best_confidence.label }}</strong>
+            <span style="color:var(--c-strong);margin-left:.5rem">{{ bs.best_confidence.accuracy_display }}</span>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{# ── By Sport Tab ─────────────────────────────────────────────────────────── #}
+<div id="tab-by-sport" style="display:none">
+  {% set sport_rows = sport_rows or [] %}
+  {% if sport_rows %}
+  <div class="sp-section" style="margin-top:.75rem">
+    <div class="sp-bets-table">
+      <div class="sp-bets-table__head" style="grid-template-columns:1fr 120px 80px 80px 120px">
+        <span>Sport</span><span>Accuracy</span><span>Correct</span><span>Wrong</span><span>Sample</span>
+      </div>
+      {% for row in sport_rows %}
+      <div class="sp-bets-row" style="grid-template-columns:1fr 120px 80px 80px 120px">
+        <span><strong>{{ row.label }}</strong></span>
+        <span class="sp-bets-row__result--{{ 'won' if (row.accuracy or 0) >= 55 else ('lost' if (row.accuracy or 0) < 45 else 'push') }}">{{ row.accuracy_display }}</span>
+        <span style="color:var(--c-strong)">{{ row.wins }}</span>
+        <span style="color:var(--c-danger)">{{ row.losses }}</span>
+        <span style="color:var(--text-3)">{{ row.count }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% else %}
+  <div class="sp-empty" style="margin-top:1rem"><p>No sport breakdown available yet. Run some predictions to see results here.</p></div>
+  {% endif %}
+</div>
+
+{# ── By Confidence Tab ────────────────────────────────────────────────────── #}
+<div id="tab-by-confidence" style="display:none">
+  {% set confidence_rows = confidence_rows or [] %}
+  {% if confidence_rows %}
+  <div class="sp-section" style="margin-top:.75rem">
+    <div class="sp-bets-table">
+      <div class="sp-bets-table__head" style="grid-template-columns:1fr 120px 80px 80px 120px">
+        <span>Tier</span><span>Accuracy</span><span>Correct</span><span>Wrong</span><span>Sample</span>
+      </div>
+      {% for row in confidence_rows %}
+      <div class="sp-bets-row" style="grid-template-columns:1fr 120px 80px 80px 120px">
+        <span>
+          <strong>{{ row.label }}</strong>
+          <div class="sp-match-row__conf-bar" style="max-width:120px;margin-top:.3rem">
+            <div class="sp-match-row__conf-fill sp-match-row__conf-fill--{{ 'bet' if (row.accuracy or 0) >= 60 else ('consider' if (row.accuracy or 0) >= 50 else 'skip') }}" style="width:{{ row.accuracy or 0 }}%"></div>
+          </div>
+        </span>
+        <span class="sp-bets-row__result--{{ 'won' if (row.accuracy or 0) >= 55 else ('lost' if (row.accuracy or 0) < 45 else 'push') }}">{{ row.accuracy_display }}</span>
+        <span style="color:var(--c-strong)">{{ row.wins }}</span>
+        <span style="color:var(--c-danger)">{{ row.losses }}</span>
+        <span style="color:var(--text-3)">{{ row.count }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% else %}
+  <div class="sp-empty" style="margin-top:1rem"><p>No confidence breakdown available yet.</p></div>
+  {% endif %}
+</div>
+
+{# ── Recent Results Tab ───────────────────────────────────────────────────── #}
+<div id="tab-recent" style="display:none">
+  {% set metrics = metrics or {} %}
+  {% set recent = metrics.recent_predictions or [] %}
+  {% if recent %}
+  <div class="sp-section" style="margin-top:.75rem">
+    <div class="sp-bets-table">
+      <div class="sp-bets-table__head" style="grid-template-columns:1fr 1fr 120px 100px">
+        <span>Match</span><span>Pick</span><span>Result</span><span>Confidence</span>
+      </div>
+      {% for row in recent %}
+      <div class="sp-bets-row" style="grid-template-columns:1fr 1fr 120px 100px">
+        <span>{{ row.matchup or row.match or '—' }}</span>
+        <span style="color:var(--c-active)">{{ row.predicted_winner or row.pick or '—' }}</span>
+        <span class="sp-bets-row__result--{{ 'won' if row.winner_hit else 'lost' }}">{{ 'Correct' if row.winner_hit else 'Incorrect' }}</span>
+        <span>{{ row.confidence or '—' }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% else %}
+  <div class="sp-empty" style="margin-top:1rem"><p>No finalized predictions yet. Track matches and check back when results are in.</p></div>
+  {% endif %}
+</div>
+
+{# ── ML Summary Tab ───────────────────────────────────────────────────────── #}
+<div id="tab-ml-summary" style="display:none">
+  {% set ml = ml_summary or {} %}
+  {% if ml.get('available') %}
+  <div class="sp-grid-3" style="margin-top:.75rem">
+    <div class="sp-kpi-card sp-kpi-card--accuracy">
+      <span class="sp-kpi-card__label">Ensemble Accuracy</span>
+      <span class="sp-kpi-card__value">{{ "%.1f"|format((ml.ensemble_accuracy or 0) * 100) }}%</span>
+      <span class="sp-kpi-card__meta">Stacking ensemble</span>
+    </div>
+    <div class="sp-kpi-card sp-kpi-card--bet">
+      <span class="sp-kpi-card__label">Best Model</span>
+      <span class="sp-kpi-card__value" style="font-size:1rem">{{ ml.best_model_label or '—' }}</span>
+      <span class="sp-kpi-card__meta">{{ "%.1f"|format((ml.best_model_accuracy or 0) * 100) }}% accuracy</span>
+    </div>
+    <div class="sp-kpi-card">
+      <span class="sp-kpi-card__label">Feature Count</span>
+      <span class="sp-kpi-card__value">{{ ml.feature_count or '—' }}</span>
+      <span class="sp-kpi-card__meta">Input signals</span>
+    </div>
+  </div>
+  {% if ml.model_rows %}
+  <div class="sp-section" style="margin-top:.75rem">
+    <div class="sp-bets-table">
+      <div class="sp-bets-table__head" style="grid-template-columns:1fr 120px 120px">
+        <span>Model</span><span>Accuracy</span><span>Brier Score</span>
+      </div>
+      {% for row in ml.model_rows %}
+      <div class="sp-bets-row" style="grid-template-columns:1fr 120px 120px">
+        <span><strong>{{ row.label }}</strong></span>
+        <span style="color:var(--c-strong)">{{ "%.1f"|format((row.accuracy or 0) * 100) }}%</span>
+        <span style="color:var(--text-3)">{{ "%.4f"|format(row.brier_score or 0) }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  {% else %}
+  <div class="sp-flash sp-flash--warn" style="margin-top:1rem">
+    ML report not available. The model comparison pipeline has not run yet. Run <code>python generate_ml_report.py</code> to generate it.
+  </div>
+  {% endif %}
+</div>
+
+{# ── Walk-Forward Summary ──────────────────────────────────────────────────── #}
+{% set wf = walk_forward or {} %}
+{% if wf.get('available') %}
+<div class="sp-section" style="margin:1.5rem 0">
+  <div class="sp-section__header"><div><h2>Walk-Forward Backtest</h2><p>{{ wf.n_folds or 0 }} chronological folds · {{ wf.total_test_matches or 0 }} total test matches</p></div></div>
+  <div class="sp-kpi-row">
+    <div class="sp-kpi-card"><span class="sp-kpi-card__label">Combined Accuracy</span><span class="sp-kpi-card__value">{{ "%.1f"|format((wf.combined_accuracy or 0) * 100) }}%</span></div>
+    <div class="sp-kpi-card"><span class="sp-kpi-card__label">Best Fold</span><span class="sp-kpi-card__value" style="color:var(--c-strong)">{{ "%.1f"|format((wf.best_fold_accuracy or 0) * 100) }}%</span></div>
+    <div class="sp-kpi-card"><span class="sp-kpi-card__label">Trend</span><span class="sp-kpi-card__value" style="font-size:1rem;text-transform:capitalize">{{ wf.trend or '—' }}</span></div>
+    <div class="sp-kpi-card"><span class="sp-kpi-card__label">High Confidence</span><span class="sp-kpi-card__value" style="color:var(--c-strong)">{{ "%.1f"|format((wf.high_confidence_accuracy or 0) * 100) }}%</span></div>
+  </div>
+</div>
+{% endif %}
+
+<div class="sp-match-legend" style="margin-top:1.5rem">
+  <span class="sp-match-legend__how">DATA SOURCES</span>
+  <div class="sp-match-legend__item"><span class="sp-match-legend__badge sp-match-legend__badge--bet">LIVE</span><span>Real graded predictions from model tracker</span></div>
+  <div class="sp-match-legend__item"><span class="sp-match-legend__badge sp-match-legend__badge--consider">OFFLINE</span><span>Held-out evaluation set — never seen during training</span></div>
+  <div class="sp-match-legend__item"><span class="sp-match-legend__badge sp-match-legend__badge--skip">WF</span><span>Walk-forward backtest across chronological folds</span></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function showLabTab(id, el) {
+  ['overview','by-sport','by-confidence','recent','ml-summary'].forEach(function(t) {
+    var tab = document.getElementById('tab-' + t);
+    if (tab) tab.style.display = 'none';
+  });
+  document.querySelectorAll('.sp-page-tab').forEach(function(a) { a.classList.remove('active'); });
+  var target = document.getElementById('tab-' + id);
+  if (target) target.style.display = '';
+  if (el) el.classList.add('active');
+  return false;
+}
+
+// Confidence tier chart
+(function() {
+  {% set conf_rows = confidence_rows or [] %}
+  var labels = [{% for r in conf_rows %}"{{ r.label }}"{% if not loop.last %},{% endif %}{% endfor %}];
+  var accs = [{% for r in conf_rows %}{{ r.accuracy or 0 }}{% if not loop.last %},{% endif %}{% endfor %}];
+  var ctx = document.getElementById('confTierChart');
+  if (ctx && labels.length) {
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Hit Rate %',
+          data: accs,
+          backgroundColor: accs.map(function(v) {
+            return v >= 60 ? 'rgba(60,242,164,0.7)' : v >= 50 ? 'rgba(245,158,11,0.7)' : 'rgba(248,113,113,0.7)';
+          }),
+          borderRadius: 6,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+          y: { min: 0, max: 100, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', callback: function(v){ return v+'%'; } } }
+        }
+      }
+    });
+  }
+})();
+</script>
+{% endblock %}

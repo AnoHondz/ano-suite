@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" fill="none">
+  <rect width="1200" height="760" rx="24" fill="#0B0F0D"/>
+  <rect x="28" y="28" width="1144" height="704" rx="20" fill="#111815" stroke="#233228"/>
+  <rect x="64" y="64" width="220" height="28" rx="14" fill="#173522"/>
+  <rect x="64" y="118" width="520" height="54" rx="16" fill="#15201A"/>
+  <rect x="64" y="198" width="1072" height="164" rx="20" fill="#101714" stroke="#203027"/>
+  <rect x="64" y="390" width="516" height="280" rx="20" fill="#101714" stroke="#203027"/>
+  <rect x="620" y="390" width="516" height="280" rx="20" fill="#101714" stroke="#203027"/>
+  <rect x="96" y="232" width="180" height="20" rx="10" fill="#8FF0A4" fill-opacity=".15"/>
+  <rect x="96" y="272" width="420" height="18" rx="9" fill="#D7FBE4" fill-opacity=".11"/>
+  <rect x="96" y="304" width="360" height="18" rx="9" fill="#D7FBE4" fill-opacity=".09"/>
+  <rect x="96" y="438" width="180" height="18" rx="9" fill="#8FF0A4" fill-opacity=".15"/>
+  <rect x="96" y="472" width="430" height="16" rx="8" fill="#D7FBE4" fill-opacity=".1"/>
+  <rect x="96" y="504" width="390" height="16" rx="8" fill="#D7FBE4" fill-opacity=".08"/>
+  <rect x="652" y="438" width="160" height="18" rx="9" fill="#8FF0A4" fill-opacity=".15"/>
+  <rect x="652" y="472" width="420" height="16" rx="8" fill="#D7FBE4" fill-opacity=".1"/>
+  <rect x="652" y="504" width="370" height="16" rx="8" fill="#D7FBE4" fill-opacity=".08"/>
+  <text x="64" y="620" fill="#8FF0A4" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">Placeholder Screenshot</text>
+  <text x="64" y="658" fill="#F4FFF8" font-family="Arial, Helvetica, sans-serif" font-size="46" font-weight="700">Match Analysis Page</text>
+  <text x="64" y="696" fill="#A7B8AD" font-family="Arial, Helvetica, sans-serif" font-size="24">Replace with a real ScorPred matchup / prediction screen capture.</text>
+</svg>

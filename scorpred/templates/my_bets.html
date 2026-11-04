@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% import "components/decision.html" as ui with context %}
+
+{% block title %}ScorPred | Tracked Matches{% endblock %}
+{% block topbar_title %}Tracked Matches{% endblock %}
+
+{% block content %}
+
+{# ── Header ──────────────────────────────────────────────────────────────────── #}
+<div class="sp-bets-header">
+  <div>
+    <h1>Tracked Matches <span style="font-size:.7em;color:var(--text-3);font-weight:600">/ My Bets</span></h1>
+    <p class="sp-muted">Track predictions and monitor completed match outcomes in one place.</p>
+  </div>
+  <a class="btn btn-primary btn-sm" href="/soccer">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:14px;height:14px;display:block"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Track New Match
+  </a>
+</div>
+
+{# ── KPI Cards ───────────────────────────────────────────────────────────────── #}
+<div class="sp-bets-kpi">
+  <div class="sp-bets-kpi-card">
+    <span class="sp-bets-kpi-card__label">Total Tracked</span>
+    <div class="sp-bets-kpi-card__value">{{ bets|length if bets else 0 }}</div>
+    <div class="sp-bets-kpi-card__sub">All time</div>
+  </div>
+  <div class="sp-bets-kpi-card sp-bets-kpi-card--won">
+    <span class="sp-bets-kpi-card__label">Correct</span>
+    <div class="sp-bets-kpi-card__value">{{ won_count or 0 }} <small style="font-size:.9rem;opacity:.7">({{ win_rate or 0 }}%)</small></div>
+    <div class="sp-bets-kpi-card__sub">Accuracy</div>
+  </div>
+  <div class="sp-bets-kpi-card sp-bets-kpi-card--lost">
+    <span class="sp-bets-kpi-card__label">Incorrect</span>
+    <div class="sp-bets-kpi-card__value">{{ lost_count or 0 }} <small style="font-size:.9rem;opacity:.7">({{ lost_rate or 0 }}%)</small></div>
+    <div class="sp-bets-kpi-card__sub">Miss rate</div>
+  </div>
+  <div class="sp-bets-kpi-card">
+    <span class="sp-bets-kpi-card__label">Open</span>
+    <div class="sp-bets-kpi-card__value">{{ pushed_count or 0 }}</div>
+    <div class="sp-bets-kpi-card__sub">Not completed</div>
+  </div>
+  <div class="sp-bets-kpi-card sp-bets-kpi-card--roi">
+    <span class="sp-bets-kpi-card__label">Model ROI</span>
+    <div class="sp-bets-kpi-card__value">{{ roi or '+0.0%' }}</div>
+    <div class="sp-bets-kpi-card__sub">Not tracked (analysis mode)</div>
+  </div>
+</div>
+
+{# ── Filter Bar ───────────────────────────────────────────────────────────────── #}
+<div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap">
+  <div class="sp-page-tabs" style="border:none;margin:0">
+    <a href="?status=all" class="sp-page-tab {% if not request.args.get('status') or request.args.get('status') == 'all' %}active{% endif %}">All Matches</a>
+    <a href="?status=open" class="sp-page-tab {% if request.args.get('status') == 'open' %}active{% endif %}">Open</a>
+    <a href="?status=settled" class="sp-page-tab {% if request.args.get('status') == 'settled' %}active{% endif %}">Completed</a>
+  </div>
+  <div style="display:flex;gap:.5rem;margin-left:auto;align-items:center">
+    <select class="sp-filter-control" aria-label="Filter by league">
+      <option>All Leagues</option>
+      <option>Premier League</option>
+      <option>La Liga</option>
+      <option>Bundesliga</option>
+      <option>Ligue 1</option>
+      <option>Serie A</option>
+    </select>
+    <select class="sp-filter-control" aria-label="Date range">
+      <option>Apr 17 - Apr 24, 2025</option>
+      <option>Last 30 days</option>
+      <option>All time</option>
+    </select>
+  </div>
+</div>
+
+{# ── Bets Table ───────────────────────────────────────────────────────────────── #}
+{% if bets %}
+  <div class="sp-bets-table">
+    <div class="sp-bets-table__head">
+      <span>Date</span>
+      <span>Match</span>
+      <span>Pick</span>
+      <span>Sport</span>
+      <span>Score</span>
+      <span>Result</span>
+      <span>Profit</span>
+      <span>Confidence</span>
+    </div>
+    {% for bet in bets %}
+      <div class="sp-bets-row">
+        <span class="sp-bets-row__date">{{ bet.date or '—' }}</span>
+        <div class="sp-bets-row__match">
+          {{ bet.match or '—' }}
+          <small>{{ bet.league or '' }}</small>
+        </div>
+        <div class="sp-bets-row__pick">
+          {{ bet.pick or '—' }}
+          <small>{{ bet.pick_type or '' }}</small>
+        </div>
+        <span>{{ bet.sport or '—' }}</span>
+        <span>{{ bet.score or '—' }}</span>
+        <span class="sp-bets-row__result--{{ bet.result_class or 'push' }}">{{ bet.result_label or '—' }}</span>
+        <span class="sp-bets-row__profit--{{ 'pos' if (bet.profit or 0) >= 0 else 'neg' }}">
+          {{ '+' if (bet.profit or 0) > 0 else '' }}{{ bet.profit or '—' }}
+        </span>
+        <span>
+          {% if bet.confidence %}
+            <span class="sp-badge {% if bet.confidence >= 70 %}sp-badge--strong{% elif bet.confidence >= 50 %}sp-badge--caution{% else %}sp-badge--danger{% endif %}">{{ bet.confidence }}%</span>
+          {% else %}—{% endif %}
+        </span>
+      </div>
+    {% endfor %}
+  </div>
+
+  {# Totals row #}
+  <div style="display:flex;justify-content:space-between;padding:.75rem 1.25rem;font-size:.82rem;color:var(--text-3);border-top:1px solid var(--border)">
+    <span>Total Settled: <strong style="color:var(--text)">{{ won_count + lost_count }}</strong></span>
+    <span>Total Open: <strong style="color:var(--c-caution)">{{ pushed_count }}</strong></span>
+    <span>Win Rate: <strong style="color:var(--text)">{{ win_rate or '0' }}%</strong></span>
+    <span>ROI: <strong style="color:var(--c-active)">{{ roi or '+0.0%' }}</strong></span>
+  </div>
+
+{% else %}
+  {# Empty state - no bets tracked yet #}
+  <div class="sp-info-card" style="text-align:center;padding:3rem 2rem">
+    <div class="sp-empty-state__mark" style="margin:0 auto 1rem">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:28px;height:28px;color:var(--c-strong)"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 12 2 2 4-4"/></svg>
+    </div>
+    <h3>No matches tracked yet</h3>
+    <p style="color:var(--text-2);max-width:400px;margin:.5rem auto 1.25rem">Track a match from Soccer or NBA to start building your accuracy history.</p>
+    <a href="/soccer" class="btn btn-primary">Browse Today's Picks</a>
+  </div>
+{% endif %}
+
+{% endblock %}

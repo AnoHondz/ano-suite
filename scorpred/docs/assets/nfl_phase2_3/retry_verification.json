@@ -1,0 +1,16 @@
+{
+  "verified_at": "2026-10-20T16:49:22.793306+00:00",
+  "archive_unchanged": true,
+  "archived_forecasts": 2,
+  "retry": {
+    "archived": 0,
+    "completed_at": "2026-10-20T16:48:36.914666+00:00",
+    "dry_run": false,
+    "due_games": 0,
+    "eligible_upcoming": 178,
+    "missed": 0,
+    "results": [],
+    "started_at": "2026-10-20T16:48:36.435036+00:00",
+    "status": "success"
+  }
+}

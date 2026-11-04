@@ -1,0 +1,27 @@
+{
+  "generated_at": "2026-10-22T13:20:24.861126+00:00",
+  "files": {
+    "docs/assets/rights_soccer/backend_tests.txt": "316e8a0eb66905ff9d8c79fa0d66aaeca2364b0c7b884c5771106e19ef7c07f2",
+    "docs/assets/rights_soccer/frontend_build.txt": "942190a74891d8bf4425cf04b5b0b8780a69a9c6c3bc1d4229264ef6c8b68c8d",
+    "docs/assets/rights_soccer/git_lineage_evidence.json": "f39df9228b64e186e0adec7b4b215d359d320e3d4e917f19983cb6d9c0fbbbf9",
+    "docs/assets/rights_soccer/nba_2023_pilot.json": "f4a99fff691e03df90a9e8825e5f8649aafe43b12b706aafea4635bc32936692",
+    "docs/assets/rights_soccer/nba_release_evidence.json": "1325c9ef02a2e3f6efa5912b21e9bd15666697244e5b861d8aebfb779f0471da",
+    "docs/assets/rights_soccer/nba_release_summary.json": "96b62bf407b78d752b2cfde1ab9d01b04c7ec67bbe1c5d9a2ecb933448efef25",
+    "docs/assets/rights_soccer/nba_rights_decisions.json": "e4a6b2029ad4bfd683de68075e26cf5ab8c4d29a119f5b84faa54f8bff8bfe8d",
+    "docs/assets/rights_soccer/nba_schema_code_evidence.json": "c7a3cfb4adb6de79a29eae01884fa0c4875551fbef23a6e32650dac0f0087c5f",
+    "docs/assets/rights_soccer/preservation.json": "1a353f38c15beba8c7201c073234a04cdfce2026df74ce92fcae5bf7305a4c5f",
+    "docs/assets/rights_soccer/soccer_duplicates.json": "9ee9c212c022bd7ea6c42eda0ecc6054e59f09e7a99d57dfb6744a22f6c4f068",
+    "docs/assets/rights_soccer/soccer_input_manifest.json": "62ec99ca3e4aa6a4a82d61eb1fd2a67bd76c5c6621f325225f45ff8f646b0990",
+    "docs/assets/rights_soccer/soccer_lineage.json": "18c44e8167be46cfa0289fd286f8ba86346f78add41e66627161b60979b9e645",
+    "docs/assets/rights_soccer/soccer_stat_contracts.json": "ef79f56f2b7ea8f68a3d72a0fb1efae551504274ff14ac90881736b5d0694a4d",
+    "docs/assets/rights_soccer/statistic_probe_results.json": "eb99228833c55fdf0378b24a4463bba427f2572c74245ab91b27c82c95433fd3",
+    "docs/assets/rights_soccer/verification.json": "ee4bad40f21f19a6ac2851f23e18d8becb25aac5fb49b10f8a72f91b3cd12ee9",
+    "docs/NBA_2023_PILOT_PLAN.md": "1bbdd1cce8429ea02719f6ae481f947c914eff46a4727d3cfa0a6984fb1aa85b",
+    "docs/NBA_SOURCE_RIGHTS_RESOLUTION.md": "50141c9083bd0dc9a91ac801be8c3eacd17ba635a07c47bf141f89306f6eb2ee",
+    "docs/SOCCER_DUPLICATE_REPAIR_PLAN.md": "8e3ff744267168a88e551781d5566d46375aceeb1e3338665a964410efa8d785",
+    "docs/SOCCER_LINEAGE_RECOVERY_PLAN.md": "0176957f13cd094bce4ea1bafca74547fe54c066a09846e83b1d0cb638a3ee75",
+    "scripts/inspect_nba_release_metadata.py": "ce12481844855891988ed85fe8880bbc584a137eeff3b0a627a81fa5c81d2c41",
+    "scripts/plan_soccer_data_repairs.py": "ab9920fa0dd60de4ef56b354e0d51306e439be4707e41ff8871b1fe3ad5f7783",
+    "tests/test_source_repair_preparation.py": "f8f945a2441b8c065d3cc77805529ba125ee5b0739d9fd0ae3fdb1ab810439e8"
+  }
+}

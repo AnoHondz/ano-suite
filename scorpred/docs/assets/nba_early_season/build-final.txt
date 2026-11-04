@@ -1,0 +1,36 @@
+
+> frontend@0.0.0 build
+> tsc -b && vite build
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 1770 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                  0.69 kB │ gzip:   0.37 kB
+dist/assets/scorpred-player-logo-bd_ksRHA.png   82.17 kB
+dist/assets/index-lNnUQOdF.css                  76.95 kB │ gzip:  16.51 kB
+dist/assets/database-Clnl-vMZ.js                 0.23 kB │ gzip:   0.19 kB
+dist/assets/flask-conical-CvbvOfhr.js            0.29 kB │ gzip:   0.22 kB
+dist/assets/SoccerPage-Ba1jbuoI.js               4.01 kB │ gzip:   1.61 kB
+dist/assets/NBAPage-CAEjlD49.js                  4.24 kB │ gzip:   1.80 kB
+dist/assets/NFLPage-BbAWhKdn.js                  7.23 kB │ gzip:   2.78 kB
+dist/assets/jsx-runtime-DSZCEiL-.js              8.56 kB │ gzip:   3.26 kB
+dist/assets/InsightsPage-DxA2hx34.js            32.22 kB │ gzip:   9.10 kB
+dist/assets/MatchAnalysisPage-DPu2WLwg.js       48.44 kB │ gzip:  11.90 kB
+dist/assets/index-BYxLT4T0.js                  224.19 kB │ gzip:  70.59 kB
+dist/assets/ArenaScene-DZ_PAYTW.js             923.53 kB │ gzip: 245.18 kB
+
+npm.cmd : [plugin builtin:vite-reporter]
+At line:2 char:193
++ ... -final.txt; & "$taskNode\npm.cmd" run build *> ..\.tmp\nba_early_seas ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([plugin builtin:vite-reporter] :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking:
+https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 858ms

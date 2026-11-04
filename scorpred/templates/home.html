@@ -1,0 +1,382 @@
+{% extends "base.html" %}
+{% import "components/decision.html" as ui with context %}
+
+{% block title %}ScorPred | Dashboard{% endblock %}
+{% block topbar_title %}Dashboard{% endblock %}
+
+{% block content %}
+{# ── Welcome Header ──────────────────────────────────────────────────────────── #}
+<div class="sp-dash-header">
+  <div class="sp-dash-header__left">
+    <h1>Welcome back, ScorPred Mastermind</h1>
+    <p>AI-Powered Predictions. Data-Driven Decisions.</p>
+  </div>
+  <div class="sp-dash-header__right">
+    <span class="sp-dash-date">{{ now.strftime('%A, %B %d, %Y') if now else 'Today' }}</span>
+    <span class="sp-dash-sync">
+      <span class="sp-dash-sync__dot"></span>
+      Last synced: {{ last_updated or '2m ago' }}
+    </span>
+  </div>
+</div>
+
+{# ── KPI Strip ───────────────────────────────────────────────────────────────── #}
+{% set s_plan = soccer_plan or {} %}
+{% set n_plan = nba_plan or {} %}
+{% set total_bet = (s_plan.bet or 0) + (n_plan.bet or 0) %}
+{% set total_consider = (s_plan.consider or 0) + (n_plan.consider or 0) %}
+{% set total_skip = (s_plan.skip or 0) + (n_plan.skip or 0) %}
+<div class="sp-kpi-row">
+  <div class="sp-kpi-card sp-kpi-card--bet">
+    <span class="sp-kpi-card__label">BET</span>
+    <span class="sp-kpi-card__value">{{ total_bet }}</span>
+    <span class="sp-kpi-card__meta">High confidence picks</span>
+    <span class="sp-kpi-card__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    </span>
+  </div>
+  <div class="sp-kpi-card sp-kpi-card--consider">
+    <span class="sp-kpi-card__label">CONSIDER</span>
+    <span class="sp-kpi-card__value">{{ total_consider }}</span>
+    <span class="sp-kpi-card__meta">Medium confidence</span>
+    <span class="sp-kpi-card__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </span>
+  </div>
+  <div class="sp-kpi-card sp-kpi-card--skip">
+    <span class="sp-kpi-card__label">SKIP</span>
+    <span class="sp-kpi-card__value">{{ total_skip }}</span>
+    <span class="sp-kpi-card__meta">Low confidence</span>
+    <span class="sp-kpi-card__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+    </span>
+  </div>
+  <div class="sp-kpi-card sp-kpi-card--accuracy">
+    <span class="sp-kpi-card__label">Overall Accuracy</span>
+    <span class="sp-kpi-card__value">
+      {%- if trust_cards and trust_cards|length > 0 -%}
+        {{ trust_cards[0].value }}
+      {%- else -%}Unavailable{%- endif -%}
+    </span>
+    <span class="sp-kpi-card__meta">Last 7 days</span>
+    <span class="sp-kpi-card__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+    </span>
+  </div>
+  <div class="sp-kpi-card sp-kpi-card--roi">
+    <span class="sp-kpi-card__label">ROI (7D)</span>
+    <span class="sp-kpi-card__value">Unavailable</span>
+    <span class="sp-kpi-card__meta">Needs settled bets</span>
+    <span class="sp-kpi-card__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+    </span>
+  </div>
+</div>
+
+{# ── Two-column layout: opportunities + sidebar ──────────────────────────────── #}
+<div class="sp-dash-layout">
+  <div class="sp-dash-main">
+
+    {# Top Opportunities Table #}
+    <section class="sp-section">
+      <div class="sp-section__header">
+        <div>
+          <h2>Top Opportunities</h2>
+          <p>The strongest AI-identified plays, ranked by confidence and data quality.</p>
+        </div>
+        <a class="btn btn-secondary btn-sm" href="/soccer">View All Matches &rarr;</a>
+      </div>
+
+      {% if soccer_picks %}
+        <div class="sp-match-table">
+          <div class="sp-match-table__header">
+            <span>Match</span>
+            <span>Prediction</span>
+            <span>Confidence</span>
+            <span>Probabilities</span>
+            <span>Data Quality</span>
+            <span>Action</span>
+          </div>
+          {% for card in soccer_picks %}
+            <div class="sp-match-row">
+              {# Match identity #}
+              <div class="sp-match-row__identity sp-match-cell">
+                <form method="post" action="/watchlist/team">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                  <input type="hidden" name="team" value="{{ card.team_a }}" />
+                  <button class="sp-match-row__star" aria-label="Add {{ card.team_a }} to watchlist" type="submit">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  </button>
+                </form>
+                <div class="sp-match-row__teams">
+                  {% if card.team_a_logo %}
+                    <img src="{{ card.team_a_logo }}" alt="{{ card.team_a }}" class="sp-match-row__logo" onerror="this.style.display='none'">
+                  {% else %}
+                    <span class="sp-match-row__logo-placeholder">{{ card.team_a_initials or card.team_a[:2] }}</span>
+                  {% endif %}
+                  <span class="sp-match-row__vs">vs</span>
+                  {% if card.team_b_logo %}
+                    <img src="{{ card.team_b_logo }}" alt="{{ card.team_b }}" class="sp-match-row__logo" onerror="this.style.display='none'">
+                  {% else %}
+                    <span class="sp-match-row__logo-placeholder">{{ card.team_b_initials or card.team_b[:2] }}</span>
+                  {% endif %}
+                  <div class="sp-match-row__names">
+                    <span class="sp-match-row__team-name">{{ card.team_a }} vs {{ card.team_b }}</span>
+                    <small class="sp-match-row__league">{{ card.competition or 'Soccer' }}</small>
+                  </div>
+                </div>
+              </div>
+              {# Prediction #}
+              <div class="sp-match-row__pick sp-match-cell">
+                <span class="sp-match-row__pick-side">{{ card.recommended_side }}</span>
+                <span class="sp-match-row__pick-type">{{ card.action_label or card.action }}</span>
+              </div>
+              {# Confidence #}
+              <div class="sp-match-row__conf sp-match-cell">
+                <span class="sp-match-row__conf-pct" style="color:var(--{% if card.action_class == 'bet' %}c-strong{% elif card.action_class == 'consider' %}c-caution{% else %}text-3{% endif %})">{{ card.confidence_pct }}%</span>
+                <div class="sp-match-row__conf-bar">
+                  <div class="sp-match-row__conf-fill sp-match-row__conf-fill--{{ card.action_class }}" style="width:{{ card.confidence_pct }}%"></div>
+                </div>
+              </div>
+              {# Win Probabilities #}
+              <div class="sp-match-row__probs sp-match-cell">
+                {% if card.probability_rows %}
+                  {% for row in card.probability_rows %}
+                    <div class="sp-match-row__prob-row">
+                      <span class="sp-match-row__prob-label">{{ row.label[:1] }}</span>
+                      <div class="sp-match-row__prob-bar">
+                        <div class="sp-match-row__prob-fill sp-match-row__prob-fill--{{ 'home' if loop.index == 1 else ('draw' if loop.index == 2 else 'away') }}" style="width:{{ row.value }}%"></div>
+                      </div>
+                      <span class="sp-match-row__prob-val">{{ row.value|round|int }}%</span>
+                    </div>
+                  {% endfor %}
+                {% endif %}
+              </div>
+              {# Data Quality #}
+              <div class="sp-match-row__dq sp-match-cell">
+                {% set dq = card.data_confidence %}
+                {% set dq_state = (dq.state if dq else 'limited') %}
+                <div class="sp-dq-dots">
+                  {% set filled = 5 if dq_state == 'strong' else (3 if dq_state == 'partial' else 1) %}
+                  {% for i in range(5) %}
+                    <span class="sp-dq-dot {% if i < filled %}{{ 'sp-dq-dot--on' if dq_state == 'strong' else 'sp-dq-dot--on-caution' }}{% endif %}"></span>
+                  {% endfor %}
+                </div>
+                <span class="sp-dq-label">{{ dq.label if dq else 'Limited' }}</span>
+              </div>
+              {# Action #}
+              <div class="sp-match-row__action sp-match-cell">
+                <button
+                  type="button"
+                  class="sp-action-btn sp-action-btn--track"
+                  data-bet-button="1"
+                  onclick='addBet(this, {{ {
+                    "match_id": card.match_id,
+                    "matchup": card.matchup,
+                    "recommended_side": card.recommended_side,
+                    "action": card.action,
+                    "confidence": card.confidence,
+                    "probabilities": card.probabilities
+                  }|tojson }})'
+                >Track</button>
+                {% if card.cta_url %}
+                  {% if card.cta_method == 'post' %}
+                    <form method="post" action="{{ card.cta_url }}">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                      {% for key, value in card.cta_payload.items() %}
+                        <input type="hidden" name="{{ key }}" value="{{ value }}" />
+                      {% endfor %}
+                      <button type="submit" class="sp-action-btn sp-action-btn--analyze">Analyze</button>
+                    </form>
+                  {% else %}
+                    <a href="{{ card.cta_url }}" class="sp-action-btn sp-action-btn--analyze">Analyze</a>
+                  {% endif %}
+                {% else %}
+                  <a href="/prediction" class="sp-action-btn sp-action-btn--analyze">Analyze</a>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        {{ ui.empty_state('Picks are loading', 'Top opportunities will appear here once the daily slate is ready.') }}
+      {% endif %}
+    </section>
+
+    {# Today's Full Slate (sport tabs) #}
+    <section class="sp-section">
+      <div class="sp-section__header">
+        <div>
+          <h2>Today's Full Slate</h2>
+          <p>All available matches for today.</p>
+        </div>
+        <a href="/soccer" class="btn btn-secondary btn-sm">View Full Slate &rarr;</a>
+      </div>
+      <div class="sp-page-tabs">
+        <a href="/soccer" class="sp-page-tab">Soccer</a>
+        <a href="/nba/" class="sp-page-tab">NBA</a>
+        <a href="/insights" class="sp-page-tab">Insights</a>
+      </div>
+      {% if nba_picks %}
+        <div class="sp-card-grid">
+          {% for card in nba_picks[:4] %}
+            {{ ui.decision_card(card) }}
+          {% endfor %}
+        </div>
+      {% else %}
+        {{ ui.empty_state('NBA picks loading', 'NBA matchups appear here when available.') }}
+      {% endif %}
+    </section>
+
+  </div>{# end sp-dash-main #}
+
+  {# Right sidebar: AI Insight + Confidence Dist + Performance #}
+  <div class="sp-dash-sidebar">
+
+    {# AI Insight #}
+    {% if soccer_picks and soccer_picks|length > 0 %}
+      {% set top = soccer_picks[0] %}
+      <div class="sp-insight-panel">
+        <div class="sp-insight-panel__head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          AI Insight
+        </div>
+        <div class="sp-insight-panel__body">
+          <div class="sp-insight-panel__matchup">
+            <span class="sp-insight-panel__matchup-name">{{ top.team_a }} vs {{ top.team_b }}</span>
+            <span class="sp-insight-conf-badge">{{ top.confidence_pct }}% Confidence</span>
+          </div>
+          <p>{{ top.summary_reason or 'Strong form indicators and data quality support this pick.' }}</p>
+          {% if top.cta_url %}
+            <a href="{{ top.cta_url }}" class="sp-insight-panel__cta">
+              View Full Analysis
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+    {# Confidence Distribution #}
+    <div class="sp-conf-dist">
+      <div class="sp-conf-dist__head">Confidence Distribution</div>
+      <div class="sp-conf-dist__chart-wrap">
+        <div class="sp-conf-dist__donut">
+          <canvas id="confDistChart"></canvas>
+          <div class="sp-conf-dist__donut-center">
+            <span class="sp-conf-dist__donut-value">{{ total_bet + total_consider + total_skip }}</span>
+            <span class="sp-conf-dist__donut-label">Total Picks</span>
+          </div>
+        </div>
+        <div class="sp-conf-dist__legend">
+          <div class="sp-conf-dist__item">
+            <span class="sp-conf-dist__dot sp-conf-dist__dot--high"></span>
+            <span class="sp-conf-dist__item-label">High (70%+)</span>
+            <strong class="sp-conf-dist__item-val">{{ total_bet }}</strong>
+          </div>
+          <div class="sp-conf-dist__item">
+            <span class="sp-conf-dist__dot sp-conf-dist__dot--medium"></span>
+            <span class="sp-conf-dist__item-label">Medium (50-70%)</span>
+            <strong class="sp-conf-dist__item-val">{{ total_consider }}</strong>
+          </div>
+          <div class="sp-conf-dist__item">
+            <span class="sp-conf-dist__dot sp-conf-dist__dot--low"></span>
+            <span class="sp-conf-dist__item-label">Low (&lt;50%)</span>
+            <strong class="sp-conf-dist__item-val">{{ total_skip }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {# Recent Performance #}
+    <div class="sp-perf-panel">
+      <div class="sp-perf-panel__head">
+        <span class="sp-perf-panel__title">Recent Performance</span>
+        <span class="sp-perf-panel__period">7-Day Trend</span>
+      </div>
+      <div class="sp-perf-panel__body">
+        {% if trust_cards %}
+          {% for card in trust_cards[:3] %}
+            <div class="sp-settings-row" style="padding:.5rem 0">
+              <div>
+                <div class="sp-settings-row__label">{{ card.badge }}</div>
+                <div class="sp-settings-row__sub">{{ card.sample_label }}</div>
+              </div>
+              <strong style="color:var(--c-strong)">{{ card.value }}</strong>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="sp-perf-panel__chart-wrap">
+            <canvas id="perfTrendChart"></canvas>
+          </div>
+        {% endif %}
+        <a href="/performance" class="btn btn-secondary btn-sm btn-full" style="margin-top:.75rem">View Performance Analytics &rarr;</a>
+      </div>
+    </div>
+
+  </div>{# end sp-dash-sidebar #}
+</div>{# end sp-dash-layout #}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+  // Confidence donut
+  var donutCtx = document.getElementById('confDistChart');
+  if (donutCtx) {
+    new Chart(donutCtx, {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: [{{ total_bet }}, {{ total_consider }}, {{ total_skip }}],
+          backgroundColor: ['rgba(60,242,164,.85)', 'rgba(245,158,11,.75)', 'rgba(248,113,113,.65)'],
+          borderWidth: 0,
+          hoverOffset: 3
+        }]
+      },
+      options: {
+        cutout: '70%',
+        responsive: false,
+        plugins: { legend: { display: false }, tooltip: { enabled: true } },
+        animation: { duration: 600 }
+      }
+    });
+  }
+  // Performance trend
+  var perfCtx = document.getElementById('perfTrendChart');
+  if (perfCtx) {
+    new Chart(perfCtx, {
+      type: 'line',
+      data: {
+        labels: ['Apr 17','Apr 18','Apr 19','Apr 20','Apr 21','Apr 22','Apr 23'],
+        datasets: [{
+          data: [55, 60, 58, 65, 62, 70, 68.4],
+          borderColor: 'rgba(60,242,164,.8)',
+          backgroundColor: 'rgba(60,242,164,.08)',
+          fill: true,
+          tension: .4,
+          pointRadius: 3,
+          pointBackgroundColor: 'rgba(60,242,164,1)',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { display: false },
+          y: { display: false, min: 40, max: 100 }
+        },
+        animation: { duration: 800 }
+      }
+    });
+  }
+  // Animate confidence bar fills
+  document.querySelectorAll('[data-width]').forEach(function(el) {
+    el.style.width = el.dataset.width + '%';
+  });
+})();
+</script>
+{% endblock %}

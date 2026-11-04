@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% import "components/decision.html" as ui with context %}
+
+{% block title %}ScorPred | Match Analysis{% endblock %}
+{% block topbar_title %}Match Analysis{% endblock %}
+
+{% block content %}
+{% set card = scorpred.decision_card if scorpred else none %}
+{% if card %}{% set _ = card.update({'hide_cta': True}) %}{% endif %}
+
+{# ── Match Header ─────────────────────────────────────────────────────────────── #}
+<div class="sp-dash-header">
+  <div class="sp-dash-header__left">
+    <span class="sp-kicker" style="color:var(--c-active);margin-bottom:.3rem;display:block">
+      {{ selected_fixture.league_name or (current_league.name if current_league) or 'Soccer' }}
+    </span>
+    <h1>{{ team_a.name if team_a else 'Home' }} vs {{ team_b.name if team_b else 'Away' }}</h1>
+    <p>AI-powered match analysis with confidence, evidence, and data trust signals.</p>
+  </div>
+  <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+    <a class="btn btn-secondary btn-sm" href="/soccer">Back to Soccer</a>
+    <a class="btn btn-secondary btn-sm" href="/insights">Insights</a>
+  </div>
+</div>
+
+{% if card %}
+  <div class="sp-analysis-layout">
+    <div>
+      {# Featured Decision Card #}
+      {{ ui.decision_card(card, 'featured') }}
+
+      {# ── Decision Metrics Panel ──────────────────────────────────────────────── #}
+      <section class="sp-section">
+        <div class="sp-info-card">
+          <h2 style="margin-bottom:1rem">Decision Metrics</h2>
+          <div class="sp-metrics-grid">
+            <div class="sp-metric-item">
+              <span class="sp-metric-label">Edge Score</span>
+              {% if card.edge_score is not none %}
+                <span class="sp-metric-value {{ 'sp-metric-value--positive' if card.edge_score > 0 else 'sp-metric-value--negative' }}">
+                  {{ '%+.1f'|format(card.edge_score * 100) }}%
+                </span>
+              {% else %}
+                <span class="sp-metric-value sp-text-muted">Market odds unavailable</span>
+              {% endif %}
+            </div>
+            <div class="sp-metric-item">
+              <span class="sp-metric-label">Expected Value</span>
+              {% if card.expected_value is not none %}
+                <span class="sp-metric-value {{ 'sp-metric-value--positive' if card.expected_value > 0 else 'sp-metric-value--negative' }}">
+                  {{ '%+.1f'|format(card.expected_value) }} pts
+                </span>
+              {% else %}
+                <span class="sp-metric-value sp-text-muted">EV unavailable</span>
+              {% endif %}
+            </div>
+            <div class="sp-metric-item">
+              <span class="sp-metric-label">Risk Level</span>
+              <span class="sp-risk-badge sp-risk-badge--{{ (card.risk_level or 'medium')|lower }}">
+                {{ card.risk_level or 'N/A' }}
+              </span>
+            </div>
+            <div class="sp-metric-item">
+              <span class="sp-metric-label">Decision Grade</span>
+              <span class="sp-grade-badge sp-grade-badge--{{ (card.decision_grade or 'c')|lower }}">
+                {{ card.decision_grade or 'N/A' }}
+              </span>
+            </div>
+          </div>
+
+          {# Adaptive safeguard trace #}
+          {% set aa = card.adaptive_adjustment if card.adaptive_adjustment is mapping else none %}
+          {% if aa %}
+            <div style="margin-top:1rem;padding-top:.75rem;border-top:1px solid var(--border)">
+              <small class="sp-kicker" style="display:block;margin-bottom:.5rem">Adaptive Safeguards</small>
+              <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+                {% if aa.drift_detected %}
+                  <span class="sp-badge sp-badge--caution">Drift Detected · {{ aa.drift_severity or 'LOW' }}</span>
+                {% endif %}
+                {% if aa.threshold_shift %}
+                  <span class="sp-badge sp-badge--muted">Threshold {{ '%+d'|format(aa.threshold_shift) }}%</span>
+                {% endif %}
+                {% if aa.trust_modifier %}
+                  <span class="sp-badge sp-badge--muted">Trust adj {{ '%+d'|format(aa.trust_modifier) }}</span>
+                {% endif %}
+                {% if aa.calibration_penalty %}
+                  <span class="sp-badge sp-badge--muted">Cal penalty {{ '%+d'|format(aa.calibration_penalty) }}</span>
+                {% endif %}
+                {% if not aa.drift_detected and not aa.threshold_shift and not aa.trust_modifier %}
+                  <span style="color:var(--text-3);font-size:.8rem">All systems nominal</span>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </section>
+
+      {# Why Win #}
+      <section class="sp-section">
+        <div class="sp-info-card">
+          <h2 style="margin-bottom:.75rem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-strong)" stroke-width="2" stroke-linecap="round" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:.4rem"><polyline points="20 6 9 17 4 12"/></svg>
+            Why this side can win
+          </h2>
+          <ul class="sp-why-list">
+            {% for point in card.why_win or [] %}
+              <li>{{ point }}</li>
+            {% else %}
+              <li style="color:var(--text-3)">Analysis points not available for this match.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+
+      {# Why Lose #}
+      <section class="sp-section">
+        <div class="sp-info-card">
+          <h2 style="margin-bottom:.75rem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-caution)" stroke-width="2" stroke-linecap="round" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:.4rem"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Why this side could lose
+          </h2>
+          <ul class="sp-why-list">
+            {% for point in card.why_lose or [] %}
+              <li>{{ point }}</li>
+            {% else %}
+              <li style="color:var(--text-3)">Risk factors not available for this match.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+
+      {# Key Swing Factor #}
+      {% if card.key_swing_factor %}
+      <section class="sp-section">
+        <div class="sp-info-card" style="border-color:rgba(var(--c-active-rgb),.2);background:linear-gradient(135deg,rgba(var(--c-active-rgb),.04),transparent)">
+          <h2 style="margin-bottom:.5rem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-active)" stroke-width="2" stroke-linecap="round" style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:.4rem"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Key swing factor
+          </h2>
+          <p>{{ card.key_swing_factor }}</p>
+        </div>
+      </section>
+      {% endif %}
+
+      {# Visual Read #}
+      <section class="sp-section">
+        <div class="sp-info-card">
+          <h2 style="margin-bottom:1rem">Visual Read</h2>
+          {{ ui.confidence_bar(card) }}
+          {{ ui.probability_bar(card) }}
+          {% if card.comparison_metrics %}
+            <div style="margin-top:.75rem">{{ ui.comparison_bars(card.comparison_metrics) }}</div>
+          {% endif %}
+          {% if card.form_strip %}
+            <div style="margin-top:.75rem">
+              <small class="sp-kicker">Recent Form</small>
+              {{ ui.form_strip(card.form_strip) }}
+            </div>
+          {% endif %}
+        </div>
+      </section>
+    </div>
+
+    {# ── Trust Check Sidebar ──────────────────────────────────────────────────── #}
+    <aside class="sp-info-card sp-analysis-sidebar" style="align-self:start">
+      <h2 style="margin-bottom:.85rem">Trust Check</h2>
+      {{ ui.data_badge(card.data_confidence) }}
+      <p class="sp-muted" style="margin-top:.75rem;font-size:.84rem">{{ (scorpred.data_completeness or {}).get('summary') or card.support_text or 'Data quality assessment for this matchup.' }}</p>
+
+      {# Grade + Risk quick stat #}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.85rem">
+        <div style="text-align:center;padding:.5rem;background:var(--bg-card);border-radius:6px;border:1px solid var(--border)">
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3)">Grade</div>
+          <div class="sp-grade-badge sp-grade-badge--{{ (card.decision_grade or 'c')|lower }}" style="font-size:1.1rem;margin-top:.25rem">{{ card.decision_grade or '—' }}</div>
+        </div>
+        <div style="text-align:center;padding:.5rem;background:var(--bg-card);border-radius:6px;border:1px solid var(--border)">
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3)">Risk</div>
+          <div class="sp-risk-badge sp-risk-badge--{{ (card.risk_level or 'medium')|lower }}" style="margin-top:.25rem">{{ card.risk_level or '—' }}</div>
+        </div>
+      </div>
+
+      {% if selected_fixture %}
+        <div style="margin-top:.85rem">
+          <small class="sp-kicker">Fixture Details</small>
+          <ul class="sp-why-list" style="margin-top:.35rem">
+            {% if selected_fixture.date %}<li>Kickoff: {{ selected_fixture.date[:16] }}</li>{% endif %}
+            {% if selected_fixture.venue_name %}<li>Venue: {{ selected_fixture.venue_name }}</li>{% endif %}
+            {% if selected_fixture.round %}<li>{{ selected_fixture.round }}</li>{% endif %}
+          </ul>
+        </div>
+      {% endif %}
+
+      {% if card.form_strip %}
+        <div style="margin-top:.85rem">
+          <small class="sp-kicker">Form</small>
+          <div style="margin-top:.35rem">{{ ui.form_strip(card.form_strip) }}</div>
+        </div>
+      {% endif %}
+
+      <div style="margin-top:1.25rem;display:flex;flex-direction:column;gap:.5rem">
+        <a class="btn btn-secondary btn-sm btn-full" href="/soccer">Back to Soccer</a>
+        <a class="btn btn-secondary btn-sm btn-full" href="/insights">Open Insights</a>
+      </div>
+    </aside>
+  </div>
+{% else %}
+  {{ ui.empty_state('Prediction data could not be generated', 'Choose another fixture or try again once data is refreshed.') }}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,559 @@
+{% extends "base.html" %}
+
+{% block title %}Prop Bet Builder — {% endblock %}
+
+{% block head %}
+<style>
+  .sp-props-select{width:100%;padding:.4rem .6rem;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-2);color:var(--text-1);font-size:.88rem}
+  .sp-market-cb{display:inline-flex;align-items:center;gap:.3rem;font-size:.82rem;padding:.25rem .5rem;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;user-select:none}
+  .sp-market-cb input:checked+span{color:var(--c-strong)}
+  .sp-spinner{display:none;width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--c-strong);border-radius:50%;animation:sp-spin .6s linear infinite}
+  @keyframes sp-spin{to{transform:rotate(360deg)}}
+  .sp-progress{height:3px;background:var(--bg-3);border-radius:2px;margin-top:.5rem;overflow:hidden}
+  .sp-progress__bar{height:100%;width:0;background:var(--c-strong);transition:width .3s}
+  .sp-props-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:.75rem}
+  .sp-prop-card{border:1px solid var(--border);border-radius:var(--radius);padding:.75rem;background:var(--bg-2)}
+  .sp-prop-card.border-over{border-color:var(--c-strong)}
+  .sp-prop-card.border-under{border-color:var(--c-active)}
+  .sp-prop-card.border-push{border-color:var(--c-caution)}
+  .sp-stats-table{width:100%;font-size:.82rem;border-collapse:collapse}
+  .sp-stats-table td{padding:.25rem .4rem;border-bottom:1px solid var(--border)}
+  .sp-stats-table td:last-child{text-align:right;font-weight:600}
+  .sp-proj-box{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin:.5rem 0}
+  .sp-proj-box>div{text-align:center;background:var(--bg-3);border-radius:var(--radius);padding:.35rem}
+  .sp-proj-label{font-size:.68rem;color:var(--text-3);text-transform:uppercase}
+  .sp-proj-val{font-size:.88rem;font-weight:600}
+  .sp-conf-bar{height:5px;background:var(--bg-3);border-radius:3px;overflow:hidden;margin-top:.25rem}
+  .sp-conf-fill{height:100%;transition:width .4s}
+  .sp-conf-fill-elite{background:var(--c-caution)}
+  .sp-conf-fill-strong{background:var(--c-strong)}
+  .sp-conf-fill-moderate{background:var(--c-active)}
+  .sp-conf-fill-lean{background:var(--c-caution)}
+  .sp-conf-fill-poor{background:var(--text-3)}
+  .sp-hit-bar{flex:1;height:5px;background:var(--bg-3);border-radius:3px;overflow:hidden}
+  .sp-hit-fill{height:100%;background:var(--c-strong)}
+  .sp-mod-item{display:flex;justify-content:space-between;font-size:.82rem;padding:.2rem 0;border-bottom:1px solid var(--border)}
+  .mod-boost{color:var(--c-strong)}.mod-drag{color:var(--c-danger)}.mod-neut{color:var(--text-3)}
+  .lean-badge{font-size:.72rem;font-weight:700;padding:.15rem .5rem;border-radius:var(--radius)}
+  .lean-over{background:rgba(60,242,164,.12);color:var(--c-strong)}
+  .lean-under{background:rgba(96,165,250,.12);color:var(--c-active)}
+  .lean-push{background:rgba(245,158,11,.12);color:var(--c-caution)}
+  .proj-lean-over{color:var(--c-strong)}.proj-lean-under{color:var(--c-active)}.proj-lean-push{color:var(--c-caution)}
+  .sp-bet-slip{border:1px solid var(--c-strong);border-radius:var(--radius);padding:.75rem;margin-top:.75rem;background:rgba(60,242,164,.03)}
+  .sp-slip-pick{display:flex;justify-content:space-between;align-items:center;padding:.35rem 0;font-size:.85rem}
+  .sp-slip-divider{border:none;border-top:1px solid var(--border);margin:.3rem 0}
+  .sp-slip-footer{display:flex;gap:1rem;flex-wrap:wrap;font-size:.82rem;margin-top:.4rem}
+  .sp-slip-footer .key{font-size:.68rem;color:var(--text-3);text-transform:uppercase}
+  .sp-parlay-low{background:rgba(60,242,164,.08);color:var(--c-strong);border-radius:var(--radius);padding:.4rem .6rem;margin-top:.4rem;font-size:.82rem}
+  .sp-parlay-medium{background:rgba(245,158,11,.08);color:var(--c-caution);border-radius:var(--radius);padding:.4rem .6rem;margin-top:.4rem;font-size:.82rem}
+  .sp-parlay-high{background:rgba(248,113,113,.08);color:var(--c-danger);border-radius:var(--radius);padding:.4rem .6rem;margin-top:.4rem;font-size:.82rem}
+  .slip-conf-elite{color:var(--c-caution)}.slip-conf-strong{color:var(--c-strong)}.slip-conf-moderate{color:var(--c-active)}.slip-conf-lean{color:var(--c-caution)}.slip-conf-poor{color:var(--text-3)}
+  .sp-btn-gen{background:var(--c-strong);color:var(--bg-1);border:none;border-radius:var(--radius);padding:.45rem 1rem;font-weight:600;cursor:pointer;font-size:.85rem}
+  .sp-btn-gen:disabled{opacity:.5;cursor:not-allowed}
+  .sp-props-error{background:rgba(248,113,113,.08);color:var(--c-danger);border-radius:var(--radius);padding:.4rem .6rem;font-size:.82rem;margin-bottom:.4rem}
+  #props-output:not(.visible){display:none}
+  .sp-pos-badge{font-size:.72rem;color:var(--c-active);background:rgba(96,165,250,.1);padding:.1rem .35rem;border-radius:var(--radius);margin-left:.3rem}
+</style>
+{% endblock %}
+
+{% block content %}
+{% if sport == 'nba' %}
+<p><a href="/nba/props/research">NBA points research: verified prices, evidence gaps and paper snapshots</a></p>
+{% endif %}
+
+{# ── Page header ── #}
+<section class="sp-hero">
+  <span class="sp-kicker">{% if sport == "nba" %}NBA{% else %}Football{% endif %}</span>
+  <h1>Prop Bet Builder</h1>
+  {% if team_a and team_b %}
+  <p style="color:var(--text-2)">{{ team_a.name }} vs {{ team_b.name }}</p>
+  {% if sport != "nba" and supported_leagues %}
+  <div style="display:flex; gap:.3rem; flex-wrap:wrap; margin-top:.3rem">
+    {% for league in supported_leagues %}
+    <span class="sp-badge sp-badge--muted">{{ league.name }}</span>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% else %}
+  <p style="color:var(--text-3)">Select a matchup first to get player-specific props</p>
+  {% endif %}
+  <div style="display:flex; gap:.5rem; margin-top:.5rem">
+    {% if sport == "nba" %}
+      <a href="{{ url_for('nba.prediction') }}" class="sp-badge sp-badge--muted" style="text-decoration:none">&larr; Prediction</a>
+    {% else %}
+      <a href="{{ url_for('prediction') }}" class="sp-badge sp-badge--muted" style="text-decoration:none">&larr; Prediction</a>
+    {% endif %}
+  </div>
+</section>
+
+{# ── Builder controls ── #}
+{% if sport != "nba" and supported_leagues and not (team_a and team_b) %}
+<div style="display:flex; gap:.3rem; flex-wrap:wrap; margin-bottom:.75rem">
+  {% for league in supported_leagues %}
+  <span class="sp-badge sp-badge--muted">{{ league.name }}</span>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="sp-panel">
+  <span class="sp-kicker">Build a Prop Card</span>
+  <div style="margin:.5rem 0">
+    <label style="font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; color:var(--text-3); display:block; margin-bottom:.25rem">Player</label>
+    <select id="player-select" class="sp-props-select">
+      <option value="">— Select player —</option>
+      {% for p in (squad_a or []) %}
+      <option
+        value="{{ p.player.id if p.player else p.id }}"
+        data-name="{{ p.player.name if p.player else (p.displayName or p.firstname ~ ' ' ~ p.lastname) }}"
+        data-team="{{ team_a.id if team_a else '' }}"
+        data-opp="{{ team_b.id if team_b else '' }}"
+        data-home="true"
+        data-pos="{{ p.player.pos if p.player else (p.position or (p.leagues.standard.pos if p.leagues else '')) }}"
+      >
+        {{ p.player.name if p.player else (p.displayName or p.firstname ~ ' ' ~ p.lastname) }}
+        {% if p.player %}({{ p.player.pos or '' }}){% else %}({{ p.leagues.standard.pos if p.leagues else '' }}){% endif %}
+      </option>
+      {% endfor %}
+      {% for p in (squad_b or []) %}
+      <option
+        value="{{ p.player.id if p.player else p.id }}"
+        data-name="{{ p.player.name if p.player else (p.displayName or p.firstname ~ ' ' ~ p.lastname) }}"
+        data-team="{{ team_b.id if team_b else '' }}"
+        data-opp="{{ team_a.id if team_a else '' }}"
+        data-home="false"
+        data-pos="{{ p.player.pos if p.player else (p.position or (p.leagues.standard.pos if p.leagues else '')) }}"
+      >
+        {{ p.player.name if p.player else (p.displayName or p.firstname ~ ' ' ~ p.lastname) }}
+        {% if p.player %}({{ p.player.pos or '' }}){% else %}({{ p.leagues.standard.pos if p.leagues else '' }}){% endif %}
+        [{{ team_b.name if team_b else '' }}]
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+  <div id="selected-player-meta" style="font-size:.82rem; color:var(--text-3); margin-bottom:.5rem">Choose a player to see context.</div>
+
+  <div style="font-size:.68rem; text-transform:uppercase; letter-spacing:.04em; color:var(--text-3); margin-bottom:.3rem; font-weight:600">Select Markets</div>
+  <div id="market-checkboxes" style="display:flex; gap:.3rem; flex-wrap:wrap; margin-bottom:.75rem">
+    {% if sport == "nba" %}
+      {% set mlist = [("points","Points"),("rebounds","Rebounds"),("assists","Assists"),
+                      ("tpm","3-Pointers"),("steals","Steals"),("blocks","Blocks"),
+                      ("turnovers","Turnovers"),("pra","PRA"),
+                      ("double_double","Double-Double"),("triple_double","Triple-Double")] %}
+    {% else %}
+      {% set mlist = [("goals","Goals"),("assists","Assists"),
+                      ("shots_on_target","Shots on Target"),("key_passes","Key Passes"),
+                      ("dribbles","Dribbles"),("tackles","Tackles"),
+                      ("yellow_cards","Yellow Cards"),("minutes","Minutes"),("motm","MoM %")] %}
+    {% endif %}
+    {% for key, lbl in mlist %}
+    <label class="sp-market-cb">
+      <input type="checkbox" name="market" value="{{ key }}"
+        {% if key in ("points","rebounds","assists","pra","goals","assists","shots_on_target","key_passes") %}checked{% endif %}>
+      <span>{{ lbl }}</span>
+    </label>
+    {% endfor %}
+  </div>
+
+  <div style="display:flex; align-items:center; gap:.5rem; flex-wrap:wrap">
+    <button class="sp-btn-gen" id="btn-generate" onclick="buildProps()">Generate Props</button>
+    <div class="sp-spinner" id="spinner"></div>
+    <span id="gen-status" style="font-size:.78rem; color:var(--text-3)"></span>
+  </div>
+  <div class="sp-progress"><div id="loading-progress-bar" class="sp-progress__bar"></div></div>
+</div>
+
+{# ── Props output area ── #}
+<div id="props-output">
+  <div id="props-errors"></div>
+  <div id="props-cards" class="sp-props-grid"></div>
+  <div id="bet-slip-container"></div>
+  <div id="persistent-slip-container"></div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+const SPORT = "{{ sport }}";
+const LEAGUE = {{ current_league_id }};
+const SLIP_KEY = "scorpred_mixed_slip_v1";
+
+function setProgress(percent, text) {
+  const bar = document.getElementById("loading-progress-bar");
+  const status = document.getElementById("gen-status");
+  if (bar) bar.style.width = `${percent}%`;
+  if (status) status.textContent = text || "";
+}
+
+function updateSelectedPlayerMeta() {
+  const playerSel = document.getElementById("player-select");
+  const opt = playerSel.selectedOptions[0];
+  const meta = document.getElementById("selected-player-meta");
+  if (!meta || !opt || !opt.value) {
+    if (meta) meta.textContent = "Choose a player to see context.";
+    return;
+  }
+  const pos = opt.dataset.pos || "Unknown";
+  meta.innerHTML = `Selected: <strong>${opt.dataset.name || opt.text}</strong><span class="sp-pos-badge">${pos}</span>`;
+}
+
+async function buildProps() {
+  const playerSel = document.getElementById("player-select");
+  const opt = playerSel.selectedOptions[0];
+  if (!opt || !opt.value) {
+    alert("Please select a player first.");
+    return;
+  }
+
+  const playerId   = opt.value;
+  const playerName = opt.dataset.name || opt.text;
+  const teamId     = opt.dataset.team;
+  const oppId      = opt.dataset.opp;
+  const isHome     = opt.dataset.home !== "false";
+  const playerPos  = opt.dataset.pos || "";
+
+  const oppName = isHome
+    ? ("{{ team_b.name if team_b else 'Opponent' }}")
+    : ("{{ team_a.name if team_a else 'Opponent' }}");
+
+  const markets = Array.from(document.querySelectorAll("input[name='market']:checked"))
+    .map(cb => cb.value).join(",");
+
+  if (!markets) { alert("Select at least one market."); return; }
+
+  const endpoint = SPORT === "nba" ? "/nba/props/generate" : "/props/generate";
+  const params = new URLSearchParams({
+    player_id:       playerId,
+    player_name:     playerName,
+    player_team_id:  teamId,
+    opponent_id:     oppId,
+    opponent_name:   oppName,
+    is_home:         isHome ? "true" : "false",
+    markets:         markets,
+    league:          LEAGUE,
+    player_position: playerPos,
+  });
+
+  const btn = document.getElementById("btn-generate");
+  const spinner = document.getElementById("spinner");
+
+  btn.disabled = true;
+  spinner.style.display = "inline-block";
+  setProgress(18, "Fetching statistical data...");
+
+  try {
+    setProgress(45, "Building prop model...");
+    const resp = await fetch(`${endpoint}?${params}`);
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || "Server error");
+    setProgress(100, "Prop cards ready");
+    renderProps(data);
+  } catch (err) {
+    document.getElementById("props-errors").innerHTML =
+      `<div class="sp-props-error">${err.message}</div>`;
+    document.getElementById("props-output").classList.add("visible");
+  } finally {
+    btn.disabled = false;
+    spinner.style.display = "none";
+    setTimeout(() => setProgress(0, ""), 600);
+  }
+}
+
+function renderProps(data) {
+  const output = document.getElementById("props-output");
+  const errDiv = document.getElementById("props-errors");
+  const cards  = document.getElementById("props-cards");
+  const slip   = document.getElementById("bet-slip-container");
+
+  errDiv.innerHTML = "";
+  cards.innerHTML  = "";
+  slip.innerHTML   = "";
+
+  if (data.errors && data.errors.length) {
+    errDiv.innerHTML = data.errors.map(e =>
+      `<div class="sp-props-error">${e}</div>`
+    ).join("");
+  }
+
+  (data.props || []).forEach(prop => {
+    cards.appendChild(buildCard(prop, data.player, data.opponent));
+  });
+
+  if (data.bet_slip && (data.bet_slip.picks || []).length) {
+    slip.appendChild(buildSlip(data.bet_slip));
+  }
+
+  renderPersistentSlip();
+  output.classList.add("visible");
+  output.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function buildCard(prop, player, opp) {
+  const el = document.createElement("div");
+  el.className = "sp-prop-card";
+
+  if (prop.type === "probability") {
+    const prob = prop.probability || {};
+    const pct  = prob.probability != null ? prob.probability + "%" : "N/A";
+    el.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+        <div><strong>${player.name}</strong><br><span style="font-size:.78rem;color:var(--text-3)">${prop.market_label} · vs ${opp.name}</span></div>
+      </div>
+      <div style="font-size:1.4rem;font-weight:700;color:var(--c-strong);text-align:center;margin:.5rem 0">${pct}</div>
+      <div style="font-size:.78rem;color:var(--text-3);text-align:center">${prob.method || ""} · ${prob.sample ? `Sample: ${prob.sample} games` : ""}</div>
+      ${prob.risk_note ? `<div class="sp-props-error" style="margin-top:.5rem">${prob.risk_note}</div>` : ""}
+      ${renderConfBadge(prop.confidence)}`;
+    return el;
+  }
+
+  const layers  = prop.layers  || {};
+  const vrn     = prop.variance || {};
+  const mods    = prop.modifiers || [];
+  const proj    = prop.projection || {};
+  const conf    = prop.confidence || {};
+
+  const lean        = proj.lean || "N/A";
+  const leanClass   = lean === "OVER" ? "lean-over" : lean === "UNDER" ? "lean-under" : "lean-push";
+  const borderClass = lean === "OVER" ? "border-over" : lean === "UNDER" ? "border-under" : "border-push";
+  const projClass   = lean === "OVER" ? "proj-lean-over" : lean === "UNDER" ? "proj-lean-under" : "proj-lean-push";
+  const hitPct      = vrn.hit_rate_pct != null ? vrn.hit_rate_pct : 0;
+  const hitFill     = Math.min(hitPct, 100);
+  const confScore   = conf.score || 0;
+  const confFillCls = confScore >= 80 ? "sp-conf-fill-elite" : confScore >= 65 ? "sp-conf-fill-strong" :
+                      confScore >= 50 ? "sp-conf-fill-moderate" : confScore >= 35 ? "sp-conf-fill-lean" : "sp-conf-fill-poor";
+  const trendLbl    = layers.trend_label ? `<span style="color:var(--c-strong);font-size:.75rem">${layers.trend_label}</span>` : "";
+
+  const modRows = mods.map(m => {
+    const mult  = m.multiplier || 1;
+    const cls   = mult > 1.01 ? "mod-boost" : mult < 0.99 ? "mod-drag" : "mod-neut";
+    const sign  = m.raw_value >= 0 ? "+" : "";
+    const rv    = m.raw_value != null ? `${sign}${m.raw_value}` : "";
+    return `<div class="sp-mod-item"><span>${m.name}</span><span class="${cls}">${rv} <small style="opacity:.6">${m.label || ""}</small></span></div>`;
+  }).join("");
+
+  const compCells = Object.entries(conf.components || {}).map(([k, v]) =>
+    `<span style="font-size:.72rem;color:var(--text-3)">${k.replace("_", " ")}: ${v}/20</span>`
+  ).join(" · ");
+
+  el.classList.add(borderClass);
+  const errorBanner = prop.error
+    ? `<div class="sp-props-error" style="margin:.5rem 0">${prop.error}</div>`
+    : "";
+  el.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+      <div><strong>${player.name}</strong> — ${prop.market_label}<br><span style="font-size:.78rem;color:var(--text-3)">vs ${opp.name}</span></div>
+      <span class="lean-badge ${leanClass}">${lean} ${proj.suggested_line != null ? proj.suggested_line : ""}</span>
+    </div>
+    ${errorBanner}
+    <div style="font-size:.68rem;text-transform:uppercase;color:var(--text-3);margin:.4rem 0 .2rem;font-weight:600">Stats</div>
+    <table class="sp-stats-table">
+      <tr><td>Season average</td><td>${fmt(layers.season_avg)} ${layers.per_90 ? "<small>(per 90)</small>" : ""}</td></tr>
+      <tr><td>Last 5 avg</td><td>${fmt(layers.last5_avg)} ${trendLbl}</td></tr>
+      <tr><td>Last 10 avg</td><td>${fmt(layers.last10_avg)}</td></tr>
+      <tr><td>vs ${opp.name} avg</td><td>${fmt(layers.vs_opponent_avg)} <small style="opacity:.55">(${layers.vs_opponent_games || 0}g)</small></td></tr>
+      <tr><td>${layers.ha_label || "Home/Away"}</td><td>${fmt(layers.active_ha_avg)}</td></tr>
+      <tr><td>Weighted rolling</td><td><strong>${fmt(layers.rolling_avg)}</strong></td></tr>
+    </table>
+
+    <div style="font-size:.68rem;text-transform:uppercase;color:var(--text-3);margin:.5rem 0 .2rem;font-weight:600">Variance</div>
+    <table class="sp-stats-table">
+      <tr><td>Std dev</td><td>${fmt(vrn.std_dev)} <small style="opacity:.55">(${fmt(vrn.std_dev_pct)}% — ${vrn.consistency_label || ""})</small></td></tr>
+      <tr><td>Hit rate (${vrn.sample_games || 10}g)</td><td><div style="display:flex;align-items:center;gap:.4rem"><div class="sp-hit-bar"><div class="sp-hit-fill" style="width:${hitFill}%"></div></div><span style="font-size:.78rem">${vrn.hit_count || 0}/${vrn.sample_games || 0} ${hitPct}%</span></div></td></tr>
+      <tr><td>Ceiling / Floor</td><td>${fmt(vrn.ceiling)} / ${fmt(vrn.floor)}</td></tr>
+      <tr><td>Boom / Bust</td><td>${fmt(vrn.boom_rate_pct)}% / ${fmt(vrn.bust_rate_pct)}%</td></tr>
+    </table>
+
+    <div style="font-size:.68rem;text-transform:uppercase;color:var(--text-3);margin:.5rem 0 .2rem;font-weight:600">Modifiers</div>
+    ${modRows}
+
+    <div style="font-size:.68rem;text-transform:uppercase;color:var(--text-3);margin:.5rem 0 .2rem;font-weight:600">Projection</div>
+    <div class="sp-proj-box">
+      <div><div class="sp-proj-label">Base</div><div class="sp-proj-val">${fmt(proj.base)}</div></div>
+      <div><div class="sp-proj-label">Adjusted</div><div class="sp-proj-val">${fmt(proj.adjusted)}</div></div>
+      <div><div class="sp-proj-label">Line</div><div class="sp-proj-val">${proj.suggested_line != null ? proj.suggested_line : "—"}</div></div>
+      <div><div class="sp-proj-label">Lean</div><div class="sp-proj-val ${projClass}">${lean} ${proj.lean_margin_pct != null ? `(${proj.lean_margin_pct > 0 ? "+" : ""}${proj.lean_margin_pct}%)` : ""}</div></div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:.5rem;margin:.5rem 0">
+      <div style="font-size:1.1rem;font-weight:700;${scoreColor(confScore)}">${confScore}</div>
+      <div style="flex:1">
+        <div style="font-size:.78rem;color:var(--text-2)">${conf.label || ""}</div>
+        <div class="sp-conf-bar"><div class="sp-conf-fill ${confFillCls}" style="width:${confScore}%"></div></div>
+        <div style="margin-top:.2rem">${compCells}</div>
+      </div>
+    </div>
+
+    <button class="sp-btn-gen" data-add-slip="true" style="width:100%;margin-top:.5rem">Add To Mixed Slip</button>`;
+  const addBtn = el.querySelector("[data-add-slip]");
+  if (addBtn) {
+    addBtn.addEventListener("click", () => addToPersistentSlip(prop, player, opp));
+  }
+  el.querySelector("[data-copy-slip]")?.addEventListener("click", () => copySlipText(el.innerText));
+  return el;
+}
+
+function buildSlip(slip) {
+  const el = document.createElement("div");
+  el.className = "sp-bet-slip";
+
+  const pickRows = (slip.picks || []).map(p => {
+    const cls = slipConfClass(p.confidence);
+    return `<div class="sp-slip-pick">
+      <div>
+        ${p.label} <strong>${p.player}</strong> — ${p.market}
+        <strong>${p.lean} ${p.line != null ? p.line : ""}</strong>
+      </div>
+      <span class="${cls}">${p.confidence}%</span>
+    </div>`;
+  }).join('<hr class="sp-slip-divider">');
+
+  const riskValue = String(slip.parlay_risk || "").toLowerCase();
+  const riskCls = riskValue === "low" ? "sp-parlay-low" :
+                  riskValue === "medium" ? "sp-parlay-medium" : "sp-parlay-high";
+
+  el.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem">
+      <strong>ScorPred Prop Bet Slip</strong>
+      <button class="sp-btn-gen" data-copy-slip style="padding:.2rem .5rem;font-size:.72rem">Copy</button>
+    </div>
+    <hr class="sp-slip-divider">
+    ${pickRows}
+    <hr class="sp-slip-divider">
+    <div class="sp-slip-footer">
+      <div><div class="key">Slip Confidence</div><div>${slip.slip_confidence}% ${slip.stars || ""}</div></div>
+      <div><div class="key">Best Single Bet</div><div style="font-size:.8rem">${slip.best_single || "—"}</div></div>
+    </div>
+    <div class="${riskCls}">${slip.parlay_advice || ""}</div>`;
+  el.querySelector("[data-copy-slip]")?.addEventListener("click", () => copySlipText(el.innerText));
+  return el;
+}
+
+function renderConfBadge(conf) {
+  if (!conf) return "";
+  const score = conf.score || 0;
+  const cls   = score >= 80 ? "sp-conf-fill-elite" : score >= 65 ? "sp-conf-fill-strong" :
+                score >= 50 ? "sp-conf-fill-moderate" : score >= 35 ? "sp-conf-fill-lean" : "sp-conf-fill-poor";
+  return `
+    <div style="display:flex;align-items:center;gap:.5rem;margin:.5rem 0">
+      <div style="font-size:1.1rem;font-weight:700;${scoreColor(score)}">${score}</div>
+      <div style="flex:1">
+        <div style="font-size:.78rem;color:var(--text-2)">${conf.label || ""}</div>
+        <div class="sp-conf-bar"><div class="sp-conf-fill ${cls}" style="width:${score}%"></div></div>
+      </div>
+    </div>`;
+}
+
+function fmt(v) {
+  if (v == null) return "<span style='opacity:.3'>—</span>";
+  return parseFloat(v).toFixed(1);
+}
+
+function scoreColor(score) {
+  if (score >= 80) return "color:var(--c-caution);";
+  if (score >= 65) return "color:var(--c-strong);";
+  if (score >= 50) return "color:var(--c-active);";
+  if (score >= 35) return "color:var(--c-caution);";
+  return "color:var(--text-3);";
+}
+
+function slipConfClass(c) {
+  if (c >= 80) return "slip-conf-elite";
+  if (c >= 65) return "slip-conf-strong";
+  if (c >= 50) return "slip-conf-moderate";
+  if (c >= 35) return "slip-conf-lean";
+  return "slip-conf-poor";
+}
+
+function readPersistentSlip() {
+  try { return JSON.parse(localStorage.getItem(SLIP_KEY) || "[]"); }
+  catch { return []; }
+}
+
+function writePersistentSlip(picks) {
+  localStorage.setItem(SLIP_KEY, JSON.stringify(picks));
+}
+
+function copySlipText(text) {
+  navigator.clipboard.writeText(text).catch(() => {});
+}
+
+function addToPersistentSlip(prop, player, opp) {
+  if (!prop || !prop.projection) return;
+  const picks = readPersistentSlip();
+  picks.push({
+    sport: SPORT === "nba" ? "nba" : "soccer",
+    player: player.name,
+    market: prop.market_label,
+    lean: prop.projection.lean,
+    line: prop.projection.suggested_line,
+    confidence: (prop.confidence || {}).score || 0,
+    label: (prop.confidence || {}).label || "",
+    scope_label: SPORT === "nba" ? "NBA Regular Season" : (prop.fixture_context || {}).scope_label || "Football",
+  });
+  writePersistentSlip(picks);
+  renderPersistentSlip();
+}
+
+function renderPersistentSlip() {
+  const picks = readPersistentSlip();
+  const container = document.getElementById("persistent-slip-container");
+  if (!container) return;
+  if (!picks.length) {
+    container.innerHTML = "";
+    return;
+  }
+
+  const football = picks.filter(p => p.sport === "soccer");
+  const nba = picks.filter(p => p.sport === "nba");
+  const footballAvg = football.length ? (football.reduce((sum, pick) => sum + pick.confidence, 0) / football.length).toFixed(1) : "0.0";
+  const nbaAvg = nba.length ? (nba.reduce((sum, pick) => sum + pick.confidence, 0) / nba.length).toFixed(1) : "0.0";
+  const overall = (picks.reduce((sum, pick) => sum + pick.confidence, 0) / picks.length).toFixed(1);
+  const warning = nba.length && Number(overall) < 65
+    ? "Parlay not recommended - NBA pick lowers combined confidence below 65%"
+    : "";
+
+  const rows = picks.map((pick, index) => `
+    <div class="sp-slip-pick">
+      <div>
+        ${pick.sport === "soccer" ? "Soccer" : "NBA"} · ${pick.player} — ${pick.market}
+        <strong>${pick.lean} ${pick.line != null ? pick.line : ""}</strong>
+        <div style="font-size:.75rem;color:var(--text-3);margin-top:.15rem">${pick.scope_label || ""} · ${pick.confidence}% ${pick.label || ""}</div>
+      </div>
+      <button class="sp-btn-gen" data-remove-slip="${index}" style="padding:.25rem .5rem;font-size:.72rem">Remove</button>
+    </div>
+  `).join('<hr class="sp-slip-divider">');
+
+  container.innerHTML = `
+    <div class="sp-bet-slip" style="margin-top:.75rem">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem">
+        <strong>Mixed Prop Bet Slip</strong>
+        <button class="sp-btn-gen" id="copy-persistent-slip" style="padding:.2rem .5rem;font-size:.72rem">Copy</button>
+      </div>
+      <hr class="sp-slip-divider">
+      ${rows}
+      <hr class="sp-slip-divider">
+      <div class="sp-slip-footer">
+        <div><div class="key">Football Avg</div><div>${footballAvg}%</div></div>
+        <div><div class="key">NBA Avg</div><div>${nbaAvg}%</div></div>
+        <div><div class="key">Overall</div><div>${overall}%</div></div>
+        <div><div class="key">Stars</div><div>${Number(overall) >= 65 ? "3" : Number(overall) >= 50 ? "2" : "1"}</div></div>
+      </div>
+      ${warning ? `<div class="sp-parlay-high">${warning}</div>` : ""}
+    </div>`;
+
+  container.querySelectorAll("[data-remove-slip]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const next = readPersistentSlip();
+      next.splice(Number(btn.dataset.removeSlip), 1);
+      writePersistentSlip(next);
+      renderPersistentSlip();
+    });
+  });
+  document.getElementById("copy-persistent-slip")?.addEventListener("click", () => copySlipText(container.innerText));
+}
+
+document.getElementById("player-select")?.addEventListener("change", updateSelectedPlayerMeta);
+updateSelectedPlayerMeta();
+window.addEventListener("load", renderPersistentSlip);
+</script>
+{% endblock %}

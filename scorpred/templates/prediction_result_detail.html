@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% import "components/decision.html" as ui with context %}
+
+{% block title %}ScorPred | Result Detail{% endblock %}
+{% block topbar_title %}Result Detail{% endblock %}
+
+{% block content %}
+<section class="sp-page-hero">
+  <span class="sp-page-hero__eyebrow">{{ record.league_name or record.sport|upper }}</span>
+  <h1>{{ record.team_a }} vs {{ record.team_b }}</h1>
+  <p>A transparent recap of the ScorPred action, side, confidence, and what happened after the match finished.</p>
+</section>
+
+<section class="sp-section">
+  <div class="sp-card-grid">
+    <article class="sp-info-card">
+      <small>Date</small>
+      <strong>{{ prediction_date_display }}</strong>
+    </article>
+    <article class="sp-info-card">
+      <small>Final score</small>
+      <strong>{{ record.final_score_display or 'Pending' }}</strong>
+    </article>
+    <article class="sp-info-card">
+      <small>ScorPred side</small>
+      <strong>{{ predicted_pick_display }}</strong>
+    </article>
+    <article class="sp-info-card">
+      <small>Result</small>
+      <strong>{{ record.overall_game_result or ('Correct' if record.winner_hit else 'Incorrect') }}</strong>
+    </article>
+    <article class="sp-info-card">
+      <small>Reality</small>
+      <strong>{{ comparison.reality_text }}</strong>
+    </article>
+  </div>
+</section>
+
+<section class="sp-section">
+  <div class="sp-info-card">
+    <h2>Why It Mattered</h2>
+    {% if evidence.evidence_layer_label %}
+      <p class="sp-muted">{{ evidence.evidence_layer_label }}</p>
+    {% endif %}
+    {% if evidence.summary_points %}
+      <ul class="sp-why-list">
+        {% for point in evidence.summary_points[:4] %}
+          <li>{{ point }}</li>
+        {% endfor %}
+      </ul>
+    {% elif evidence.summary %}
+      <p class="sp-muted">{{ evidence.summary }}</p>
+    {% else %}
+      <p class="sp-muted">No extra result notes were recorded for this pick.</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="sp-section">
+  <div class="sp-page-actions">
+    <a class="btn btn-primary" href="/insights">Back to Insights</a>
+    <a class="btn btn-secondary" href="/">Home</a>
+  </div>
+</section>
+{% endblock %}

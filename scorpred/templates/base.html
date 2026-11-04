@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}ScorPred{% endblock %}</title>
+  <script>
+    try {
+      if (sessionStorage.getItem('scorpredIntroSeen') === '1') {
+        document.documentElement.classList.add('sp-loader-seen');
+      }
+    } catch (error) {
+      document.documentElement.classList.add('sp-loader-seen');
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="{{ url_for('static', filename='media/scorpred-player-logo-128.png') }}" type="image/png" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='design.css') }}" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <meta name="csrf-token" content="{{ csrf_token() }}" />
+  {% block head %}{% endblock %}
+</head>
+{% set match_analysis_href = '/prediction' if session.get('team_a_id') else '/nba/prediction' if session.get('nba_team_a_id') else '/soccer' %}
+{% set match_analysis_active = request.path in ['/matchup', '/prediction'] or request.path.startswith('/nba/matchup') or request.path.startswith('/nba/prediction') %}
+<body class="{% block body_class %}{% endblock %}">
+  <div id="scorpredIntroLoader" class="sp-intro-loader" role="status" aria-live="polite" aria-label="Loading ScorPred">
+    <div class="sp-intro-loader__glow" aria-hidden="true"></div>
+    <div class="sp-intro-loader__card">
+      <div class="sp-intro-loader__media-wrap">
+        <video class="sp-intro-loader__media" autoplay muted playsinline preload="auto" poster="{{ url_for('static', filename='media/player.png') }}" aria-hidden="true">
+          <source src="{{ url_for('static', filename='media/scorpred-loader.webm') }}" type="video/webm">
+          <source src="{{ url_for('static', filename='media/scorpred-loader.mp4') }}" type="video/mp4">
+          <img src="{{ url_for('static', filename='media/scorpred-loader.gif') }}" alt="ScorPred intro animation" loading="eager" decoding="async" />
+        </video>
+        <div class="sp-intro-loader__fallback" aria-hidden="true"><img src="{{ url_for('static', filename='media/scorpred-player-logo.png') }}" alt=""></div>
+      </div>
+      <div class="sp-intro-loader__brand">
+        <span class="sp-intro-loader__kicker">Decision Intelligence</span>
+        <strong>ScorPred</strong>
+        <small>Clear actions, confidence, and trust signals.</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="sp-shell">
+    <aside class="sp-sidebar" id="sidebar">
+      <a href="/" class="sp-brand">
+        <span class="sp-brand__icon"><img src="{{ url_for('static', filename='media/scorpred-player-logo.png') }}" alt=""></span>
+        <span class="sp-brand__text">
+          <strong>SCOR<span class="sp-brand__accent">PRED</span></strong>
+          <em class="sp-brand__ai-badge">AI</em>
+        </span>
+      </a>
+
+      <p class="sp-nav-label">Main Menu</p>
+      <nav class="sp-nav" role="navigation" aria-label="Primary">
+        <a href="/" class="{% if request.path == '/' %}active{% endif %}">
+          <span class="sp-nav__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+          </span>
+          Dashboard
+        </a>
+        <a href="/soccer" class="{% if request.path == '/soccer' or request.path in ['/today-soccer-predictions', '/fixtures'] %}active{% endif %}">
+          <span class="sp-nav__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m9 8 3-2 3 2 1 4-4 3-4-3 1-4Z"/><path d="m4.5 13.5 3.5-1.5M16 12l3.5 1.5M12 15v4"/></svg>
+          </span>
+          Soccer
+        </a>
+        <a href="/insights" class="{% if request.path == '/insights' %}active{% endif %}">
+          <span class="sp-nav__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l3-4 3 2 4-6"/><path d="M17 7h3v3"/></svg>
+          </span>
+          Insights
+        </a>
+        <a href="{{ match_analysis_href }}" class="{% if match_analysis_active %}active{% endif %}">
+          <span class="sp-nav__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg>
+          </span>
+          Match Analysis
+        </a>
+        <a href="/nba/" class="{% if request.path.startswith('/nba') %}active{% endif %}">
+          <span class="sp-nav__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.5 12h17"/><path d="M12 3c2.2 2.3 3.3 5.3 3.3 9S14.2 18.7 12 21"/><path d="M12 3C9.8 5.3 8.7 8.3 8.7 12S9.8 18.7 12 21"/></svg>
+          </span>
+          NBA
+        </a>
+        <a href="/parlays" class="{% if request.path.startswith('/parlays') %}active{% endif %}">
+          <span class="sp-nav__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="m8 8 1.5 1.5L12 7"/><path d="m8 13 1.5 1.5L12 12"/><path d="M14 8.5h2.5"/><path d="M14 13.5h2.5"/><path d="M8 18h8"/></svg>
+          </span>
+          Parlay Mode
+        </a>
+      </nav>
+
+      <p class="sp-nav-label" style="margin-top:1rem">Tracking</p>
+      <nav class="sp-nav" role="navigation" aria-label="Tracking">
+        <a href="/my-bets" class="{% if request.path == '/my-bets' %}active{% endif %}">
+          <span class="sp-nav__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 12 2 2 4-4"/></svg>
+          </span>
+          Tracked Matches
+        </a>
+        <a href="/performance" class="{% if request.path == '/performance' %}active{% endif %}">
+          <span class="sp-nav__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+          </span>
+          Performance
+        </a>
+        <a href="/alerts" class="{% if request.path == '/alerts' %}active{% endif %}">
+          <span class="sp-nav__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          </span>
+          Alerts
+          {% if alert_count and alert_count > 0 %}
+            <span class="sp-nav__badge">{{ alert_count }}</span>
+          {% endif %}
+        </a>
+        <a href="/watchlist" class="{% if request.path == '/watchlist' %}active{% endif %}">
+          <span class="sp-nav__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </span>
+          Watchlist
+        </a>
+        <a href="/settings" class="{% if request.path == '/settings' %}active{% endif %}">
+          <span class="sp-nav__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </span>
+          Settings
+        </a>
+      </nav>
+
+      <div class="sp-sidebar__footer">
+        <div class="sp-fang-mode">
+          <span class="sp-fang-mode__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </span>
+          <div class="sp-fang-mode__text">
+            <strong>FANG LEVEL MODE</strong>
+            <span class="sp-fang-mode__status">Maximum intelligence.</span>
+          </div>
+          <span class="sp-fang-mode__badge">ON</span>
+        </div>
+        <div class="sp-sidebar-stats">
+          <div class="sp-sidebar-stat">
+            <span class="sp-sidebar-stat__label">Paper tracking</span>
+            <span class="sp-sidebar-stat__value sp-sidebar-stat__value--strong">Research only</span>
+          </div>
+          <div class="sp-sidebar-stat">
+            <span class="sp-sidebar-stat__label">ROI</span>
+            <span class="sp-sidebar-stat__value sp-sidebar-stat__value--strong">Not established</span>
+          </div>
+        </div>
+        {% if is_guest %}
+          <span class="sp-badge sp-badge--muted" style="margin-top:.5rem;display:inline-block">Guest Mode</span>
+        {% else %}
+          <span class="sp-badge sp-badge--strong" style="margin-top:.5rem;display:inline-block">Logged in</span>
+        {% endif %}
+      </div>
+    </aside>
+
+    <div class="sp-main">
+      <header class="sp-topbar">
+        <button class="sp-mobile-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <span class="sp-topbar__title">{% block topbar_title %}{{ self.title() }}{% endblock %}</span>
+        <div class="sp-topbar__center">
+          {% block topbar_actions %}{% endblock %}
+        </div>
+        <div class="sp-topbar__right">
+          <div class="sp-topbar__pills">
+            {% if data_source %}<span class="sp-topbar__pill">{{ data_source }}</span>{% endif %}
+            {% if last_updated %}<span class="sp-topbar__pill">{{ last_updated }}</span>{% endif %}
+            {% if is_stale %}<span class="sp-topbar__pill sp-topbar__pill--stale" title="Showing cached data">Cached</span>{% endif %}
+          </div>
+          <div class="sp-topbar__auth">
+            {% if is_guest %}
+              <a href="/login" class="sp-auth-link">Login</a>
+              <a href="/signup" class="sp-auth-link sp-auth-link--primary">Sign up</a>
+            {% else %}
+              <span class="sp-topbar__notify" title="Alerts">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                <span class="sp-topbar__notify-dot">3</span>
+              </span>
+              <a href="/settings" class="sp-topbar__avatar" title="{{ current_user.email }}">
+                {{ (current_user.email[:2])|upper }}
+              </a>
+              <a href="/logout" class="sp-auth-link">Logout</a>
+            {% endif %}
+          </div>
+        </div>
+      </header>
+
+      <main class="sp-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="sp-flash-stack" role="status" aria-live="polite">
+              {% for category, message in messages %}
+                {% set kind = 'info' %}
+                {% if category in ['danger', 'error'] %}{% set kind = 'error' %}{% endif %}
+                {% if category in ['warning', 'warn'] %}{% set kind = 'warn' %}{% endif %}
+                {% if category in ['success', 'ok'] %}{% set kind = 'success' %}{% endif %}
+                <div class="sp-flash sp-flash--{{ kind }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+      </main>
+
+      <footer class="sp-footer">
+        Sports decision support. Verify injuries, lineups, and market context before acting.
+      </footer>
+    </div>
+  </div>
+
+  {# ── Mobile Bottom Navigation Bar ─────────────────────────────────────── #}
+  <nav class="sp-bottom-nav" aria-label="Mobile navigation">
+    <a href="/" class="sp-bottom-nav__item{% if request.path == '/' %} active{% endif %}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+      <span>Home</span>
+    </a>
+    <a href="/soccer" class="sp-bottom-nav__item{% if request.path in ['/soccer', '/today-soccer-predictions', '/fixtures'] %} active{% endif %}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m9 8 3-2 3 2 1 4-4 3-4-3 1-4Z"/><path d="m4.5 13.5 3.5-1.5M16 12l3.5 1.5M12 15v4"/></svg>
+      <span>Soccer</span>
+    </a>
+    <a href="/nba/" class="sp-bottom-nav__item{% if request.path.startswith('/nba') %} active{% endif %}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3.5 12h17"/><path d="M12 3c2.2 2.3 3.3 5.3 3.3 9S14.2 18.7 12 21"/><path d="M12 3C9.8 5.3 8.7 8.3 8.7 12S9.8 18.7 12 21"/></svg>
+      <span>NBA</span>
+    </a>
+    <a href="/my-bets" class="sp-bottom-nav__item{% if request.path == '/my-bets' %} active{% endif %}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 12 2 2 4-4"/></svg>
+      <span>Bets</span>
+    </a>
+    <button type="button" class="sp-bottom-nav__item" id="mobileMenuBtn" aria-label="Open full menu" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      <span>Menu</span>
+    </button>
+  </nav>
+
+  <button id="chat-toggle" class="sp-chat-toggle" type="button" aria-controls="chat-window" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  </button>
+  <section id="chat-window" class="sp-chat-window" aria-hidden="true">
+    <div class="sp-chat-header">
+      <strong>ScorPred Assistant</strong>
+      <button id="chat-clear" type="button" class="sp-chat-clear">Clear</button>
+    </div>
+    <div id="chat-messages" class="sp-chat-messages">
+      <div class="sp-chat-message assistant">Ask why a side grades well, where trust is strongest, or which plays carry more volatility.</div>
+    </div>
+    <form id="chat-form" class="sp-chat-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <input id="chat-input" name="message" type="text" placeholder="Ask ScorPred..." autocomplete="off" />
+      <button type="submit" class="btn btn-primary btn-sm">Send</button>
+    </form>
+  </section>
+
+  <script>
+    function addBet(button, payload) {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || "";
+      fetch("/add-bet", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({...payload, csrf_token: csrfToken})
+      }).then((res) => {
+        if (!res.ok || !button) return;
+        const original = button.textContent;
+        button.textContent = "Tracked";
+        button.disabled = true;
+        setTimeout(() => {
+          button.textContent = original;
+          button.disabled = false;
+        }, 1200);
+      });
+    }
+  </script>
+  <script src="{{ url_for('static', filename='charts.js') }}"></script>
+  <script src="{{ url_for('static', filename='main.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,1144 @@
+{
+  "version": "nba-early-season-v1",
+  "generated_at": "2026-10-22T19:35:21.668914+00:00",
+  "evaluated_games": 189,
+  "development_games": 96,
+  "coverage": {
+    "2023": {
+      "early_games": 96,
+      "winner_rule_gate": 57,
+      "scoring_gate": 48,
+      "research_available": 96
+    },
+    "2024": {
+      "early_games": 94,
+      "winner_rule_gate": 59,
+      "scoring_gate": 44,
+      "research_available": 94
+    },
+    "2025": {
+      "early_games": 95,
+      "winner_rule_gate": 59,
+      "scoring_gate": 44,
+      "research_available": 95
+    }
+  },
+  "seasons": {
+    "2024": {
+      "calibration_games": 96,
+      "calibration_end": "2022-11-01T00:00:00+00:00",
+      "metrics": {
+        "blend": {
+          "games": 94,
+          "log_loss": 0.6661367691883949,
+          "brier": 0.23674944581908705,
+          "accuracy": 0.5957446808510638,
+          "calibration_bins": [
+            {
+              "lower": 0.2,
+              "upper": 0.4,
+              "games": 4,
+              "predicted": 0.3777026646299433,
+              "observed": 0.5
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.6,
+              "games": 54,
+              "predicted": 0.5250736838832701,
+              "observed": 0.5185185185185185
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.8,
+              "games": 35,
+              "predicted": 0.6682088347834708,
+              "observed": 0.6571428571428571
+            },
+            {
+              "lower": 0.8,
+              "upper": 1.0,
+              "games": 1,
+              "predicted": 0.8096508970977319,
+              "observed": 1
+            }
+          ],
+          "ece_5_bins": 0.015115176505325135,
+          "points_mae": 9.359268617021275,
+          "interval_coverage": {
+            "home": 0.7659574468085106,
+            "away": 0.8297872340425532
+          }
+        },
+        "previous_season_only": {
+          "games": 94,
+          "log_loss": 0.6721710511024463,
+          "brier": 0.23963653906253493,
+          "accuracy": 0.5531914893617021,
+          "calibration_bins": [
+            {
+              "lower": 0.4,
+              "upper": 0.6,
+              "games": 57,
+              "predicted": 0.5319187099532243,
+              "observed": 0.5087719298245614
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.8,
+              "games": 37,
+              "predicted": 0.648779029774653,
+              "observed": 0.6756756756756757
+            }
+          ],
+          "ece_5_bins": 0.02462279112416622,
+          "points_mae": 9.613696808510639,
+          "interval_coverage": {
+            "home": 0.7872340425531915,
+            "away": 0.776595744680851
+          }
+        },
+        "home_prior": {
+          "games": 94,
+          "log_loss": 0.6821155159816404,
+          "brier": 0.24450387213329805,
+          "accuracy": 0.574468085106383,
+          "calibration_bins": [
+            {
+              "lower": 0.4,
+              "upper": 0.6,
+              "games": 94,
+              "predicted": 0.5674418604651162,
+              "observed": 0.574468085106383
+            }
+          ],
+          "ece_5_bins": 0.007026224641266787
+        }
+      }
+    },
+    "2025": {
+      "calibration_games": 190,
+      "calibration_end": "2023-11-07T01:00:00+00:00",
+      "metrics": {
+        "blend": {
+          "games": 95,
+          "log_loss": 0.6192030662774066,
+          "brier": 0.21505518494153303,
+          "accuracy": 0.6526315789473685,
+          "calibration_bins": [
+            {
+              "lower": 0.2,
+              "upper": 0.4,
+              "games": 15,
+              "predicted": 0.32182472082297975,
+              "observed": 0.13333333333333333
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.6,
+              "games": 45,
+              "predicted": 0.5075948673691549,
+              "observed": 0.4
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.8,
+              "games": 34,
+              "predicted": 0.69482973369401,
+              "observed": 0.7352941176470589
+            },
+            {
+              "lower": 0.8,
+              "upper": 1.0,
+              "games": 1,
+              "predicted": 0.8153470247441437,
+              "observed": 1
+            }
+          ],
+          "ece_5_bins": 0.09715349340648616,
+          "points_mae": 8.922407894736843,
+          "interval_coverage": {
+            "home": 0.8210526315789474,
+            "away": 0.7894736842105263
+          }
+        },
+        "previous_season_only": {
+          "games": 95,
+          "log_loss": 0.6523193850510806,
+          "brier": 0.2302362922600784,
+          "accuracy": 0.6105263157894737,
+          "calibration_bins": [
+            {
+              "lower": 0.2,
+              "upper": 0.4,
+              "games": 11,
+              "predicted": 0.33911280682540723,
+              "observed": 0.09090909090909091
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.6,
+              "games": 51,
+              "predicted": 0.5181680578010046,
+              "observed": 0.5098039215686274
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.8,
+              "games": 33,
+              "predicted": 0.6817836823863024,
+              "observed": 0.5757575757575758
+            }
+          ],
+          "ece_5_bins": 0.07005971938609151,
+          "points_mae": 9.05242105263158,
+          "interval_coverage": {
+            "home": 0.7894736842105263,
+            "away": 0.8210526315789474
+          }
+        },
+        "home_prior": {
+          "games": 95,
+          "log_loss": 0.703635761648172,
+          "brier": 0.2552129330464946,
+          "accuracy": 0.4842105263157895,
+          "calibration_bins": [
+            {
+              "lower": 0.4,
+              "upper": 0.6,
+              "games": 95,
+              "predicted": 0.5581174984207201,
+              "observed": 0.4842105263157895
+            }
+          ],
+          "ece_5_bins": 0.07390697210493063
+        }
+      }
+    }
+  },
+  "metrics": {
+    "blend": {
+      "games": 189,
+      "log_loss": 0.6425457544976865,
+      "brier": 0.22584492315576626,
+      "accuracy": 0.6243386243386243,
+      "calibration_bins": [
+        {
+          "lower": 0.2,
+          "upper": 0.4,
+          "games": 19,
+          "predicted": 0.33358849846655103,
+          "observed": 0.21052631578947367
+        },
+        {
+          "lower": 0.4,
+          "upper": 0.6,
+          "games": 99,
+          "predicted": 0.517128767285945,
+          "observed": 0.46464646464646464
+        },
+        {
+          "lower": 0.6,
+          "upper": 0.8,
+          "games": 69,
+          "predicted": 0.6813263791741713,
+          "observed": 0.6956521739130435
+        },
+        {
+          "lower": 0.8,
+          "upper": 1.0,
+          "games": 2,
+          "predicted": 0.8124989609209378,
+          "observed": 1
+        }
+      ],
+      "ece_5_bins": 0.047076250514885364,
+      "points_mae": 9.13968253968254,
+      "interval_coverage": {
+        "home": 0.7936507936507936,
+        "away": 0.8095238095238095
+      }
+    },
+    "previous_season_only": {
+      "games": 189,
+      "log_loss": 0.662192700441707,
+      "brier": 0.2349115472835224,
+      "accuracy": 0.582010582010582,
+      "calibration_bins": [
+        {
+          "lower": 0.2,
+          "upper": 0.4,
+          "games": 11,
+          "predicted": 0.33911280682540723,
+          "observed": 0.09090909090909091
+        },
+        {
+          "lower": 0.4,
+          "upper": 0.6,
+          "games": 108,
+          "predicted": 0.5254253464368984,
+          "observed": 0.5092592592592593
+        },
+        {
+          "lower": 0.6,
+          "upper": 0.8,
+          "games": 70,
+          "predicted": 0.664338366005859,
+          "observed": 0.6285714285714286
+        }
+      ],
+      "ece_5_bins": 0.0369304968818764,
+      "points_mae": 9.331574074074075,
+      "interval_coverage": {
+        "home": 0.7883597883597884,
+        "away": 0.798941798941799
+      }
+    },
+    "home_prior": {
+      "games": 189,
+      "log_loss": 0.692932570681749,
+      "brier": 0.24988673343887305,
+      "accuracy": 0.5291005291005291,
+      "calibration_bins": [
+        {
+          "lower": 0.4,
+          "upper": 0.6,
+          "games": 189,
+          "predicted": 0.5627550118184621,
+          "observed": 0.5291005291005291
+        }
+      ],
+      "ece_5_bins": 0.03365448271793303
+    }
+  },
+  "paired_intervals": {
+    "previous_season_only": {
+      "log_loss": {
+        "delta": -0.019646945944020437,
+        "low": -0.053673398227739165,
+        "high": -0.004077550228152916,
+        "blocks": 6,
+        "draws": 2000
+      },
+      "brier": {
+        "delta": -0.00906662412775615,
+        "low": -0.024986124718670635,
+        "high": -0.00150508527181734,
+        "blocks": 6,
+        "draws": 2000
+      },
+      "accuracy": {
+        "delta": 0.042328042328042326,
+        "low": -0.010526315789473684,
+        "high": 0.10941840277777753,
+        "blocks": 6,
+        "draws": 2000
+      }
+    },
+    "home_prior": {
+      "log_loss": {
+        "delta": -0.05038681618406245,
+        "low": -0.10632211879320527,
+        "high": -0.021131742695518565,
+        "blocks": 6,
+        "draws": 2000
+      },
+      "brier": {
+        "delta": -0.024041810283106785,
+        "low": -0.050087935129345645,
+        "high": -0.010054748990659178,
+        "blocks": 6,
+        "draws": 2000
+      },
+      "accuracy": {
+        "delta": 0.09523809523809523,
+        "low": 0.013960621959884137,
+        "high": 0.19470105763004528,
+        "blocks": 6,
+        "draws": 2000
+      }
+    }
+  },
+  "paired_intervals_favor_blend": true,
+  "statistically_convincing": false,
+  "production_eligible": false,
+  "conclusion": "Promising retrospective signal, not sufficient proof: only 2 evaluated seasons and 6 weekly blocks, without prospective calibration evidence.",
+  "sample_groups": {
+    "zero_current": {
+      "blend": {
+        "games": 31,
+        "log_loss": 0.6582468559695119,
+        "brier": 0.23295965893181397,
+        "accuracy": 0.5483870967741935,
+        "calibration_bins": [
+          {
+            "lower": 0.2,
+            "upper": 0.4,
+            "games": 3,
+            "predicted": 0.35084870060089973,
+            "observed": 0
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.6,
+            "games": 17,
+            "predicted": 0.5376471257108365,
+            "observed": 0.29411764705882354
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.8,
+            "games": 11,
+            "predicted": 0.6567081638535637,
+            "observed": 0.7272727272727273
+          }
+        ],
+        "ece_5_bins": 0.19254056246766835,
+        "points_mae": 8.301518817204302,
+        "interval_coverage": {
+          "home": 0.8387096774193549,
+          "away": 0.8387096774193549
+        }
+      },
+      "previous_season_only": {
+        "games": 31,
+        "log_loss": 0.658025687063784,
+        "brier": 0.23274088156832928,
+        "accuracy": 0.5483870967741935,
+        "calibration_bins": [
+          {
+            "lower": 0.2,
+            "upper": 0.4,
+            "games": 3,
+            "predicted": 0.3606220861965246,
+            "observed": 0
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.6,
+            "games": 17,
+            "predicted": 0.5383945370038379,
+            "observed": 0.29411764705882354
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.8,
+            "games": 11,
+            "predicted": 0.6607055052486027,
+            "observed": 0.7272727272727273
+          }
+        ],
+        "ece_5_bins": 0.1924778332232319,
+        "points_mae": 8.308064516129033,
+        "interval_coverage": {
+          "home": 0.8064516129032258,
+          "away": 0.8387096774193549
+        }
+      },
+      "home_prior": {
+        "games": 31,
+        "log_loss": 0.7193212379391174,
+        "brier": 0.2630171450376473,
+        "accuracy": 0.41935483870967744,
+        "calibration_bins": [
+          {
+            "lower": 0.4,
+            "upper": 0.6,
+            "games": 31,
+            "predicted": 0.5626292865067183,
+            "observed": 0.41935483870967744
+          }
+        ],
+        "ece_5_bins": 0.14327444779704085
+      }
+    },
+    "one_current": {
+      "blend": {
+        "games": 40,
+        "log_loss": 0.6348077640514749,
+        "brier": 0.222443448131486,
+        "accuracy": 0.6,
+        "calibration_bins": [
+          {
+            "lower": 0.2,
+            "upper": 0.4,
+            "games": 3,
+            "predicted": 0.2967860852542443,
+            "observed": 0
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.6,
+            "games": 24,
+            "predicted": 0.5149364152538916,
+            "observed": 0.5833333333333334
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.8,
+            "games": 13,
+            "predicted": 0.6711025479796051,
+            "observed": 0.6923076923076923
+          }
+        ],
+        "ece_5_bins": 0.07018877914836175,
+        "points_mae": 8.636604166666666,
+        "interval_coverage": {
+          "home": 0.825,
+          "away": 0.85
+        }
+      },
+      "previous_season_only": {
+        "games": 40,
+        "log_loss": 0.646220993006951,
+        "brier": 0.22772438343462517,
+        "accuracy": 0.6,
+        "calibration_bins": [
+          {
+            "lower": 0.2,
+            "upper": 0.4,
+            "games": 2,
+            "predicted": 0.3354429987324147,
+            "observed": 0
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.6,
+            "games": 24,
+            "predicted": 0.5259677670651024,
+            "observed": 0.625
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.8,
+            "games": 14,
+            "predicted": 0.6640963452516733,
+            "observed": 0.5714285714285714
+          }
+        ],
+        "ece_5_bins": 0.10862521053564496,
+        "points_mae": 8.763625000000001,
+        "interval_coverage": {
+          "home": 0.825,
+          "away": 0.825
+        }
+      },
+      "home_prior": {
+        "games": 40,
+        "log_loss": 0.6826763243941768,
+        "brier": 0.24477918121751147,
+        "accuracy": 0.575,
+        "calibration_bins": [
+          {
+            "lower": 0.4,
+            "upper": 0.6,
+            "games": 40,
+            "predicted": 0.5627796794429182,
+            "observed": 0.575
+          }
+        ],
+        "ece_5_bins": 0.012220320557081776
+      }
+    },
+    "two_current": {
+      "blend": {
+        "games": 30,
+        "log_loss": 0.6934873378228309,
+        "brier": 0.24908174405455444,
+        "accuracy": 0.6,
+        "calibration_bins": [
+          {
+            "lower": 0.2,
+            "upper": 0.4,
+            "games": 2,
+            "predicted": 0.3509348197803922,
+            "observed": 0.5
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.6,
+            "games": 13,
+            "predicted": 0.49887041348276845,
+            "observed": 0.23076923076923078
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.8,
+            "games": 15,
+            "predicted": 0.6752647715483471,
+            "observed": 0.6
+          }
+        ],
+        "ece_5_bins": 0.16374724363134704,
+        "points_mae": 10.689472222222223,
+        "interval_coverage": {
+          "home": 0.7333333333333333,
+          "away": 0.7666666666666667
+        }
+      },
+      "previous_season_only": {
+        "games": 30,
+        "log_loss": 0.6605560682716197,
+        "brier": 0.23489872328079156,
+        "accuracy": 0.6,
+        "calibration_bins": [
+          {
+            "lower": 0.2,
+            "upper": 0.4,
+            "games": 1,
+            "predicted": 0.3815816125849517,
+            "observed": 1
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.6,
+            "games": 13,
+            "predicted": 0.5004077116572345,
+            "observed": 0.15384615384615385
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.8,
+            "games": 16,
+            "predicted": 0.6605444819542908,
+            "observed": 0.625
+          }
+        ],
+        "ece_5_bins": 0.189747678340925,
+        "points_mae": 10.55775,
+        "interval_coverage": {
+          "home": 0.7666666666666667,
+          "away": 0.8333333333333334
+        }
+      },
+      "home_prior": {
+        "games": 30,
+        "log_loss": 0.7173381054754316,
+        "brier": 0.2620228359404152,
+        "accuracy": 0.43333333333333335,
+        "calibration_bins": [
+          {
+            "lower": 0.4,
+            "upper": 0.6,
+            "games": 30,
+            "predicted": 0.5627796794429182,
+            "observed": 0.43333333333333335
+          }
+        ],
+        "ece_5_bins": 0.12944634610958483
+      }
+    },
+    "three_to_five_current": {
+      "blend": {
+        "games": 88,
+        "log_loss": 0.6231655041848176,
+        "brier": 0.2169630773029263,
+        "accuracy": 0.6704545454545454,
+        "calibration_bins": [
+          {
+            "lower": 0.2,
+            "upper": 0.4,
+            "games": 11,
+            "predicted": 0.33576431579438665,
+            "observed": 0.2727272727272727
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.6,
+            "games": 45,
+            "predicted": 0.5158212773967767,
+            "observed": 0.5333333333333333
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.8,
+            "games": 30,
+            "predicted": 0.6978141887889515,
+            "observed": 0.7333333333333333
+          },
+          {
+            "lower": 0.8,
+            "upper": 1.0,
+            "games": 2,
+            "predicted": 0.8124989609209378,
+            "observed": 1
+          }
+        ],
+        "ece_5_bins": 0.03320484551560087,
+        "points_mae": 9.135279356060604,
+        "interval_coverage": {
+          "home": 0.7840909090909091,
+          "away": 0.7954545454545454
+        }
+      },
+      "previous_season_only": {
+        "games": 88,
+        "log_loss": 0.671478435409985,
+        "brier": 0.23894747809271333,
+        "accuracy": 0.5795454545454546,
+        "calibration_bins": [
+          {
+            "lower": 0.2,
+            "upper": 0.4,
+            "games": 5,
+            "predicted": 0.31918140128802497,
+            "observed": 0
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.6,
+            "games": 54,
+            "predicted": 0.5271241412039496,
+            "observed": 0.6111111111111112
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.8,
+            "games": 29,
+            "predicted": 0.6679263626856354,
+            "observed": 0.6206896551724138
+          }
+        ],
+        "ece_5_bins": 0.0852394079467077,
+        "points_mae": 9.532272727272728,
+        "interval_coverage": {
+          "home": 0.7727272727272727,
+          "away": 0.7613636363636364
+        }
+      },
+      "home_prior": {
+        "games": 88,
+        "log_loss": 0.6799784243489533,
+        "brier": 0.24344555450985253,
+        "accuracy": 0.5795454545454546,
+        "calibration_bins": [
+          {
+            "lower": 0.4,
+            "upper": 0.6,
+            "games": 88,
+            "predicted": 0.5627796794429182,
+            "observed": 0.5795454545454546
+          }
+        ],
+        "ece_5_bins": 0.016765775102536407
+      }
+    }
+  },
+  "gate_subsets": {
+    "below_winner_minimum": {
+      "metrics": {
+        "blend": {
+          "games": 71,
+          "log_loss": 0.6450417337621671,
+          "brier": 0.2270350331288123,
+          "accuracy": 0.5774647887323944,
+          "calibration_bins": [
+            {
+              "lower": 0.2,
+              "upper": 0.4,
+              "games": 6,
+              "predicted": 0.32381739292757206,
+              "observed": 0
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.6,
+              "games": 41,
+              "predicted": 0.524353051297015,
+              "observed": 0.4634146341463415
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.8,
+              "games": 24,
+              "predicted": 0.6645051219218362,
+              "observed": 0.7083333333333334
+            }
+          ],
+          "ece_5_bins": 0.07736981034674621,
+          "points_mae": 8.490299295774648,
+          "interval_coverage": {
+            "home": 0.8309859154929577,
+            "away": 0.8450704225352113
+          }
+        },
+        "previous_season_only": {
+          "games": 71,
+          "log_loss": 0.6513751552007795,
+          "brier": 0.229914685436665,
+          "accuracy": 0.5774647887323944,
+          "calibration_bins": [
+            {
+              "lower": 0.2,
+              "upper": 0.4,
+              "games": 5,
+              "predicted": 0.35055045121088063,
+              "observed": 0
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.6,
+              "games": 41,
+              "predicted": 0.5311203302104317,
+              "observed": 0.4878048780487805
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.8,
+              "games": 25,
+              "predicted": 0.6626043756503222,
+              "observed": 0.64
+            }
+          ],
+          "ece_5_bins": 0.0576590871259177,
+          "points_mae": 8.564718309859156,
+          "interval_coverage": {
+            "home": 0.8169014084507042,
+            "away": 0.8309859154929577
+          }
+        },
+        "home_prior": {
+          "games": 71,
+          "log_loss": 0.6986762162236579,
+          "brier": 0.2527422358432046,
+          "accuracy": 0.5070422535211268,
+          "calibration_bins": [
+            {
+              "lower": 0.4,
+              "upper": 0.6,
+              "games": 71,
+              "predicted": 0.5627140149214788,
+              "observed": 0.5070422535211268
+            }
+          ],
+          "ece_5_bins": 0.055671761400352016
+        }
+      },
+      "paired_intervals": {
+        "log_loss": {
+          "delta": -0.006333421438612341,
+          "low": -0.013656949770732082,
+          "high": 0.023514062204653043,
+          "blocks": 4,
+          "draws": 2000
+        },
+        "brier": {
+          "delta": -0.002879652307852699,
+          "low": -0.006618748167261845,
+          "high": 0.011292128712689633,
+          "blocks": 4,
+          "draws": 2000
+        },
+        "accuracy": {
+          "delta": 0.0,
+          "low": -0.03125,
+          "high": 0.029411764705882353,
+          "blocks": 4,
+          "draws": 2000
+        }
+      }
+    },
+    "below_scoring_minimum": {
+      "metrics": {
+        "blend": {
+          "games": 101,
+          "log_loss": 0.6594315171465227,
+          "brier": 0.23358356112655748,
+          "accuracy": 0.5841584158415841,
+          "calibration_bins": [
+            {
+              "lower": 0.2,
+              "upper": 0.4,
+              "games": 8,
+              "predicted": 0.33059674964077707,
+              "observed": 0.125
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.6,
+              "games": 54,
+              "predicted": 0.5182183421935853,
+              "observed": 0.4074074074074074
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.8,
+              "games": 39,
+              "predicted": 0.6686434487012635,
+              "observed": 0.6666666666666666
+            }
+          ],
+          "ece_5_bins": 0.07629365321711981,
+          "points_mae": 9.14351897689769,
+          "interval_coverage": {
+            "home": 0.801980198019802,
+            "away": 0.8217821782178217
+          }
+        },
+        "previous_season_only": {
+          "games": 101,
+          "log_loss": 0.6541021590832072,
+          "brier": 0.23139509271709863,
+          "accuracy": 0.5841584158415841,
+          "calibration_bins": [
+            {
+              "lower": 0.2,
+              "upper": 0.4,
+              "games": 6,
+              "predicted": 0.35572231143989247,
+              "observed": 0.16666666666666666
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.6,
+              "games": 54,
+              "predicted": 0.5237265516698472,
+              "observed": 0.4074074074074074
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.8,
+              "games": 41,
+              "predicted": 0.6618005146957734,
+              "observed": 0.6341463414634146
+            }
+          ],
+          "ece_5_bins": 0.08464741347859218,
+          "points_mae": 9.15670792079208,
+          "interval_coverage": {
+            "home": 0.801980198019802,
+            "away": 0.8316831683168316
+          }
+        },
+        "home_prior": {
+          "games": 101,
+          "log_loss": 0.7042193516449768,
+          "brier": 0.25549884973346515,
+          "accuracy": 0.48514851485148514,
+          "calibration_bins": [
+            {
+              "lower": 0.4,
+              "upper": 0.6,
+              "games": 101,
+              "predicted": 0.5627335192347777,
+              "observed": 0.48514851485148514
+            }
+          ],
+          "ece_5_bins": 0.07758500438329252
+        }
+      },
+      "paired_intervals": {
+        "log_loss": {
+          "delta": 0.005329358063315434,
+          "low": -0.010666120677150866,
+          "high": 0.030758067855851598,
+          "blocks": 4,
+          "draws": 2000
+        },
+        "brier": {
+          "delta": 0.0021884684094588586,
+          "low": -0.0049368463269636835,
+          "high": 0.01351589183659213,
+          "blocks": 4,
+          "draws": 2000
+        },
+        "accuracy": {
+          "delta": 0.0,
+          "low": -0.02702702702702703,
+          "high": 0.02564102564102564,
+          "blocks": 4,
+          "draws": 2000
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Retrospective source vintages; original historical pregame receipts unverified.",
+    "Only two evaluation seasons and a small number of seven-day blocks; long-range team dependence is not removed.",
+    "No roster, trade, lineup or injury adjustments; previous-season observations may describe a changed team.",
+    "Winner-rule gates are compared as availability only; the production weighted engine cannot be exactly reconstructed without historical point-in-time standings.",
+    "Ending-2026 outcomes excluded from this study, but previously used by older project scoring research; not a globally untouched holdout.",
+    "All post-freeze future games are reserved for genuinely prospective validation; no automatic production promotion."
+  ],
+  "protocol": {
+    "version": "nba-early-season-v1",
+    "frozen_before_evaluation": true,
+    "previous_minimum_observations": 20,
+    "transition_games": 6,
+    "early_sample_definition": "Either team has fewer than six prior eligible same-season regular games",
+    "development_season": 2023,
+    "evaluation_seasons": [
+      2024,
+      2025
+    ],
+    "excluded_seasons_from_evaluation": [
+      2026,
+      2027
+    ],
+    "calibration": "Expanding earlier early-season games only; minimum 50; no regression fitting",
+    "score_formula": "Existing _calibrate_nba_projections with explicitly blended scoring/conceding stats, no form double-count, injuries/standings/odds omitted, home advantage only when not neutral",
+    "baselines": [
+      "previous_season_only",
+      "home_prior"
+    ],
+    "availability_lag_hours": 24,
+    "bootstrap": "Paired 7-day calendar blocks, 2000 resamples, seed 20261022",
+    "probability": "Normal margin residual CDF; bias, spread and absolute-error intervals calibrated on earlier seasons only",
+    "no_hyperparameter_selection": true,
+    "production_promotion": "Forbidden in this experiment; research disabled by default; prospective collection required",
+    "nba_holdout_note": "Ending 2026 excluded from this experiment, but already used by earlier project scoring research; not globally untouched",
+    "prospective_holdout": "All games after protocol timestamp; no outcomes used until a later authorized evaluation",
+    "frozen_at": "2026-10-22T19:28:47.284672+00:00"
+  },
+  "sources": [
+    {
+      "file": "202201.json",
+      "sha256": "65d94995bf44be60733997fb6cd706f39c21a02edcc4eec0feaca50ee4c58039"
+    },
+    {
+      "file": "202202.json",
+      "sha256": "43db5bc3f08f3f0a162fbfee4b3bf7ca2a9002c1fb1bc68ec42ba2f212a98126"
+    },
+    {
+      "file": "202203.json",
+      "sha256": "d08f0727ad02d72f18824dec432bb7ec517ecc6837348a677bc48406daa1efc3"
+    },
+    {
+      "file": "202204.json",
+      "sha256": "d9d2c71c7d46317914ecd2924693e1fac4fa843b7e0192fbd45b70ab0c654e52"
+    },
+    {
+      "file": "202205.json",
+      "sha256": "3c717e7587c637f43af38fbc1e8fd4d48186422dd72eccc4146ae2d851fdbd11"
+    },
+    {
+      "file": "202206.json",
+      "sha256": "0331eaa556f40c66b4b0afb5cbedaf430c6b037ebada799898900865bf2c1034"
+    },
+    {
+      "file": "202207.json",
+      "sha256": "c18f567fc6c8bb4fcb3591f1bb5a9c1a06376b1943a210654594d8656210b37f"
+    },
+    {
+      "file": "202210.json",
+      "sha256": "67efbcea343413233ffc6929bcf1bcaefb58ba9c0866122899a9b9ef5c12239c"
+    },
+    {
+      "file": "202211.json",
+      "sha256": "ca51f44ef856b66fa733171c773a5287cbd1dfab7ad1f2c01254b315fd1441b8"
+    },
+    {
+      "file": "202212.json",
+      "sha256": "a512d01bc7e7fb70b961cdedf28b25c9b17541e592b52617fcb6fb734e56e042"
+    },
+    {
+      "file": "202301.json",
+      "sha256": "bfc4d93079351f1805406abc068d09d2a6e8fc4ed35c3347f29ff78e0872db17"
+    },
+    {
+      "file": "202302.json",
+      "sha256": "bb00d6c73129d5accb1a712c27f962804ab82b9c6d69f31c52ec6d3a9549ac4f"
+    },
+    {
+      "file": "202303.json",
+      "sha256": "1f378ba87f6e0e54b595aa869ae708b6980d1571d69c6dcef059ca682d7e3a88"
+    },
+    {
+      "file": "202304.json",
+      "sha256": "cf01693a69990a516b49e4fc87d01b3ac1caf7e64ce68492b12566a7f0a2e3b2"
+    },
+    {
+      "file": "202305.json",
+      "sha256": "a294d704d71eeecd5f3d2be4f5c8c686c3d5e10adb1f637ac69bd9ed07f45a35"
+    },
+    {
+      "file": "202306.json",
+      "sha256": "c245c0dc71698cd68e9f9efd5ca1c7b3079ff0690546777cd0a7a92e66e4ec43"
+    },
+    {
+      "file": "202307.json",
+      "sha256": "b81711bed2e6d68e13dbd00d4b7ce57e93ca70e5ed7c789abdaef823ad2c5ba2"
+    },
+    {
+      "file": "202310.json",
+      "sha256": "76d48460fce3338855cd5570c870a0cc83819b68f31a7bef94b18bc522a5289a"
+    },
+    {
+      "file": "202311.json",
+      "sha256": "7354698b29cfc164bc9a627e34d8c24dee4c2d51da2569190dfdae1e9cbf5b7d"
+    },
+    {
+      "file": "202312.json",
+      "sha256": "f656ac1935b8f51a5a884c4e6c6c2b553befc402c31b8391765db3e3b35cca3d"
+    },
+    {
+      "file": "202401.json",
+      "sha256": "3554d226ed1b6f99bc0fdd3cb51fa025beef01cebf9706e0ca548faf30b8e2cb"
+    },
+    {
+      "file": "202402.json",
+      "sha256": "c9000e7b08aa953c052348bf8748b43e7b49b953c4abdd18966b653cb791a7a1"
+    },
+    {
+      "file": "202403.json",
+      "sha256": "26b0d490c7501543ec09f325afef057aaeb33f980250a9985f43915e0755695b"
+    },
+    {
+      "file": "202404.json",
+      "sha256": "66f8c830fc8cc4b6b781c333180d9d46f0266d6400e74c685cb88c635337e9d0"
+    },
+    {
+      "file": "202405.json",
+      "sha256": "6a28828bc7ee907f14b231613bfd00579f894bbffcd4c01009ebe6513bf20820"
+    },
+    {
+      "file": "202406.json",
+      "sha256": "b44fdeffdde9da4b3dd9838da7c29cee9ca515994946fd5c530ecd93dbfe9337"
+    },
+    {
+      "file": "202407.json",
+      "sha256": "2be172f1174adfaad08a9746fcc729dfbdd9af25cc2e7f7d8966710e9019170c"
+    },
+    {
+      "file": "202410.json",
+      "sha256": "05a83a78904e78610d701eeae45551fed2396f8354e6ec66c4196c0cea3f6fa0"
+    },
+    {
+      "file": "202411.json",
+      "sha256": "38a77d412d0837b5b56b923d97b69ab5140fd471cc1e61db011304f4b7a8af51"
+    },
+    {
+      "file": "202412.json",
+      "sha256": "f38ba711938284afcbceb0ff2e7ee09f198cd66b56e4bca953cd4f9b736697be"
+    },
+    {
+      "file": "202501.json",
+      "sha256": "78abf69c345d7ddb8ea950d494ed8e7220eb34c9c02ffd585ba0fef98b644fd7"
+    },
+    {
+      "file": "202502.json",
+      "sha256": "64f8319d663c33f6b7bd664d463d9628a395a7e7d83688c0dd1fd670f4867d4f"
+    },
+    {
+      "file": "202503.json",
+      "sha256": "e46844bc69ea7bf016ab84e0d658c1816a14269ac481b21b23530d96731e436a"
+    },
+    {
+      "file": "202504.json",
+      "sha256": "955db3d65f65dd12548c59cfa71773238388008397825a7685753d7df91e06e8"
+    },
+    {
+      "file": "202505.json",
+      "sha256": "8884ebde7db4a6bbb3dec3129732f26e635b3a4a86d1327300f8d86912e5fc27"
+    },
+    {
+      "file": "202506.json",
+      "sha256": "0e801adcd51b382e5b4df63de6ff7cbbe0945ca19c111975177907207f6024ec"
+    },
+    {
+      "file": "202507.json",
+      "sha256": "955fbcdbe8b0b6abe698b1dc7f571b97ccc26401046ebb3e0d34c8e63f9dfad3"
+    }
+  ],
+  "observed_regular_games": 4395
+}

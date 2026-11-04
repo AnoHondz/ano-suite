@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" fill="none">
+  <rect width="1200" height="760" rx="24" fill="#0C0F14"/>
+  <rect x="28" y="28" width="1144" height="704" rx="20" fill="#111722" stroke="#243244"/>
+  <rect x="64" y="64" width="180" height="28" rx="14" fill="#163B2A"/>
+  <rect x="64" y="118" width="620" height="54" rx="16" fill="#131B28"/>
+  <rect x="64" y="210" width="248" height="128" rx="18" fill="#101724" stroke="#223145"/>
+  <rect x="328" y="210" width="248" height="128" rx="18" fill="#101724" stroke="#223145"/>
+  <rect x="592" y="210" width="248" height="128" rx="18" fill="#101724" stroke="#223145"/>
+  <rect x="856" y="210" width="248" height="128" rx="18" fill="#101724" stroke="#223145"/>
+  <rect x="64" y="372" width="520" height="300" rx="20" fill="#101724" stroke="#223145"/>
+  <rect x="616" y="372" width="520" height="300" rx="20" fill="#101724" stroke="#223145"/>
+  <rect x="96" y="408" width="190" height="18" rx="9" fill="#8FF0A4" fill-opacity=".14"/>
+  <rect x="96" y="442" width="438" height="16" rx="8" fill="#E8F1FF" fill-opacity=".09"/>
+  <rect x="96" y="474" width="398" height="16" rx="8" fill="#E8F1FF" fill-opacity=".07"/>
+  <rect x="648" y="408" width="210" height="18" rx="9" fill="#8FF0A4" fill-opacity=".14"/>
+  <rect x="648" y="442" width="434" height="16" rx="8" fill="#E8F1FF" fill-opacity=".09"/>
+  <rect x="648" y="474" width="372" height="16" rx="8" fill="#E8F1FF" fill-opacity=".07"/>
+  <text x="64" y="620" fill="#8FF0A4" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">Placeholder Screenshot</text>
+  <text x="64" y="658" fill="#F4FFF8" font-family="Arial, Helvetica, sans-serif" font-size="46" font-weight="700">Strategy Lab</text>
+  <text x="64" y="696" fill="#A7B8AD" font-family="Arial, Helvetica, sans-serif" font-size="24">Replace with the live strategy dashboard, breakdown cards, and insights view.</text>
+</svg>

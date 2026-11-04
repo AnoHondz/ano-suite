@@ -1,0 +1,78 @@
+//@version=5
+// Ano · Gap fill (NY morning). Shows what Ano's paper executor does; it places no orders itself.
+// Same rules as ano/paper_execution.py: the session opens away from yesterday's close by 0.05–0.6%; if the
+// 9:34 close is toward the fill, a limit order goes in at that price (filled only if touched by 9:40). Target:
+// yesterday's close. Stop: 1.5 × the gap beyond the entry. Flat at 11:00 New York time.
+// Drawn like a position tool: green = room to the target, red = room to the stop, from entry to exit.
+indicator("Ano · Gap fill", shorttitle="Ano gap fill", overlay=true, max_boxes_count=100, max_labels_count=100)
+
+tz       = "America/New_York"
+maxGap   = input.float(0.6, "Largest gap (%)", step=0.1) / 100
+minGap   = input.float(0.05, "Smallest gap (%)", step=0.05) / 100
+stopGaps = input.float(1.5, "Stop: gap size ×", step=0.25)
+
+prevClose = request.security(syminfo.tickerid, "D", close[1], lookahead=barmerge.lookahead_on)
+regular   = not na(time(timeframe.period, "0930-1600", tz))
+decideBar = not na(time(timeframe.period, "0935-0936", tz))
+fillTime  = not na(time(timeframe.period, "0935-0940", tz))
+session   = not na(time(timeframe.period, "0930-1100", tz))
+plot(session ? prevClose : na, "Yesterday's close", color.new(color.yellow, 55), 1, plot.style_linebr, display=display.pane)
+
+var float dayOpen = na
+var string side = ""
+var float entry = na
+var float stop = na
+var float target = na
+var int startBar = na
+var bool waiting = false
+var bool inTrade = false
+var box reward = na
+var box risk = na
+
+if regular and not regular[1]
+    dayOpen := open
+    side := ""
+    waiting := false
+    inTrade := false
+
+gap = na(dayOpen) or na(prevClose) ? na : (dayOpen - prevClose) / prevClose
+if decideBar and side == "" and not na(gap) and math.abs(gap) >= minGap and math.abs(gap) <= maxGap
+    wantShort = gap > 0
+    towardFill = wantShort ? close[1] < dayOpen : close[1] > dayOpen
+    beforeTarget = wantShort ? close[1] > prevClose : close[1] < prevClose
+    if towardFill and beforeTarget
+        side := wantShort ? "short" : "long"
+        entry := close[1]
+        target := prevClose
+        stop := wantShort ? entry + stopGaps * math.abs(dayOpen - prevClose) : entry - stopGaps * math.abs(dayOpen - prevClose)
+        waiting := true
+        startBar := bar_index
+
+// The limit order: filled when price trades through the entry before 9:40, otherwise cancelled.
+if waiting
+    touched = side == "short" ? high >= entry : low <= entry
+    if touched and fillTime
+        waiting := false
+        inTrade := true
+        reward := box.new(bar_index, side == "short" ? entry : target, bar_index + 1, side == "short" ? target : entry, border_color=color.new(color.teal, 70), bgcolor=color.new(color.teal, 85))
+        risk := box.new(bar_index, side == "short" ? stop : entry, bar_index + 1, side == "short" ? entry : stop, border_color=color.new(color.red, 75), bgcolor=color.new(color.red, 88))
+        label.new(bar_index, entry, side == "short" ? "▼ short" : "▲ long", style=label.style_label_right, color=color.new(color.black, 100), textcolor=color.new(color.white, 20), size=size.small)
+    else if not fillTime and bar_index > startBar
+        waiting := false
+        label.new(bar_index, entry, "not filled", style=label.style_label_left, color=color.new(color.black, 100), textcolor=color.new(color.gray, 20), size=size.tiny)
+
+if inTrade
+    box.set_right(reward, bar_index)
+    box.set_right(risk, bar_index)
+    hitStop = side == "short" ? high >= stop : low <= stop
+    hitTarget = side == "short" ? low <= target : high >= target
+    oneR = math.abs(entry - stop)
+    result = hitStop ? -1.0 : hitTarget ? math.abs(target - entry) / oneR : (side == "short" ? entry - close : close - entry) / oneR
+    if hitStop or hitTarget or not session
+        inTrade := false
+        tone = result > 0 ? color.teal : color.red
+        label.new(bar_index, hitStop ? stop : hitTarget ? target : close, (hitStop ? "stop " : hitTarget ? "target " : "11:00 ") + str.tostring(result, "+0.00;-0.00") + "R", style=label.style_label_left, color=color.new(tone, 25), textcolor=color.white, size=size.small)
+
+signal = decideBar and waiting and bar_index == startBar
+alertcondition(signal and side == "short", "Gap fill short", "Ano gap fill: short limit on {{ticker}} near {{close}}")
+alertcondition(signal and side == "long", "Gap fill long", "Ano gap fill: long limit on {{ticker}} near {{close}}")

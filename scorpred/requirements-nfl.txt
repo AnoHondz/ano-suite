@@ -1,0 +1,4 @@
+-r requirements.txt
+# Maintained nflverse Python loader; import/training jobs only, not Flask startup.
+nflreadpy==0.1.5
+polars>=1.30,<2

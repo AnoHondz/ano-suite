@@ -1,0 +1,66 @@
+{
+  "observed_at": "2026-10-22T19:12:11.504635+00:00",
+  "backend": {
+    "passed": 832,
+    "duration_seconds": 255.7,
+    "command": ".venv/Scripts/python.exe -m pytest tests -q --tb=short"
+  },
+  "frontend": {
+    "passed": 38,
+    "duration_seconds": 57.8,
+    "command": "npm run test:e2e",
+    "channel": "msedge",
+    "mode": "Routine tests use Lite graphics; real WebGL verified separately."
+  },
+  "lint": {
+    "passed": true,
+    "command": "npm run lint"
+  },
+  "production_build": {
+    "passed": true,
+    "command": "npm run build",
+    "warning": "Deferred ArenaScene chunk exceeds 500 kB minified."
+  },
+  "nba_real_api_cases": 4,
+  "nba_history_navigation": true,
+  "nba_controlled_outage": true,
+  "real_api_navigation_steps": 22,
+  "real_webgl_desktop_pages": 6,
+  "reduced_motion": true,
+  "webgl_failure_fallback": true,
+  "offscreen_animation_paused": true,
+  "protected_files": 160,
+  "all_protected_files_unchanged": true,
+  "soccer_fixed_input_outputs": 6,
+  "soccer_outputs_unchanged": true,
+  "dependency_vulnerabilities": 0,
+  "runtime": {
+    "app": "ScorPred",
+    "pid": 3892,
+    "research_enabled": false,
+    "root": "C:\\Users\\User\\Documents\\scorpred",
+    "source_fingerprint": "4e02701b02d19e4ff84528c70494d1a0d113b39f0b3b30c7134a912975c63c58",
+    "loaded_code_matches_workspace": true,
+    "health": {
+      "path": "/health",
+      "status": 200,
+      "ms": 72.3,
+      "payload": {
+        "api": "ok",
+        "app": "ScorPred",
+        "cache": "local",
+        "db": "connected",
+        "degraded_mode": false,
+        "error_count": 0,
+        "last_refresh": "2026-10-22T18:40:59.823731Z",
+        "release": "2026-04-20-d53ddbe",
+        "status": "ok",
+        "timestamp": "2026-10-22 15:09:18"
+      }
+    }
+  },
+  "nba_winner_classifier_present": false,
+  "deployment": false,
+  "training": false,
+  "third_party_historical_downloads": false
+}

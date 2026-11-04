@@ -1,0 +1,117 @@
+{
+  "mocked": false,
+  "browser": "Edge with software WebGL",
+  "pages": [
+    {
+      "name": "dashboard",
+      "path": "/",
+      "shellMs": 1358,
+      "contentMs": 11020,
+      "sceneMs": 11026,
+      "dimensions": {
+        "width": 967,
+        "cssWidth": 967,
+        "dpr": 1
+      },
+      "overflow": false,
+      "alerts": [],
+      "webglCanvases": 1
+    },
+    {
+      "name": "nfl",
+      "path": "/nfl",
+      "shellMs": 255,
+      "contentMs": 682,
+      "sceneMs": 2547,
+      "dimensions": {
+        "width": 1312,
+        "cssWidth": 1312,
+        "dpr": 1
+      },
+      "overflow": false,
+      "alerts": [],
+      "webglCanvases": 1
+    },
+    {
+      "name": "nba",
+      "path": "/nba",
+      "shellMs": 276,
+      "contentMs": 949,
+      "sceneMs": 2459,
+      "dimensions": {
+        "width": 1312,
+        "cssWidth": 1312,
+        "dpr": 1
+      },
+      "overflow": false,
+      "alerts": [],
+      "webglCanvases": 1
+    },
+    {
+      "name": "soccer",
+      "path": "/soccer",
+      "shellMs": 236,
+      "contentMs": 702,
+      "sceneMs": 2463,
+      "dimensions": {
+        "width": 1312,
+        "cssWidth": 1312,
+        "dpr": 1
+      },
+      "overflow": false,
+      "alerts": [],
+      "webglCanvases": 1
+    },
+    {
+      "name": "match-analysis",
+      "path": "/match-analysis?sport=nba&match_id=401909093&date=2026-10-22",
+      "shellMs": 244,
+      "contentMs": 666,
+      "sceneMs": 3341,
+      "dimensions": {
+        "width": 1312,
+        "cssWidth": 1312,
+        "dpr": 1
+      },
+      "overflow": false,
+      "alerts": [],
+      "webglCanvases": 1
+    },
+    {
+      "name": "insights",
+      "path": "/insights",
+      "shellMs": 277,
+      "contentMs": 592,
+      "sceneMs": 2518,
+      "dimensions": {
+        "width": 1312,
+        "cssWidth": 1312,
+        "dpr": 1
+      },
+      "overflow": false,
+      "alerts": [],
+      "webglCanvases": 1
+    }
+  ],
+  "errors": [],
+  "performance": {
+    "animation": {
+      "frames": 78,
+      "durationMs": 2002.3999999999533,
+      "meanFrameMs": 25.671794871794273,
+      "p95FrameMs": 33.400000000000546
+    }
+  },
+  "fallback": {
+    "reducedMotion": true,
+    "webglUnavailable": true
+  },
+  "pausesOffscreen": true,
+  "mobile": {
+    "width": 390,
+    "noOverflow": true,
+    "maxCanvases": 1,
+    "dpr": 1
+  },
+  "ok": true
+}

@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Key Threats — {{ team_a.name }} vs {{ team_b.name }}{% endblock %}
+
+{% block head %}
+<style>
+  .sp-threat{display:flex;align-items:flex-start;gap:.6rem;padding:.6rem .75rem;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:.4rem}
+  .sp-threat--top{border-color:var(--c-caution)}
+  .sp-threat__rank{font-size:.72rem;font-weight:700;color:var(--c-caution);min-width:1.2rem;text-align:center;padding-top:.15rem}
+  .sp-threat__photo{width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;background:var(--bg-3)}
+  .sp-threat__name{font-weight:600;font-size:.88rem}
+  .sp-roster-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+  .sp-pos-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--c-caution);margin:.6rem 0 .25rem;font-weight:600}
+  .sp-roster-player{display:flex;align-items:center;gap:.4rem;font-size:.82rem;padding:.15rem 0}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="sp-hero">
+  <span class="sp-kicker">Key Threats</span>
+  <h1>{{ team_a.name }} vs {{ team_b.name }}</h1>
+  <p style="color:var(--text-3)">Most dangerous players and their expected match impact</p>
+</section>
+
+{% if selected_fixture %}
+<div class="sp-meta-strip sp-panel sp-panel--tight" style="margin-bottom:.75rem">
+  {% if selected_fixture.date %}<span>{{ selected_fixture.date[:10] }}</span>{% endif %}
+  {% if selected_fixture.league_name %}<span>{{ selected_fixture.league_name }}</span>{% endif %}
+  {% if selected_fixture.round %}<span>{{ selected_fixture.round }}</span>{% endif %}
+  {% if selected_fixture.venue_name %}<span>{{ selected_fixture.venue_name }}</span>{% endif %}
+</div>
+{% endif %}
+
+{# ── Key Threats ── #}
+<div class="sp-split">
+  {% for team, threats in [(team_a, threats_a), (team_b, threats_b)] %}
+  <div class="sp-panel">
+    <div style="display:flex; align-items:center; gap:.4rem; margin-bottom:.5rem">
+      {% if team.logo %}<img src="{{ team.logo }}" alt="" style="width:22px;height:22px;object-fit:contain" />{% endif %}
+      <strong>{{ team.name }}</strong>
+    </div>
+    {% if threats %}
+      {% for player in threats %}
+      <div class="sp-threat{% if loop.index == 1 %} sp-threat--top{% endif %}">
+        <div class="sp-threat__rank">{{ loop.index }}</div>
+        {% if player.photo %}
+          <img src="{{ player.photo }}" alt="{{ player.name }}" class="sp-threat__photo" />
+        {% else %}
+          <div class="sp-threat__photo" style="display:flex;align-items:center;justify-content:center;font-size:1rem">?</div>
+        {% endif %}
+        <div>
+          <div class="sp-threat__name">{{ player.name }}</div>
+          <div style="display:flex; gap:.3rem; flex-wrap:wrap; margin:.2rem 0">
+            <span class="sp-badge sp-badge--active">{{ player.position }}</span>
+            <span class="sp-badge sp-badge--caution">{{ player.threat_label }}</span>
+            {% if player.injured %}
+              <span class="sp-badge sp-badge--danger">Injured</span>
+            {% else %}
+              <span class="sp-badge sp-badge--strong">Available</span>
+            {% endif %}
+          </div>
+          <span style="font-size:.78rem; color:var(--text-3)">Expected: <strong>{{ player.contribution }}</strong></span>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <p style="color:var(--text-3)">No squad data available.</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+
+{# ── Injury Report ── #}
+{% if injuries_a or injuries_b %}
+<div class="sp-panel" style="margin-top:1rem">
+  <span class="sp-kicker">Injury Report</span>
+  <div class="sp-split" style="margin-top:.5rem">
+    {% for team, inj_list in [(team_a, injuries_a), (team_b, injuries_b)] %}
+    <div>
+      <strong style="font-size:.82rem; color:var(--text-3)">{{ team.name }}</strong>
+      {% for inj in inj_list[:5] %}
+        <div style="font-size:.82rem; color:var(--c-danger); margin:.2rem 0">
+          {{ (inj.player or {}).get('name', '—') }}
+          {% if inj.type %}<span style="color:var(--text-3); font-size:.75rem"> — {{ inj.type }}</span>{% endif %}
+        </div>
+      {% else %}
+        <p style="color:var(--text-3); font-size:.82rem">No injuries reported</p>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{# ── Full Squads ── #}
+<span class="sp-kicker" style="margin-top:1.5rem">Full Squads</span>
+<div class="sp-roster-grid">
+  {% for team, squad in [(team_a, squad_a), (team_b, squad_b)] %}
+  <div class="sp-panel">
+    <strong style="font-size:.9rem">{{ team.name }}</strong>
+    {% for position in ['Goalkeeper', 'Defender', 'Midfielder', 'Attacker'] %}
+      {% set players = squad.get(position, []) %}
+      {% if players %}
+      <div class="sp-pos-label">{{ position }}s</div>
+      {% for p in players | sort(attribute='name') %}
+      <div class="sp-roster-player">
+        {% if p.photo %}
+          <img src="{{ p.photo }}" alt="" style="width:24px;height:24px;border-radius:50%;object-fit:cover" />
+        {% else %}
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--bg-3);flex-shrink:0"></div>
+        {% endif %}
+        <span>{{ p.name or '—' }}</span>
+        {% if p.number %}<span style="color:var(--text-3);font-size:.75rem">#{{ p.number }}</span>{% endif %}
+      </div>
+      {% endfor %}
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

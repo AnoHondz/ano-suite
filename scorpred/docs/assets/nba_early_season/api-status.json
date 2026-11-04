@@ -1,0 +1,40 @@
+[
+  {
+    "path": "/api/nba/research/early-season",
+    "status": 200,
+    "data": {
+      "available": true,
+      "research_enabled": false,
+      "production_enabled": false
+    }
+  },
+  {
+    "path": "/api/nba/research/early-season/matches/401909094?date=2026-10-22",
+    "status": 404,
+    "data": {
+      "error": "NBA early-season research previews are disabled. Production predictions are unchanged."
+    }
+  },
+  {
+    "path": "/api/matches/401909093?sport=nba&date=2026-10-22",
+    "status": 200,
+    "data": {
+      "matchup": "Philadelphia 76ers vs Cleveland Cavaliers",
+      "matchDate": "2026-10-22T23:00Z",
+      "reason": "Pregame recommendations are unavailable after kickoff or when the game is not scheduled.",
+      "winProbability": null,
+      "modelSource": "unavailable"
+    }
+  },
+  {
+    "path": "/api/matches/401909094?sport=nba&date=2026-10-22",
+    "status": 200,
+    "data": {
+      "matchup": "Oklahoma City Thunder vs Denver Nuggets",
+      "matchDate": "2026-10-23T01:30Z",
+      "reason": "Pregame recommendations are unavailable because their source data needs a fresh update.",
+      "winProbability": null,
+      "modelSource": "unavailable"
+    }
+  }
+]

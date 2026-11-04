@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% import "components/decision.html" as ui with context %}
+
+{% block title %}ScorPred | Today's Soccer Predictions{% endblock %}
+{% block topbar_title %}Today's Soccer Predictions{% endblock %}
+{% block topbar_actions %}
+  <form class="sp-filter-row" method="get" action="/today-soccer-predictions">
+    <select class="sp-filter-control" name="league" onchange="this.form.submit()" aria-label="Competition">
+      {% for league in supported_leagues %}
+        <option value="{{ league.id }}" {% if current_league_id == league.id %}selected{% endif %}>{{ league.name }}</option>
+      {% endfor %}
+    </select>
+  </form>
+{% endblock %}
+
+{% block content %}
+<section class="sp-page-hero">
+  <span class="sp-page-hero__eyebrow">Soccer decision plan</span>
+  <h1>Today's soccer predictions, ranked by playable edge.</h1>
+  <p>Start with the strongest opportunities, then scan the rest by action, confidence, and data trust.</p>
+</section>
+
+{{ ui.plan_strip(today_plan) }}
+{{ ui.top_opportunities(top_opportunities) }}
+
+{% for group in grouped_predictions %}
+  <section class="sp-section">
+    <div class="sp-section__header">
+      <div>
+        <h2>{{ group.league_name or 'Competition' }}</h2>
+        <p>{{ group.predictions|length }} matches available.</p>
+      </div>
+    </div>
+    {% if group.cards %}
+      <div class="sp-card-grid">
+        {% for card in group.cards %}
+          {{ ui.decision_card(card) }}
+        {% endfor %}
+      </div>
+    {% else %}
+      {{ ui.empty_state('No baseline data for this competition', 'ScorPred needs usable fixture data before ranking this group.') }}
+    {% endif %}
+  </section>
+{% endfor %}
+
+{% if not grouped_predictions %}
+  {{ ui.empty_state('No soccer slate available', load_error or 'Check back when fixtures are available.') }}
+{% endif %}
+{% endblock %}

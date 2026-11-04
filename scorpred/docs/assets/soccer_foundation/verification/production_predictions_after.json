@@ -1,0 +1,439 @@
+{
+  "method": "fixed clock, isolated empty tracking, three saved feature vectors and three rule contexts",
+  "classifier": [
+    {
+      "feature_csv_line": 2,
+      "output": {
+        "available": true,
+        "prediction": 0,
+        "probabilities": [
+          0.474324,
+          0.263715,
+          0.261962
+        ],
+        "confidence": 0.474324,
+        "class_labels": {
+          "0": "HomeWin",
+          "1": "Draw",
+          "2": "AwayWin"
+        },
+        "model_type": "calibrated_random_forest",
+        "model_role": "production",
+        "base_models": null,
+        "base_agreement": null,
+        "feature_count": 60,
+        "schema_version": "f4960fa835e3d20b01fda002f6edd0bff87e51a8b7257ce6ea5d85e7e9430378"
+      }
+    },
+    {
+      "feature_csv_line": 3795,
+      "output": {
+        "available": true,
+        "prediction": 0,
+        "probabilities": [
+          0.466483,
+          0.237801,
+          0.295716
+        ],
+        "confidence": 0.466483,
+        "class_labels": {
+          "0": "HomeWin",
+          "1": "Draw",
+          "2": "AwayWin"
+        },
+        "model_type": "calibrated_random_forest",
+        "model_role": "production",
+        "base_models": null,
+        "base_agreement": null,
+        "feature_count": 60,
+        "schema_version": "f4960fa835e3d20b01fda002f6edd0bff87e51a8b7257ce6ea5d85e7e9430378"
+      }
+    },
+    {
+      "feature_csv_line": 7587,
+      "output": {
+        "available": true,
+        "prediction": 0,
+        "probabilities": [
+          0.410868,
+          0.245663,
+          0.343469
+        ],
+        "confidence": 0.410868,
+        "class_labels": {
+          "0": "HomeWin",
+          "1": "Draw",
+          "2": "AwayWin"
+        },
+        "model_type": "calibrated_random_forest",
+        "model_role": "production",
+        "base_models": null,
+        "base_agreement": null,
+        "feature_count": 60,
+        "schema_version": "f4960fa835e3d20b01fda002f6edd0bff87e51a8b7257ce6ea5d85e7e9430378"
+      }
+    }
+  ],
+  "primary_rule_engine": [
+    {
+      "team_a_score": 7.64,
+      "team_b_score": 1.94,
+      "score_gap": 5.7,
+      "win_probabilities": {
+        "a": 87.0,
+        "draw": 8.0,
+        "b": 5.0
+      },
+      "prob_a": 87.0,
+      "prob_b": 5.0,
+      "prob_draw": 8.0,
+      "home_pct": 87.0,
+      "draw_pct": 8.0,
+      "away_pct": 5.0,
+      "confidence": "High",
+      "winner_label": "Home Win",
+      "components_a": {
+        "form": 8.0,
+        "offense": 6.67,
+        "defense": 10.0,
+        "h2h": 5.0,
+        "home_away": 7.5,
+        "squad": 10.0,
+        "opp_strength": 7.5,
+        "match_context": 4.2
+      },
+      "components_b": {
+        "form": 0.0,
+        "offense": 0.0,
+        "defense": 3.33,
+        "h2h": 5.0,
+        "home_away": 4.5,
+        "squad": 10.0,
+        "opp_strength": 0.75,
+        "match_context": 4.2
+      },
+      "comparison": {
+        "form": "A",
+        "offense": "A",
+        "defense": "A",
+        "h2h": "equal",
+        "home_away": "A",
+        "squad": "equal",
+        "opp_strength": "A",
+        "trending_up_offense": "neither"
+      },
+      "key_edges": [
+        {
+          "team": "A",
+          "team_name": "Home",
+          "category": "Recent Form",
+          "margin": 8.0,
+          "a_val": 8.0,
+          "b_val": 0.0,
+          "detail": "Home leads in Recent Form (8.0 vs 0.0)"
+        },
+        {
+          "team": "A",
+          "team_name": "Home",
+          "category": "Opponent Quality Faced",
+          "margin": 6.8,
+          "a_val": 7.5,
+          "b_val": 0.8,
+          "detail": "Home leads in Opponent Quality Faced (7.5 vs 0.8)"
+        },
+        {
+          "team": "A",
+          "team_name": "Home",
+          "category": "Attacking Power",
+          "margin": 6.7,
+          "a_val": 6.7,
+          "b_val": 0.0,
+          "detail": "Home leads in Attacking Power (6.7 vs 0.0)"
+        }
+      ],
+      "matchup_reading": "Home hold the clearest overall edge (7.6 vs 1.9). Away's recent results came against weaker opposition \u2014 treat their form with caution. Home have been tested by quality opponents recently, making their form more credible. Home may be fatigued from short rest, weakening their current edge. Away may be fatigued from short rest, weakening their current edge. Home carry the stronger attacking threat right now. Home are the tighter defensive unit.",
+      "best_pick": {
+        "prediction": "Home Win",
+        "team": "A",
+        "confidence": "High",
+        "reasoning": "Home leads in Recent Form (8.0 vs 0.0). Gap: 5.7/10."
+      },
+      "performance_summary": {
+        "total_tracked": 0,
+        "total_verified": 0,
+        "accuracy": null,
+        "confidence": {
+          "High": {
+            "total": 0,
+            "accuracy": null
+          },
+          "Medium": {
+            "total": 0,
+            "accuracy": null
+          },
+          "Low": {
+            "total": 0,
+            "accuracy": null
+          }
+        }
+      },
+      "optional_picks": [
+        {
+          "market": "Goals Over/Under 2.5",
+          "lean": "Under",
+          "reasoning": "Avg combined goals: 2.00/game"
+        },
+        {
+          "market": "Both Teams to Score",
+          "lean": "Yes",
+          "reasoning": "BTTS probability ~50% from recent scoring rates"
+        }
+      ],
+      "debug_info": {
+        "fallbacks_used": [],
+        "data_quality": "Moderate"
+      },
+      "data_quality": "Moderate",
+      "top_lean": {
+        "outcome": "Home",
+        "label": "Home",
+        "prob": 87.0
+      },
+      "decision_status": "Strong Lean"
+    },
+    {
+      "team_a_score": 1.98,
+      "team_b_score": 7.4,
+      "score_gap": 5.42,
+      "win_probabilities": {
+        "a": 5.7,
+        "draw": 8.0,
+        "b": 86.3
+      },
+      "prob_a": 5.7,
+      "prob_b": 86.3,
+      "prob_draw": 8.0,
+      "home_pct": 5.7,
+      "draw_pct": 8.0,
+      "away_pct": 86.3,
+      "confidence": "High",
+      "winner_label": "Away Win",
+      "components_a": {
+        "form": 0.0,
+        "offense": 0.0,
+        "defense": 3.33,
+        "h2h": 5.0,
+        "home_away": 5.0,
+        "squad": 10.0,
+        "opp_strength": 0.75,
+        "match_context": 4.2
+      },
+      "components_b": {
+        "form": 8.0,
+        "offense": 6.67,
+        "defense": 10.0,
+        "h2h": 5.0,
+        "home_away": 4.5,
+        "squad": 10.0,
+        "opp_strength": 7.5,
+        "match_context": 4.2
+      },
+      "comparison": {
+        "form": "B",
+        "offense": "B",
+        "defense": "B",
+        "h2h": "equal",
+        "home_away": "A",
+        "squad": "equal",
+        "opp_strength": "B",
+        "trending_up_offense": "neither"
+      },
+      "key_edges": [
+        {
+          "team": "B",
+          "team_name": "Away",
+          "category": "Recent Form",
+          "margin": 8.0,
+          "a_val": 0.0,
+          "b_val": 8.0,
+          "detail": "Away leads in Recent Form (0.0 vs 8.0)"
+        },
+        {
+          "team": "B",
+          "team_name": "Away",
+          "category": "Opponent Quality Faced",
+          "margin": 6.8,
+          "a_val": 0.8,
+          "b_val": 7.5,
+          "detail": "Away leads in Opponent Quality Faced (0.8 vs 7.5)"
+        },
+        {
+          "team": "B",
+          "team_name": "Away",
+          "category": "Attacking Power",
+          "margin": 6.7,
+          "a_val": 0.0,
+          "b_val": 6.7,
+          "detail": "Away leads in Attacking Power (0.0 vs 6.7)"
+        }
+      ],
+      "matchup_reading": "Away hold the clearest overall edge (2.0 vs 7.4). Home's recent results came against weaker opposition \u2014 treat their form with caution. Away have been tested by quality opponents recently, making their form more credible. Home may be fatigued from short rest, weakening their current edge. Away may be fatigued from short rest, weakening their current edge. Away carry the stronger attacking threat right now. Away are the tighter defensive unit.",
+      "best_pick": {
+        "prediction": "Away Win",
+        "team": "B",
+        "confidence": "High",
+        "reasoning": "Away leads in Recent Form (0.0 vs 8.0). Gap: 5.4/10."
+      },
+      "performance_summary": {
+        "total_tracked": 0,
+        "total_verified": 0,
+        "accuracy": null,
+        "confidence": {
+          "High": {
+            "total": 0,
+            "accuracy": null
+          },
+          "Medium": {
+            "total": 0,
+            "accuracy": null
+          },
+          "Low": {
+            "total": 0,
+            "accuracy": null
+          }
+        }
+      },
+      "optional_picks": [
+        {
+          "market": "Goals Over/Under 2.5",
+          "lean": "Under",
+          "reasoning": "Avg combined goals: 2.00/game"
+        },
+        {
+          "market": "Both Teams to Score",
+          "lean": "Yes",
+          "reasoning": "BTTS probability ~50% from recent scoring rates"
+        }
+      ],
+      "debug_info": {
+        "fallbacks_used": [],
+        "data_quality": "Moderate"
+      },
+      "data_quality": "Moderate",
+      "top_lean": {
+        "outcome": "Away",
+        "label": "Away",
+        "prob": 86.3
+      },
+      "decision_status": "Strong Lean"
+    },
+    {
+      "team_a_score": 4.59,
+      "team_b_score": 4.55,
+      "score_gap": 0.04,
+      "win_probabilities": {
+        "a": 37.4,
+        "draw": 25.9,
+        "b": 36.7
+      },
+      "prob_a": 37.4,
+      "prob_b": 36.7,
+      "prob_draw": 25.9,
+      "home_pct": 37.4,
+      "draw_pct": 25.9,
+      "away_pct": 36.7,
+      "confidence": "Low",
+      "winner_label": "Draw",
+      "components_a": {
+        "form": 4.0,
+        "offense": 3.33,
+        "defense": 6.67,
+        "h2h": 5.0,
+        "home_away": 5.0,
+        "squad": 10.0,
+        "opp_strength": 2.5,
+        "match_context": 4.2
+      },
+      "components_b": {
+        "form": 4.0,
+        "offense": 3.33,
+        "defense": 6.67,
+        "h2h": 5.0,
+        "home_away": 4.5,
+        "squad": 10.0,
+        "opp_strength": 2.5,
+        "match_context": 4.2
+      },
+      "comparison": {
+        "form": "equal",
+        "offense": "equal",
+        "defense": "equal",
+        "h2h": "equal",
+        "home_away": "A",
+        "squad": "equal",
+        "opp_strength": "equal",
+        "trending_up_offense": "neither"
+      },
+      "key_edges": [
+        {
+          "team": "A",
+          "team_name": "Home",
+          "category": "Venue Advantage",
+          "margin": 0.5,
+          "a_val": 5.0,
+          "b_val": 4.5,
+          "detail": "Home leads in Venue Advantage (5.0 vs 4.5)"
+        }
+      ],
+      "matchup_reading": "Home hold the clearest overall edge (4.6 vs 4.5). Home's recent results came against weaker opposition \u2014 treat their form with caution. Away's recent results came against weaker opposition \u2014 treat their form with caution. Home may be fatigued from short rest, weakening their current edge. Away may be fatigued from short rest, weakening their current edge.",
+      "best_pick": {
+        "prediction": "Draw",
+        "team": "draw",
+        "confidence": "Low",
+        "reasoning": "Home leads in Venue Advantage (5.0 vs 4.5). Gap: 0.0/10."
+      },
+      "performance_summary": {
+        "total_tracked": 0,
+        "total_verified": 0,
+        "accuracy": null,
+        "confidence": {
+          "High": {
+            "total": 0,
+            "accuracy": null
+          },
+          "Medium": {
+            "total": 0,
+            "accuracy": null
+          },
+          "Low": {
+            "total": 0,
+            "accuracy": null
+          }
+        }
+      },
+      "optional_picks": [
+        {
+          "market": "Goals Over/Under 2.5",
+          "lean": "Under",
+          "reasoning": "Avg combined goals: 2.00/game"
+        },
+        {
+          "market": "Both Teams to Score",
+          "lean": "Yes",
+          "reasoning": "BTTS probability ~100% from recent scoring rates"
+        }
+      ],
+      "debug_info": {
+        "fallbacks_used": [],
+        "data_quality": "Moderate"
+      },
+      "data_quality": "Moderate",
+      "top_lean": {
+        "outcome": "Home",
+        "label": "Home",
+        "prob": 37.4
+      },
+      "decision_status": "No Edge"
+    }
+  ]
+}

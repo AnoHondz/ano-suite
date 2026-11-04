@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScorPred Scoreline Predictor Test</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+        .container {
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #34d399;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            color: #e2e8f0;
+            font-size: 16px;
+        }
+        button {
+            background: #34d399;
+            color: #0f172a;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #10b981;
+        }
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #0f172a;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .loading {
+            color: #fbbf24;
+        }
+        .error {
+            color: #ef4444;
+        }
+        .success {
+            color: #34d399;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚽ ScorPred Scoreline Predictor Test</h1>
+
+        <div class="form-group">
+            <label>Sport</label>
+            <select id="sport">
+                <option value="soccer">Soccer</option>
+                <option value="nba">NBA</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Team A Name</label>
+            <input type="text" id="teamAName" value="Barcelona" placeholder="Home team name">
+        </div>
+
+        <div class="form-group">
+            <label>Team B Name</label>
+            <input type="text" id="teamBName" value="Real Madrid" placeholder="Away team name">
+        </div>
+
+        <div class="form-group">
+            <label>Team A ID (optional)</label>
+            <input type="text" id="teamAId" value="529" placeholder="API ID for team A">
+        </div>
+
+        <div class="form-group">
+            <label>Team B ID (optional)</label>
+            <input type="text" id="teamBId" value="530" placeholder="API ID for team B">
+        </div>
+
+        <div class="form-group">
+            <label>League ID (optional)</label>
+            <input type="text" id="leagueId" value="140" placeholder="e.g., 140 for La Liga">
+        </div>
+
+        <button onclick="testScoreline()">🎯 Predict Scoreline</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function testScoreline() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<span class="loading">⏳ Fetching scoreline prediction...</span>';
+
+            const sport = document.getElementById('sport').value;
+            const endpoint = sport === 'soccer' ? '/api/scoreline/soccer' : '/api/scoreline/nba';
+
+            const payload = {
+                team_a_name: document.getElementById('teamAName').value,
+                team_b_name: document.getElementById('teamBName').value,
+            };
+
+            const teamAId = document.getElementById('teamAId').value.trim();
+            const teamBId = document.getElementById('teamBId').value.trim();
+            const leagueId = document.getElementById('leagueId').value.trim();
+
+            if (teamAId) payload.team_a_id = parseInt(teamAId);
+            if (teamBId) payload.team_b_id = parseInt(teamBId);
+            if (leagueId) payload.league_id = parseInt(leagueId);
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'ok') {
+                    resultDiv.innerHTML = '<span class="success">✅ Prediction successful!</span>\n\n' +
+                        JSON.stringify(data.result, null, 2);
+                } else {
+                    resultDiv.innerHTML = '<span class="error">❌ Error: ' + (data.message || 'Unknown error') + '</span>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = '<span class="error">❌ Network error: ' + error.message + '</span>';
+            }
+        }
+    </script>
+</body>
+</html>

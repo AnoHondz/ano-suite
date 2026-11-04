@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+{% import "components/decision.html" as ui with context %}
+
+{% block title %}ScorPred | Settings{% endblock %}
+{% block topbar_title %}Settings{% endblock %}
+
+{% block content %}
+
+{# ── Header ──────────────────────────────────────────────────────────────────── #}
+<div class="sp-dash-header">
+  <div class="sp-dash-header__left">
+    <h1>Settings</h1>
+    <p>Manage your account preferences and app settings.</p>
+  </div>
+  <button class="btn btn-primary btn-sm">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:14px;height:14px;display:block"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+    Save Changes
+  </button>
+</div>
+
+{# ── Settings Tab Nav ─────────────────────────────────────────────────────────── #}
+<div class="sp-settings-tab-nav">
+  <a href="#profile" class="sp-settings-tab active" onclick="showSettingsTab('profile',this);return false;">Profile</a>
+  <a href="#notifications" class="sp-settings-tab" onclick="showSettingsTab('notifications',this);return false;">Notifications</a>
+  <a href="#betting" class="sp-settings-tab" onclick="showSettingsTab('betting',this);return false;">Betting</a>
+  <a href="#display" class="sp-settings-tab" onclick="showSettingsTab('display',this);return false;">Display</a>
+  <a href="#privacy" class="sp-settings-tab" onclick="showSettingsTab('privacy',this);return false;">Privacy</a>
+  <a href="#integrations" class="sp-settings-tab" onclick="showSettingsTab('integrations',this);return false;">Integrations</a>
+</div>
+
+{# ── Profile Tab ──────────────────────────────────────────────────────────────── #}
+<div id="st-profile">
+  <div class="sp-settings-layout">
+    {# Profile Info #}
+    <div class="sp-settings-card">
+      <div class="sp-settings-card__title">Profile Information</div>
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--c-active),var(--c-purple));display:grid;place-items:center;font-size:1.15rem;font-weight:800;color:#fff;flex-shrink:0">
+          {{ (current_user.email[:2]|upper) if not is_guest else 'GU' }}
+        </div>
+        <a href="#" class="btn btn-secondary btn-sm">Change Avatar</a>
+      </div>
+      <div class="sp-auth-field" style="margin-bottom:.75rem">
+        <label class="sp-label">Name</label>
+        <input type="text" class="sp-input sp-auth-input" value="{{ current_user.username if not is_guest else 'Guest User' }}">
+      </div>
+      <div class="sp-auth-field" style="margin-bottom:.75rem">
+        <label class="sp-label">Email</label>
+        <input type="email" class="sp-input sp-auth-input" value="{{ current_user.email if not is_guest else 'guest@scorpred.com' }}">
+      </div>
+      <div class="sp-auth-field" style="margin-bottom:.75rem">
+        <label class="sp-label">Timezone</label>
+        <select class="sp-input sp-auth-input">
+          <option selected>(UTC-4) Eastern Time (US &amp; Canada)</option>
+          <option>(UTC+0) Greenwich Mean Time</option>
+          <option>(UTC+1) Central European Time</option>
+          <option>(UTC+8) China Standard Time</option>
+        </select>
+      </div>
+      <div class="sp-auth-field">
+        <label class="sp-label">Language</label>
+        <select class="sp-input sp-auth-input">
+          <option selected>English</option>
+          <option>Spanish</option>
+          <option>French</option>
+          <option>German</option>
+        </select>
+      </div>
+    </div>
+
+    {# Account #}
+    <div>
+      <div class="sp-settings-card" style="margin-bottom:1rem">
+        <div class="sp-settings-card__title">Account</div>
+        <div class="sp-settings-row">
+          <div>
+            <div class="sp-settings-row__label">Subscription Plan</div>
+            <div class="sp-settings-row__sub">ScorPred Master Pro</div>
+          </div>
+          <a href="#" class="btn btn-secondary btn-sm">Manage Plan</a>
+        </div>
+        <div class="sp-settings-row">
+          <div>
+            <div class="sp-settings-row__label">Member Since</div>
+            <div class="sp-settings-row__sub">March 15, 2024</div>
+          </div>
+        </div>
+        <div class="sp-settings-row">
+          <div>
+            <div class="sp-settings-row__label">Auto-renewal</div>
+            <div class="sp-settings-row__sub">Enabled</div>
+          </div>
+          <a href="#" class="btn btn-secondary btn-sm">Manage</a>
+        </div>
+        <div class="sp-settings-row">
+          <div>
+            <div class="sp-settings-row__label" style="color:var(--c-danger)">Delete Account</div>
+            <div class="sp-settings-row__sub">Permanently delete your account and all data.</div>
+          </div>
+          <a href="#" class="btn btn-sm" style="background:rgba(var(--c-danger-rgb),.1);color:var(--c-danger);border:1px solid rgba(var(--c-danger-rgb),.3)">Delete</a>
+        </div>
+      </div>
+
+      {# Preferences #}
+      <div class="sp-settings-card">
+        <div class="sp-settings-card__title">Preferences</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+          <div class="sp-auth-field">
+            <label class="sp-label">Default Stake Amount</label>
+            <select class="sp-input sp-auth-input">
+              <option>$100</option>
+              <option>$50</option>
+              <option>$200</option>
+            </select>
+          </div>
+          <div class="sp-auth-field">
+            <label class="sp-label">Odds Format</label>
+            <select class="sp-input sp-auth-input">
+              <option>Decimal (1.80)</option>
+              <option>American (-120)</option>
+              <option>Fractional (4/5)</option>
+            </select>
+          </div>
+          <div class="sp-auth-field">
+            <label class="sp-label">Default Odds Type</label>
+            <select class="sp-input sp-auth-input">
+              <option>Closing Odds</option>
+              <option>Opening Odds</option>
+              <option>Best Available</option>
+            </select>
+          </div>
+          <div class="sp-auth-field">
+            <label class="sp-label">Data Refresh Rate</label>
+            <select class="sp-input sp-auth-input">
+              <option>Real-time</option>
+              <option>Every 5 min</option>
+              <option>Every 15 min</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{# ── Notifications Tab ─────────────────────────────────────────────────────────── #}
+<div id="st-notifications" style="display:none">
+  <div class="sp-settings-card">
+    <div class="sp-settings-card__title">Notification Preferences</div>
+    {% set notif_opts = [
+      ('High Confidence Alerts', 'Notify when confidence is 70%+', True),
+      ('Line Movement Alerts', 'Notify when lines move significantly', True),
+      ('Value Bet Alerts', 'Notify when edge value is detected', True),
+      ('Data Updates', 'Notify for injury or lineup changes', True),
+      ('Odds Drop Alerts', 'Notify when odds drop significantly', False),
+      ('Settlement Notifications', 'Notify when bets are settled', True),
+      ('Performance Reports', 'Weekly performance summary email', False)
+    ] %}
+    {% for label, desc, enabled in notif_opts %}
+      <div class="sp-settings-row">
+        <div>
+          <div class="sp-settings-row__label">{{ label }}</div>
+          <div class="sp-settings-row__sub">{{ desc }}</div>
+        </div>
+        <label style="display:flex;align-items:center;gap:.4rem;cursor:pointer;font-size:.82rem;color:var(--text-2)">
+          <input type="checkbox" {% if enabled %}checked{% endif %} style="accent-color:var(--c-active)">
+          {{ 'On' if enabled else 'Off' }}
+        </label>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{# ── Betting Tab ──────────────────────────────────────────────────────────────── #}
+<div id="st-betting" style="display:none">
+  <div class="sp-settings-card">
+    <div class="sp-settings-card__title">Betting Preferences</div>
+    <div class="sp-settings-row">
+      <div><div class="sp-settings-row__label">Default Stake</div><div class="sp-settings-row__sub">Amount applied to new bets</div></div>
+      <select class="sp-filter-control"><option>$100</option><option>$50</option><option>$200</option><option>Custom</option></select>
+    </div>
+    <div class="sp-settings-row">
+      <div><div class="sp-settings-row__label">Odds Format</div><div class="sp-settings-row__sub">How odds are displayed</div></div>
+      <select class="sp-filter-control"><option>Decimal</option><option>American</option><option>Fractional</option></select>
+    </div>
+    <div class="sp-settings-row">
+      <div><div class="sp-settings-row__label">Minimum Confidence</div><div class="sp-settings-row__sub">Only show picks above this threshold</div></div>
+      <select class="sp-filter-control"><option>50%</option><option>60%</option><option>70%</option></select>
+    </div>
+    <div class="sp-settings-row">
+      <div><div class="sp-settings-row__label">Auto-record Bets</div><div class="sp-settings-row__sub">Automatically log bets you mark as taken</div></div>
+      <label style="cursor:pointer"><input type="checkbox" checked style="accent-color:var(--c-active)"> Enabled</label>
+    </div>
+  </div>
+</div>
+
+{# ── Display / Privacy / Integrations tabs (placeholders) ─────────────────────── #}
+<div id="st-display" style="display:none">
+  {{ ui.empty_state('Display Settings', 'Theme, density, and layout preferences coming soon.') }}
+</div>
+<div id="st-privacy" style="display:none">
+  {{ ui.empty_state('Privacy Settings', 'Data sharing, cookie, and privacy controls coming soon.') }}
+</div>
+<div id="st-integrations" style="display:none">
+  {{ ui.empty_state('Integrations', 'Connect to external services and betting platforms coming soon.') }}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+var tabs = { 'profile': 'st-profile', 'notifications': 'st-notifications', 'betting': 'st-betting', 'display': 'st-display', 'privacy': 'st-privacy', 'integrations': 'st-integrations' };
+function showSettingsTab(id, el) {
+  Object.values(tabs).forEach(function(t) { var e = document.getElementById(t); if (e) e.style.display = 'none'; });
+  var target = document.getElementById(tabs[id]);
+  if (target) target.style.display = '';
+  document.querySelectorAll('.sp-settings-tab').forEach(function(a) { a.classList.remove('active'); });
+  if (el) el.classList.add('active');
+}
+</script>
+{% endblock %}

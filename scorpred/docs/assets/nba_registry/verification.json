@@ -1,0 +1,88 @@
+{
+  "verified_at": "2026-10-22T02:29:50.095960+00:00",
+  "registry_providers": 3,
+  "providers_enabled": 0,
+  "reference_games": 6048,
+  "reference_matches_prior_audit": true,
+  "tests": {
+    "targeted": {
+      "command": ".venv/Scripts/python.exe -m pytest tests/test_nba_provider_registry.py -q --tb=short",
+      "passed": 19
+    },
+    "backend": {
+      "command": ".venv/Scripts/python.exe -m pytest tests -q --tb=short",
+      "passed": 754,
+      "duration_seconds": 102.47,
+      "regressions": [
+        "NFL",
+        "NBA",
+        "soccer"
+      ]
+    },
+    "lint": {
+      "result": "passed",
+      "rules": "E,W,F; E501 ignored",
+      "files": [
+        "services/nba_provider_registry.py",
+        "services/nba_historical_reconciliation.py",
+        "scripts/reconcile_nba_history.py",
+        "tests/test_nba_provider_registry.py"
+      ]
+    },
+    "frontend_build": {
+      "command": "npm run build",
+      "result": "passed",
+      "node": "22.23.3",
+      "note": "Used existing local Node installation explicitly because npm was absent from the shell PATH"
+    }
+  },
+  "deterministic_replay": {
+    "network_connections_blocked": true,
+    "network_attempts": 0,
+    "byte_identical_artifacts": 8,
+    "bundle_content_sha256": "dd3fa7e4af8a81be2cdbd965959cc16deb59c2ed87691af3c90139b997cde2fe"
+  },
+  "preservation": {
+    "original_protected_files_unchanged": 277,
+    "reconciliation_input_files_rechecked_unchanged": 554,
+    "production_source_changes": 0,
+    "models_retrained": 0,
+    "third_party_sports_assets_downloaded": 0,
+    "sports_records_imported": 0,
+    "nfl_outcome_store_access": false,
+    "deployments": 0
+  },
+  "license_evidence_checks": [
+    {
+      "url": "https://raw.githubusercontent.com/sportsdataverse/sportsdataverse-data/main/LICENSE",
+      "snapshot_sha256_matches": true,
+      "license_claim": "MIT"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/sportsdataverse/sportsdataverse-data/main/README.md",
+      "snapshot_sha256_matches": true,
+      "license_claim": "CC-BY-4.0 data claim"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/sportsdataverse/hoopR-nba-data/main/LICENSE.md",
+      "snapshot_sha256_matches": true,
+      "license_claim": "CC-BY-4.0 data/code/documentation"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/sportsdataverse/hoopR-nba-stats-data/main/LICENSE.md",
+      "snapshot_sha256_matches": true,
+      "license_claim": "CC-BY-4.0 data/code/documentation"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/shufinskiy/nba_data/main/LICENSE",
+      "snapshot_sha256_matches": true,
+      "license_claim": "Apache-2.0"
+    }
+  ],
+  "intended_use_permissions_verified": 0,
+  "limitations": [
+    "No candidate game-ID manifests; game matches and net new games unknown",
+    "Structural local boxes/minutes only; no complete-roster or count-contract validation",
+    "No original historical pregame receipts verified in inspected NBA sources"
+  ]
+}
